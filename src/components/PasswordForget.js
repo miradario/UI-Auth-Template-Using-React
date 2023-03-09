@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Button, Form, InputGroup, Container } from "react-bootstrap";
-import Footer from './Footer';
-import Navigation from './Navigation';
+import Footer from "./Footer";
+import Navigation from "./Navigation";
 import { auth } from "../firebase";
 import * as routes from "../constants/routes";
 import MainBanner from "./Banner";
@@ -11,37 +11,37 @@ import MainBanner from "./Banner";
 const PasswordForgetPage = () => (
   <div className="div-flex">
     <Navigation />
-    <center style={{marginTop: "110px"}}>
-      <MainBanner />
+    <center style={{ marginTop: "110px" }}>
       <PasswordForgetForm />
-      <br/>
+      <br />
     </center>
     <Footer />
   </div>
 );
 
 const byPropKey = (propertyName, value) => () => ({
-  [propertyName]: value
+  [propertyName]: value,
 });
 
 //################### PasswordForget Form ###################
 const INITIAL_STATE = {
-  email: ""
+  email: "",
 };
-
 
 class PasswordForgetForm extends Component {
   state = { ...INITIAL_STATE };
-  
-  onSubmit = event => {
+
+  onSubmit = (event) => {
     const { email } = this.state;
     auth
       .doPasswordReset(email)
       .then(() => {
-        alert("We have sent you reset password link to your registered email address.");
+        alert(
+          "We have sent you reset password link to your registered email address."
+        );
         this.setState({ ...INITIAL_STATE });
       })
-      .catch(error => {
+      .catch((error) => {
         alert(error.message);
       });
 
@@ -53,12 +53,15 @@ class PasswordForgetForm extends Component {
 
     const isInvalid = email === "";
 
-    return ( <div className="inputclass">
-        <Container style={{marginBottom: "150px"}}>
+    return (
+      <div className="inputclass">
+        <Container style={{ marginBottom: "150px" }}>
           <h2 id="mytexth2">Reset Password</h2>
           <Form onSubmit={this.onSubmit}>
             <InputGroup>
-              <InputGroup.Prepend className="inputlabel">Email</InputGroup.Prepend>
+              <InputGroup.Prepend className="inputlabel">
+                Email
+              </InputGroup.Prepend>
               <Form.Control
                 type="email"
                 name="email"
@@ -66,12 +69,12 @@ class PasswordForgetForm extends Component {
                 placeholder="Enter your registered email"
                 value={email}
                 required
-                onChange={event =>
+                onChange={(event) =>
                   this.setState(byPropKey("email", event.target.value))
                 }
               />
             </InputGroup>
-            <br/>
+            <br />
             <div className="text-center">
               <Button disabled={isInvalid} type="submit" id="mybutton">
                 Reset Password
@@ -87,11 +90,12 @@ class PasswordForgetForm extends Component {
 //################### PasswordForget Link ###################
 const PasswordForgetLink = () => (
   <p>
-    <Link to={routes.PASSWORD_FORGET} id="mylink">Forgot Password?</Link>
+    <Link to={routes.PASSWORD_FORGET} id="mylink">
+      Forgot Password?
+    </Link>
   </p>
 );
 
 export default PasswordForgetPage;
 
 export { PasswordForgetForm, PasswordForgetLink };
-

@@ -5,21 +5,20 @@ import { SignUpLink } from "./SignUp";
 import { PasswordForgetLink } from "./PasswordForget";
 import { auth } from "../firebase";
 import * as routes from "../constants/routes";
-import Footer from './Footer';
-import Navigation from './Navigation';
+import Footer from "./Footer";
+import Navigation from "./Navigation";
 import MainBanner from "./Banner";
 
 const SignInPage = ({ history }) => {
   return (
-    <div className="div-flex" style={{marginTop: "110px"}}>
+    <div className="div-flex" style={{ marginTop: "110px" }}>
       <Navigation />
       <center>
-        <MainBanner />
         <SignInForm history={history} />
-        <SignUpLink />
+
         <PasswordForgetLink />
-        <br/>
-        <hr/>
+        <br />
+        <hr />
         <Footer />
       </center>
     </div>
@@ -27,32 +26,32 @@ const SignInPage = ({ history }) => {
 };
 
 const byPropKey = (propertyName, value) => () => ({
-  [propertyName]: value
+  [propertyName]: value,
 });
 
 const INITIAL_STATE = {
   email: "",
-  password: ""
+  password: "",
 };
 
 class SignInForm extends Component {
   state = { ...INITIAL_STATE };
 
-  onSubmit = event => {
+  onSubmit = (event) => {
     const { email, password } = this.state;
     const { history } = this.props;
-    
+
     auth
       .doSignInWithEmailAndPassword(email, password)
-        .then(() => {
-          this.setState({ ...INITIAL_STATE });
-          history.push(routes.LANDING);
-        })
-        .catch(error => {
-          alert(error.message);
-        });
+      .then(() => {
+        this.setState({ ...INITIAL_STATE });
+        history.push(routes.LANDING);
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
 
-      event.preventDefault();
+    event.preventDefault();
   };
 
   render() {
@@ -66,7 +65,9 @@ class SignInForm extends Component {
             <h2 id="mytexth2">Sign In</h2>
             <Form onSubmit={this.onSubmit}>
               <InputGroup>
-                <InputGroup.Prepend className="inputlabel">Email</InputGroup.Prepend>
+                <InputGroup.Prepend className="inputlabel">
+                  Email
+                </InputGroup.Prepend>
                 <Form.Control
                   id="inputtext"
                   type="email"
@@ -74,34 +75,36 @@ class SignInForm extends Component {
                   value={email}
                   required
                   autoFocus
-                  onChange={event =>
+                  onChange={(event) =>
                     this.setState(byPropKey("email", event.target.value))
                   }
-                  />
+                />
               </InputGroup>
-              <br/>
+              <br />
               <InputGroup>
-                <InputGroup.Prepend className="inputlabel">Password</InputGroup.Prepend>
+                <InputGroup.Prepend className="inputlabel">
+                  Password
+                </InputGroup.Prepend>
                 <Form.Control
                   id="inputtext"
                   type="password"
                   placeholder="Password"
                   value={password}
                   required
-                  onChange={event =>
+                  onChange={(event) =>
                     this.setState(byPropKey("password", event.target.value))
                   }
-                  />
+                />
               </InputGroup>
-              <br/>
+              <br />
               <div className="text-center">
                 <Button disabled={isInvalid} type="submit" id="mybutton">
                   Sign In
                 </Button>
               </div>
             </Form>
-            <hr/>
-        </center>
+            <hr />
+          </center>
         </Container>
       </div>
     );

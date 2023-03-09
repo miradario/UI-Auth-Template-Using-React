@@ -14,8 +14,8 @@ export const doSignOut = () => auth.signOut();
 //## below are two more functions, for resetting or changing passwords ##
 
 //password reset
-export const doPasswordReset = email => auth.sendPasswordResetEmail(email);
+export const doPasswordReset = (email) => auth.sendPasswordResetEmail(email);
 
 //password change
-export const doPasswordChange = password =>
+export const doPasswordChange = (password) =>
   auth.currentUser.updatePassword(password);

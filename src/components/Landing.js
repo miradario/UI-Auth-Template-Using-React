@@ -1,33 +1,29 @@
-import React , { Component } from 'react';
+import React, { Component } from "react";
 import Navigation from "./Navigation";
 import Jumbo from "./Jumbo";
 import Footer from "./Footer";
-import Cards from "./Cards";
 
 const INITIAL_STATE = {
-  error: null
+  error: null,
 };
 
 class Landing extends Component {
-  state = { ...INITIAL_STATE }
-
+  state = { ...INITIAL_STATE };
 
   render() {
     return (
       <div className="App">
-       <div>
+        <div>
           <Navigation />
-          <div className="container"> 
-              <Jumbo />
+          <div className="container">
+            <Jumbo />
           </div>
-          <div className="cards_together">
-              <Cards/>
-          </div>
-          <Footer/>
+
+          <Footer />
         </div>
-      </div>    
+      </div>
     );
   }
 }
-  
+
 export default Landing;

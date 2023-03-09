@@ -4,4 +4,6 @@ export const LANDING = "/";
 export const HOME = "/home";
 export const CARD = "/card/:id";
 export const ACCOUNT = "/account";
+export const USERS = "/users";
+export const ADDUSERS = "/add-users";
 export const PASSWORD_FORGET = "/pw-forget";

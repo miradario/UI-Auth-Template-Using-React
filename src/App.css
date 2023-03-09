@@ -4,37 +4,63 @@
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  width:100%;
+  width: 100%;
   font-family: sans-serif;
 }
 
+.btn-primary {
+  background-color: #d39e00 !important;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.button {
+  background-color: #feae00 !important;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.5s;
+}
 .header {
   /* box-shadow: 3px 3px 5px 6px rgb(158, 155, 155); */
-  box-shadow: 0px 10px 5px 0px rgb(158, 155, 155);
+  background-color: #feae00;
 }
 
 @keyframes popping {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(20px); }
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(20px);
+  }
 }
 
 .Jumbotron {
   margin: auto;
   margin-top: 4rem;
-  background-image: url(https://source.unsplash.com/800x500);
+  background-image: url(https://1.bp.blogspot.com/-eDWXkSEHbgY/YKv5YQZ8rKI/AAAAAAAAkF4/aBuH5E3pVeoIKcoHwBRY8QIcI8b8Dqd6wCLcBGAsYHQ/s0/Full-Moon-Carousal.jpg);
   background-position: center;
   background-size: cover;
   font-weight: bold;
   border-radius: 5px;
-  animation-name:popping;
+  animation-name: popping;
   font-family: sans-serif;
   animation-duration: 5s;
-  transform: scale(1);
+  transform: scale(2);
   transition: transform 2s ease;
-  box-shadow: 10px 10px 5px 0px rgb(158, 155, 155);
+
   animation-iteration-count: infinite;
-  width: 80%;
-  height: auto;
+  width: 1000px;
+  height: 500px;
 }
 
 .Jumbotron:hover {
@@ -43,20 +69,22 @@
 }
 
 .jumbo_transform {
-  background-color: #ffffffc3;
-  padding: 25px;
+  background-color: #feae0044;
+  margin-top: 290px;
+  padding: 40px;
   transform: scale(1);
-  transition: transform 0.5s ;
+  transition: transform 0.5s;
+  color: #65656a;
 }
 
 .button_transform {
   transform: scale(1);
-  box-shadow: 5px 5px 5px 1px rgba(0,0,0,0.253)!important;
+  box-shadow: 5px 5px 5px 1px rgba(0, 0, 0, 0.253) !important;
 }
 
 .button_transform:hover {
   transform: scale(1.1);
-  box-shadow: 5px 5px 5px 1px rgba(0,0,0,0.8)!important;
+  box-shadow: 5px 5px 5px 1px rgba(0, 0, 0, 0.8) !important;
 }
 
 .jumbo_transform:hover {
@@ -64,7 +92,7 @@
   background-color: #ffffffe4;
   font-weight: bold;
   color: black;
-} 
+}
 
 #mytextnewuser {
   padding-left: 5%;
@@ -75,26 +103,26 @@
 .cards_together {
   margin-top: 30px;
   padding: 50px 120px;
-}  
+}
 
 .individual_card {
   padding-bottom: 20px;
 }
 
 .card:hover {
-  box-shadow: 5px 10px 20px 1px rgba(0,0,0,0.453)!important;
+  box-shadow: 5px 10px 20px 1px rgba(0, 0, 0, 0.453) !important;
 }
 
 .card-body {
-    padding: 3rem 0 !important;
+  padding: 3rem 0 !important;
 }
 
 .card-text {
-  font-size: .9rem;
+  font-size: 0.9rem;
 }
 
 .overflow {
-  overflow:hidden;
+  overflow: hidden;
 }
 
 .card-img-top {
@@ -107,7 +135,7 @@
 }
 
 .inputclass {
-  width: 40%; 
+  width: 40%;
 }
 
 .inputlabel {
@@ -132,11 +160,11 @@
 }
 
 #inputtext:hover {
-  border-bottom: blue;
+  border-bottom: #404040;
 }
 
 #mybutton {
-  background-color: darkblue;
+  background-color: #feae00;
   font-size: 18px;
   color: aliceblue;
 }
@@ -186,21 +214,20 @@
 }
 
 @media (max-width: 1200px) {
-
-  .Jumbotron{
+  .Jumbotron {
     margin-top: 4rem;
     width: 85%;
   }
-  .cards_together{
+  .cards_together {
     width: 100%;
     margin-top: 60px;
     padding: 10px;
   }
-  .jumbo_transform{
+  .jumbo_transform {
     background-color: #ffffffc4;
   }
   .inputclass {
-    width: 60%; 
+    width: 60%;
   }
   .inputlabel {
     padding: 0 5px;
@@ -224,19 +251,19 @@
 }
 
 @media (max-width: 900px) {
-  .Jumbotron{
+  .Jumbotron {
     margin-top: 4rem;
     width: 95%;
   }
   .inputclass {
-    width: 95%; 
+    width: 95%;
   }
   #mytextjambo {
     font-size: 12px;
   }
-  .jumbo_transform{
+  .jumbo_transform {
     font-size: 20px;
-  } 
+  }
   #mytable {
     width: 90%;
   }
@@ -253,7 +280,7 @@ footer ul {
   padding-left: 0;
 }
 footer {
-  background-color: #04166e;
+  background-color: #feae00;
   color: #bbb;
   line-height: 1.5;
 }
@@ -263,7 +290,7 @@ footer a {
 }
 footer a:hover {
   text-decoration: underline;
-  color:white;
+  color: white;
 }
 .ft-title {
   color: #fff;
@@ -294,7 +321,7 @@ footer a:hover {
 .ft-main-item {
   padding: 1.25rem;
   min-width: 12.5rem;
-  text-align:left;
+  text-align: left;
 }
 /* Footer main  */
 footer Form {
@@ -330,9 +357,9 @@ footer Form {
   white-space: nowrap;
 }
 /* one before the last child */
-.ft-legal-list  {
-    display: flex;
-    justify-content: space-between;
+.ft-legal-list {
+  display: flex;
+  justify-content: space-between;
 }
 /*social media buttons*/
 .fa {
@@ -352,5 +379,5 @@ footer Form {
   margin: 5px 2px;
 }
 .fa:hover {
-    opacity: 0.7;
+  opacity: 0.7;
 }
