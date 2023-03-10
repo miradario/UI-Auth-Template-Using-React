@@ -6,7 +6,7 @@ import * as routes from "./constants/routes";
 import SignUpPage from "./components/SignUp";
 import SignInPage from "./components/SignIn";
 import PasswordForgetPage from "./components/PasswordForget";
-import AccountPage from "./components/Account";
+
 import LandingPage from "./components/Landing";
 import UsersPage from "./components/Users";
 import AddUsersPage from "./components/AddUser";
@@ -22,7 +22,6 @@ const App = () => (
     <Route exact path={routes.PASSWORD_FORGET} component={PasswordForgetPage} />
 
     {/* <Route exact path={routes.HOME} component={HomePage} /> */}
-    <Route exact path={routes.ACCOUNT} component={AccountPage} />
   </BrowserRouter>
 );
 
