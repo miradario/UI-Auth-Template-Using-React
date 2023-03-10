@@ -72,6 +72,11 @@ class UserPage extends Component {
       <div className="App">
         <div>
           <Navigation />
+          <br />
+          <br />
+          <br />
+          <br />
+
           <div className="container">
             <div className="row">
               <div className="col-md-12">
@@ -166,6 +171,27 @@ class UserPage extends Component {
                             {this.state.items[key].inactive
                               ? "Activate"
                               : "Inactive"}
+                          </button>
+                        </td>
+                        <td>
+                          {/* send a forgot password */}
+                          <button
+                            className="btn btn-info"
+                            style={{ fontSize: 8 }}
+                            onClick={() => {
+                              auth
+                                .sendPasswordResetEmail(
+                                  this.state.items[key].email
+                                )
+                                .then(function () {
+                                  alert("Password reset email sent");
+                                })
+                                .catch(function (error) {
+                                  alert(error.message);
+                                });
+                            }}
+                          >
+                            Reset Password
                           </button>
                         </td>
                       </tr>
