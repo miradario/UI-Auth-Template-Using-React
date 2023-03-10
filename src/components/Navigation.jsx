@@ -60,10 +60,7 @@ function Navigation() {
           ) : (
             <Nav>
               <Nav.Link>
-                <Link
-                  to={routes.USERS}
-                  style={{ backgroundColor: ", color: "white" }}
-                >
+                <Link to={routes.USERS} style={{ color: "white" }}>
                   <Button
                     style={{
                       backgroundColor: "white",

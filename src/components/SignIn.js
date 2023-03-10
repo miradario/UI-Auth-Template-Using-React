@@ -32,6 +32,7 @@ const byPropKey = (propertyName, value) => () => ({
 const INITIAL_STATE = {
   email: "",
   password: "",
+  internalCode: "",
 };
 
 class SignInForm extends Component {
@@ -40,6 +41,11 @@ class SignInForm extends Component {
   onSubmit = (event) => {
     const { email, password } = this.state;
     const { history } = this.props;
+
+    if (this.state.internalCode !== "Jgd108") {
+      alert("Invalid Admin Code");
+      return;
+    }
 
     auth
       .doSignInWithEmailAndPassword(email, password)
@@ -55,7 +61,7 @@ class SignInForm extends Component {
   };
 
   render() {
-    const { email, password } = this.state;
+    const { email, password, internalCode } = this.state;
     const isInvalid = password === "" || email === "";
 
     return (
@@ -93,6 +99,22 @@ class SignInForm extends Component {
                   required
                   onChange={(event) =>
                     this.setState(byPropKey("password", event.target.value))
+                  }
+                />
+              </InputGroup>
+              <br />
+              <InputGroup>
+                <InputGroup.Prepend className="inputlabel">
+                  Admin Code
+                </InputGroup.Prepend>
+                <Form.Control
+                  id="inputtext"
+                  type="password"
+                  placeholder="internal Code"
+                  value={internalCode}
+                  required
+                  onChange={(event) =>
+                    this.setState(byPropKey("internalCode", event.target.value))
                   }
                 />
               </InputGroup>

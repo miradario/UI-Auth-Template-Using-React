@@ -1,12 +1,13 @@
 // add user component
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Form, InputGroup, Container } from "react-bootstrap";
 import Navigation from "./Navigation";
 import { db } from "../firebase/firebase";
 import { auth } from "../firebase/firebase";
 
-function AddUserPage() {
+const AddUserPage = (props) => {
+  const [id, setId] = useState(0);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,10 +17,14 @@ function AddUserPage() {
   const [long, setLong] = useState(false);
   const [short, setShort] = useState(false);
   const [ae, setAe] = useState(false);
+  const [inactive, setInactive] = useState(false);
+  const [error, setError] = useState(null);
+  const [isloading, setIsLoading] = useState(false);
 
   // create async createAuthUser
 
   const createAuthUser = async (email, password) => {
+    setIsLoading(true);
     auth
       .createUserWithEmailAndPassword(email, password)
       .then((authUser) => {
@@ -34,15 +39,53 @@ function AddUserPage() {
       });
   };
 
+  //get the key from parameter and set the data in the fields with useEffect
+
+  useEffect(() => {
+    console.log("props", props);
+    const { key } = (props.location && props.location.state) || {};
+    setId(key);
+    //CHEKC IF THERE IS A PARMATER?
+
+    console.log("id", key);
+    if (key) {
+      setIsLoading(true);
+      db.ref("users/" + key)
+        .once("value")
+        .then((snapshot) => {
+          console.log("snapshot:", snapshot);
+          if (snapshot) {
+            setPhone(snapshot.val().phone);
+            setName(snapshot.val().name);
+            setEmail(snapshot.val().email);
+            setCountry(snapshot.val().country);
+            setLastname(snapshot.val().lastName);
+            const long = snapshot.val().SKY.long === 1 ? true : false;
+            setLong(long);
+
+            setShort(snapshot.val().SKY.short === 1 ? true : false);
+            setAe(snapshot.val().SKY.ae === 1 ? true : false);
+            setIsLoading(false);
+          }
+        })
+        .catch((e) => {
+          alert(e.message);
+        });
+    }
+  }, [props]);
+
   const handleLong = (long) => {
     setLong(!long);
   };
+
   const handleShort = (short) => {
     setShort(!short);
   };
+
   const handleAe = (ae) => {
     setAe(!ae);
   };
+
   const cleanFields = () => {
     setName("");
     setEmail("");
@@ -59,7 +102,7 @@ function AddUserPage() {
     const long_1 = long ? 1 : 0;
     const short_1 = short ? 1 : 0;
     const ae_1 = ae ? 1 : 0;
-    console.log("user", userNew);
+    console.log("checks", long, short, ae);
     db.ref("users/" + userNew)
       .update({
         name: name,
@@ -75,10 +118,15 @@ function AddUserPage() {
       })
       .then((data) => {
         //success callback
-
-        alert("User added successfully");
-
-        cleanFields();
+        if (id) {
+          alert("User updated successfully");
+        } else {
+          alert("User added successfully");
+        }
+        setIsLoading(false);
+        props.history.push({
+          pathname: "/users",
+        });
       })
       .catch((error) => {
         //error callback
@@ -89,8 +137,11 @@ function AddUserPage() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     console.log("email", email);
-
-    await createAuthUser(email, password);
+    if (id) {
+      handleAddUser(id);
+    } else {
+      await createAuthUser(email, password);
+    }
   };
   // TODO: handle form submission
 
@@ -100,145 +151,157 @@ function AddUserPage() {
 
       <Container>
         <center>
-          <h1>Add Teacher</h1>
+          <h1>{id ? "Update Teacher" : "Add Teacher"}</h1>
         </center>
         <br />
-        <form onSubmit={handleSubmit}>
-          <InputGroup>
-            <InputGroup.Prepend className="inputlabel">
-              Email
-            </InputGroup.Prepend>
-            <Form.Control
-              id="inputtext"
-              type="email"
-              placeholder="user@gmail.com"
-              value={email}
-              required
-              autoFocus
-              // change widht of input
-              style={{ width: "300px" }}
-              onChange={(event) => setEmail(event.target.value)}
-            />
-          </InputGroup>
+        {isloading ? ( // if loading show 'loading...'
+          <div id="preloader"></div>
+        ) : (
+          <form onSubmit={handleSubmit}>
+            <InputGroup>
+              <InputGroup.Prepend className="inputlabel">
+                Email
+              </InputGroup.Prepend>
+              <Form.Control
+                id="inputtext"
+                type="email"
+                placeholder="user@gmail.com"
+                value={email}
+                required
+                autoFocus
+                // change widht of input
+                style={{ width: "300px" }}
+                onChange={(event) => setEmail(event.target.value)}
+              />
+            </InputGroup>
 
-          <br />
-          <InputGroup>
-            <InputGroup.Prepend className="inputlabel">
-              Password
-            </InputGroup.Prepend>
-            <Form.Control
-              id="inputtext"
-              type="password"
-              placeholder="Password"
-              value={password}
-              required
-              onChange={(event) => setPassword(event.target.value)}
-            />
-          </InputGroup>
-          <br />
-          <InputGroup>
-            <InputGroup.Prepend className="inputlabel">
-              Name:
-            </InputGroup.Prepend>
-            <Form.Control
-              type="text"
-              name="name"
-              id="inputtext"
-              placeholder=" John "
-              value={name}
-              autoFocus
-              required
-              onChange={(event) => setName(event.target.value)}
-            />
-          </InputGroup>
-          <br />
-          <InputGroup>
-            <InputGroup.Prepend className="inputlabel">
-              Last Name:
-            </InputGroup.Prepend>
-            <Form.Control
-              type="text"
-              name="lastName"
-              id="inputtext"
-              placeholder=" Doe"
-              value={lastName}
-              autoFocus
-              required
-              onChange={(event) => setLastname(event.target.value)}
-            />
-          </InputGroup>
-          <br />
-          <InputGroup>
-            <InputGroup.Prepend className="inputlabel">
-              Country:
-            </InputGroup.Prepend>
-            <Form.Control
-              type="text"
-              name="country"
-              id="inputtext"
-              placeholder=" Argentina"
-              value={country}
-              autoFocus
-              required
-              onChange={(event) => setCountry(event.target.value)}
-            />
-          </InputGroup>
-          <br />
-          <InputGroup>
-            <InputGroup.Prepend className="inputlabel">
-              Phone:
-            </InputGroup.Prepend>
-            <Form.Control
-              type="text"
-              name="phone"
-              id="inputtext"
-              placeholder=" +54 9 11 1234 5678"
-              value={phone}
-              autoFocus
-              required
-              onChange={(event) => setPhone(event.target.value)}
-            />
-          </InputGroup>
-          <br />
-          <InputGroup style={{ width: "60%" }}>
-            <Form.Label className="inputlabel">Kriya Available</Form.Label>
             <br />
-            <Form.Check
-              className="inputradio"
-              label="Long"
-              type="checkbox"
-              name="Long"
-              value={long}
-              onChange={() => handleLong(long)}
-            />
-            <Form.Check
-              className="inputradio"
-              label="Short"
-              type="checkbox"
-              name="Short"
-              value={short}
-              onChange={() => handleShort(short)}
-            />
-            <Form.Check
-              className="inputradio"
-              label="Art Excel"
-              type="checkbox"
-              name="ArtExcel"
-              value={ae}
-              onChange={() => handleAe(ae)}
-            />
-          </InputGroup>
-          <br />
-          <div className="text-center">
-            <Button type="submit" id="mybutton">
-              Create Teacher
-            </Button>
-          </div>
-        </form>
+            {!id ? (
+              <InputGroup>
+                <InputGroup.Prepend className="inputlabel">
+                  Password
+                </InputGroup.Prepend>
+                <Form.Control
+                  id="inputtext"
+                  type="password"
+                  placeholder="********"
+                  value={password}
+                  required
+                  autoFocus
+                  // change widht of input
+                  style={{ width: "300px" }}
+                  onChange={(event) => setPassword(event.target.value)}
+                />
+              </InputGroup>
+            ) : null}
+            <br />
+            <InputGroup>
+              <InputGroup.Prepend className="inputlabel">
+                Name:
+              </InputGroup.Prepend>
+              <Form.Control
+                type="text"
+                name="name"
+                id="inputtextName"
+                placeholder=" John "
+                value={name}
+                autoFocus
+                required
+                onChange={(event) => setName(event.target.value)}
+              />
+            </InputGroup>
+            <br />
+            <InputGroup>
+              <InputGroup.Prepend className="inputlabel">
+                Last Name:
+              </InputGroup.Prepend>
+              <Form.Control
+                type="text"
+                name="lastName"
+                id="inputtextLN"
+                placeholder=" Doe"
+                value={lastName}
+                autoFocus
+                required
+                onChange={(event) => setLastname(event.target.value)}
+              />
+            </InputGroup>
+            <br />
+            <InputGroup>
+              <InputGroup.Prepend className="inputlabel">
+                Country:
+              </InputGroup.Prepend>
+              <Form.Control
+                type="text"
+                name="country"
+                id="inputtextCountry"
+                placeholder=" Argentina"
+                value={country}
+                autoFocus
+                required
+                onChange={(event) => setCountry(event.target.value)}
+              />
+            </InputGroup>
+            <br />
+            <InputGroup>
+              <InputGroup.Prepend className="inputlabel">
+                Phone:
+              </InputGroup.Prepend>
+              <Form.Control
+                type="text"
+                name="phone"
+                id="inputtextPhone"
+                placeholder=" +54 9 11 1234 5678"
+                value={phone}
+                autoFocus
+                required
+                onChange={(event) => setPhone(event.target.value)}
+              />
+            </InputGroup>
+            <br />
+            <InputGroup style={{ width: "60%" }}>
+              <Form.Label className="inputlabel">Kriya Available</Form.Label>
+              <br />
+              <Form.Check
+                className="inputradio"
+                label={"Long"}
+                type="checkbox"
+                name="Long"
+                defaultChecked={long}
+                value={long}
+                onChange={() => handleLong(long)}
+              />
+              <Form.Check
+                className="inputradio"
+                label="Short"
+                type="checkbox"
+                name="Short"
+                defaultChecked={short}
+                value={short}
+                onChange={() => handleShort(short)}
+              />
+              <Form.Check
+                className="inputradio"
+                label="Art Excel"
+                type="checkbox"
+                name="ArtExcel"
+                defaultChecked={ae}
+                value={ae}
+                onChange={() => handleAe(ae)}
+              />
+            </InputGroup>
+            <br />
+            <div className="text-center">
+              <Button type="submit" id="mybutton">
+                {id ? "Update Teacher" : "Add Teacher"}
+              </Button>
+            </div>
+          </form>
+        )}
       </Container>
     </div>
   );
-}
+};
 
 export default AddUserPage;
 
