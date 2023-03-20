@@ -14,6 +14,7 @@ const AddUserPage = (props) => {
   const [phone, setPhone] = useState("");
   const [lastName, setLastname] = useState("");
   const [country, setCountry] = useState("");
+  const [code, setCode] = useState("");
   const [long, setLong] = useState(false);
   const [short, setShort] = useState(false);
   const [ae, setAe] = useState(false);
@@ -62,6 +63,7 @@ const AddUserPage = (props) => {
             setName(snapshot.val().name);
             setEmail(snapshot.val().email);
             setCountry(snapshot.val().country);
+            setCode(snapshot.val().code);
             setLastname(snapshot.val().lastName);
             setTTCDate(snapshot.val().TTCDate);
             const long = snapshot.val().SKY.long === 1 ? true : false;
@@ -118,6 +120,7 @@ const AddUserPage = (props) => {
         email: email,
         phone: phone,
         country: country,
+        code: code,
         lastName: lastName,
         TTCDate: TTCDate,
         sign: sign_1,
@@ -251,6 +254,22 @@ const AddUserPage = (props) => {
                 autoFocus
                 required
                 onChange={(event) => setCountry(event.target.value)}
+              />
+            </InputGroup>
+            <br />
+            <InputGroup>
+              <InputGroup.Prepend className="inputlabel">
+                Code:
+              </InputGroup.Prepend>
+              <Form.Control
+                type="text"
+                name="code"
+                id="inputtextCode"
+                placeholder=" 9906"
+                value={code}
+                autoFocus
+                required
+                onChange={(event) => setCode(event.target.value)}
               />
             </InputGroup>
             <br />

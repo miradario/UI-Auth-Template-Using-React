@@ -38,8 +38,10 @@ class UserPage extends Component {
           email: items[item].email,
           phone: items[item].phone,
           country: items[item].country,
+          code: items[item].code,
           TTCDate: items[item].TTCDate,
           sign: items[item].sign,
+
           address: items[item].address,
           inactive: items[item].inactive,
         });
@@ -101,11 +103,13 @@ class UserPage extends Component {
                       <th scope="col">Email</th>
                       <th scope="col">Phone</th>
                       <th scope="col">Country</th>
+                      <th scope="col">Code</th>
                       <th scope="col">Long</th>
                       <th scope="col">Short</th>
                       <th scope="col">Art Excel</th>
                       <th scope="col">Status</th>
                       <th scope="col">First TTC Date</th>
+                      <th scope="col">Code</th>
                       <th scope="col">Sign Contract</th>
                       <th scope="col">Action</th>
                       <th scope="col">Delete</th>
@@ -127,6 +131,7 @@ class UserPage extends Component {
                         <td>{this.state.items[key].email}</td>
                         <td>{this.state.items[key].phone}</td>
                         <td>{this.state.items[key].country}</td>
+                        <td>{this.state.items[key].code}</td>
                         <td>
                           {this.state.items[key].SKY.long === 1 ? "On" : "Off"}
                         </td>
