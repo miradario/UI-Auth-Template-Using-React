@@ -17,6 +17,9 @@ const AddUserPage = (props) => {
   const [long, setLong] = useState(false);
   const [short, setShort] = useState(false);
   const [ae, setAe] = useState(false);
+  const [TTCDate, setTTCDate] = useState(false);
+  const [sign, setSign] = useState(false);
+
   const [inactive, setInactive] = useState(false);
   const [error, setError] = useState(null);
   const [isloading, setIsLoading] = useState(false);
@@ -60,9 +63,10 @@ const AddUserPage = (props) => {
             setEmail(snapshot.val().email);
             setCountry(snapshot.val().country);
             setLastname(snapshot.val().lastName);
+            setTTCDate(snapshot.val().TTCDate);
             const long = snapshot.val().SKY.long === 1 ? true : false;
             setLong(long);
-
+            setSign(snapshot.val().sign === 1 ? true : false);
             setShort(snapshot.val().SKY.short === 1 ? true : false);
             setAe(snapshot.val().SKY.ae === 1 ? true : false);
             setIsLoading(false);
@@ -86,6 +90,10 @@ const AddUserPage = (props) => {
     setAe(!ae);
   };
 
+  const handleSign = (sign) => {
+    setSign(!sign);
+  };
+
   const cleanFields = () => {
     setName("");
     setEmail("");
@@ -102,6 +110,7 @@ const AddUserPage = (props) => {
     const long_1 = long ? 1 : 0;
     const short_1 = short ? 1 : 0;
     const ae_1 = ae ? 1 : 0;
+    const sign_1 = sign ? 1 : 0;
     console.log("checks", long, short, ae);
     db.ref("users/" + userNew)
       .update({
@@ -110,6 +119,8 @@ const AddUserPage = (props) => {
         phone: phone,
         country: country,
         lastName: lastName,
+        TTCDate: TTCDate,
+        sign: sign_1,
         SKY: {
           long: long_1,
           short: short_1,
@@ -258,6 +269,31 @@ const AddUserPage = (props) => {
                 onChange={(event) => setPhone(event.target.value)}
               />
             </InputGroup>
+            <br />
+            <InputGroup>
+              <InputGroup.Prepend className="inputlabel">
+                TTC Date:
+              </InputGroup.Prepend>
+              <Form.Control
+                type="date"
+                name="ttcdate"
+                id="inputtextTTCDate"
+                placeholder=" 2020-01-01"
+                value={TTCDate}
+                autoFocus
+                required
+                onChange={(event) => setTTCDate(event.target.value)}
+              />
+            </InputGroup>
+            <Form.Check
+              className="inputradio"
+              label="Sign the contract"
+              type="checkbox"
+              name="Sing"
+              defaultChecked={sign}
+              value={sign}
+              onChange={() => handleSign(sign)}
+            />
             <br />
             <InputGroup style={{ width: "60%" }}>
               <Form.Label className="inputlabel">Kriya Available</Form.Label>

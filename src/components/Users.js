@@ -34,8 +34,12 @@ class UserPage extends Component {
         newState.push({
           id: item,
           name: items[item].name,
+          lastName: items[item].lastName,
           email: items[item].email,
           phone: items[item].phone,
+          country: items[item].country,
+          TTCDate: items[item].TTCDate,
+          sign: items[item].sign,
           address: items[item].address,
           inactive: items[item].inactive,
         });
@@ -93,6 +97,7 @@ class UserPage extends Component {
                   <thead>
                     <tr>
                       <th scope="col">Name</th>
+                      <th scope="col">Last Name</th>
                       <th scope="col">Email</th>
                       <th scope="col">Phone</th>
                       <th scope="col">Country</th>
@@ -100,7 +105,8 @@ class UserPage extends Component {
                       <th scope="col">Short</th>
                       <th scope="col">Art Excel</th>
                       <th scope="col">Status</th>
-
+                      <th scope="col">First TTC Date</th>
+                      <th scope="col">Sign Contract</th>
                       <th scope="col">Action</th>
                       <th scope="col">Delete</th>
                     </tr>
@@ -117,6 +123,7 @@ class UserPage extends Component {
                         }}
                       >
                         <td>{this.state.items[key].name}</td>
+                        <td>{this.state.items[key].lastName}</td>
                         <td>{this.state.items[key].email}</td>
                         <td>{this.state.items[key].phone}</td>
                         <td>{this.state.items[key].country}</td>
@@ -131,10 +138,16 @@ class UserPage extends Component {
                           {" "}
                           {this.state.items[key].SKY.ae === 1 ? "On" : "Off"}
                         </td>
+
                         <td>
                           {this.state.items[key].inactive
                             ? "Disable"
                             : "Enable"}
+                        </td>
+                        <td>{this.state.items[key].TTCDate}</td>
+                        <td>
+                          {" "}
+                          {this.state.items[key].sign === 1 ? "Yes" : "No"}
                         </td>
                         <td>
                           <button
