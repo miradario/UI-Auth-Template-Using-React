@@ -95,7 +95,10 @@ class UserPage extends Component {
                 <br />
                 <br />
 
-                <table className="table table-striped">
+                <table
+                  className="table table-striped"
+                  style={{ fontSize: "11px" }}
+                >
                   <thead>
                     <tr>
                       <th scope="col">Name</th>
@@ -106,10 +109,9 @@ class UserPage extends Component {
                       <th scope="col">Code</th>
                       <th scope="col">Long</th>
                       <th scope="col">Short</th>
-                      <th scope="col">Art Excel</th>
+
                       <th scope="col">Status</th>
                       <th scope="col">First TTC Date</th>
-                      <th scope="col">Code</th>
                       <th scope="col">Sign Contract</th>
                       <th scope="col">Action</th>
                       <th scope="col">Delete</th>
@@ -136,14 +138,8 @@ class UserPage extends Component {
                           {this.state.items[key].SKY.long === 1 ? "On" : "Off"}
                         </td>
                         <td>
-                          {" "}
                           {this.state.items[key].SKY.short === 1 ? "On" : "Off"}
                         </td>
-                        <td>
-                          {" "}
-                          {this.state.items[key].SKY.ae === 1 ? "On" : "Off"}
-                        </td>
-
                         <td>
                           {this.state.items[key].inactive
                             ? "Disable"
@@ -151,12 +147,14 @@ class UserPage extends Component {
                         </td>
                         <td>{this.state.items[key].TTCDate}</td>
                         <td>
-                          {" "}
                           {this.state.items[key].sign === 1 ? "Yes" : "No"}
                         </td>
                         <td>
                           <button
                             className="btn btn-primary"
+                            style={{
+                              fontSize: "11px",
+                            }}
                             onClick={() => {
                               this.props.history.push({
                                 pathname: "/add-users",
@@ -173,6 +171,7 @@ class UserPage extends Component {
                               backgroundColor: this.state.items[key].inactive
                                 ? ""
                                 : "orange",
+                              fontSize: "11px",
                             }}
                             className={
                               this.state.items[key].inactive
