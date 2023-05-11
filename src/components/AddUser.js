@@ -14,7 +14,7 @@ const AddUserPage = (props) => {
   const [phone, setPhone] = useState("");
   const [lastName, setLastname] = useState("");
   const [country, setCountry] = useState("");
-  const [code, setCode] = useState("");
+  // const [code, setCode] = useState("");
   const [long, setLong] = useState(false);
   const [short, setShort] = useState(false);
   const [ae, setAe] = useState(false);
@@ -63,7 +63,7 @@ const AddUserPage = (props) => {
             setName(snapshot.val().name);
             setEmail(snapshot.val().email);
             setCountry(snapshot.val().country);
-            setCode(snapshot.val().code);
+            //   setCode(snapshot.val().code);
             setLastname(snapshot.val().lastName);
             setTTCDate(snapshot.val().TTCDate);
             const long = snapshot.val().SKY.long === 1 ? true : false;
@@ -120,7 +120,7 @@ const AddUserPage = (props) => {
         email: email,
         phone: phone,
         country: country,
-        code: code,
+        //     code: code,
         lastName: lastName,
         TTCDate: TTCDate,
         sign: sign_1,
@@ -257,22 +257,7 @@ const AddUserPage = (props) => {
               />
             </InputGroup>
             <br />
-            <InputGroup>
-              <InputGroup.Prepend className="inputlabel">
-                Code:
-              </InputGroup.Prepend>
-              <Form.Control
-                type="text"
-                name="code"
-                id="inputtextCode"
-                placeholder=" 9906"
-                value={code}
-                autoFocus
-                required
-                onChange={(event) => setCode(event.target.value)}
-              />
-            </InputGroup>
-            <br />
+
             <InputGroup>
               <InputGroup.Prepend className="inputlabel">
                 Phone:
@@ -284,7 +269,6 @@ const AddUserPage = (props) => {
                 placeholder=" +54 9 11 1234 5678"
                 value={phone}
                 autoFocus
-                required
                 onChange={(event) => setPhone(event.target.value)}
               />
             </InputGroup>
@@ -294,13 +278,12 @@ const AddUserPage = (props) => {
                 TTC Date:
               </InputGroup.Prepend>
               <Form.Control
-                type="date"
+                type="text"
                 name="ttcdate"
                 id="inputtextTTCDate"
                 placeholder=" 2020-01-01"
                 value={TTCDate}
                 autoFocus
-                required
                 onChange={(event) => setTTCDate(event.target.value)}
               />
             </InputGroup>
@@ -334,15 +317,6 @@ const AddUserPage = (props) => {
                 defaultChecked={short}
                 value={short}
                 onChange={() => handleShort(short)}
-              />
-              <Form.Check
-                className="inputradio"
-                label="Art Excel"
-                type="checkbox"
-                name="ArtExcel"
-                defaultChecked={ae}
-                value={ae}
-                onChange={() => handleAe(ae)}
               />
             </InputGroup>
             <br />
