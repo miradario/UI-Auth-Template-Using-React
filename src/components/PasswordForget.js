@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+
 import { Button, Form, InputGroup, Container } from "react-bootstrap";
 import Footer from "./Footer";
 import NavigationEmpty from "./NavigationEmpty";
 import { auth } from "../firebase";
-import * as routes from "../constants/routes";
+
 
 
 //it resets your password. It doesn’t matter if you are authenticated or not
@@ -36,9 +36,11 @@ class PasswordForgetForm extends Component {
   resetPassword = (oobCode, newPassword) => {
   // [START auth_reset_password]
   auth
-    .doPasswordReset(oobCode, newPassword)
+    .doPasswordSet(oobCode, newPassword)
     .then(function (resp) {
       // Password reset has been confirmed and new password updated.
+       alert('Contraseña correctamente ingresada');
+       window.location.href = "http://cursos.elartedevivir.org/app";
       console.log(resp);
     })
     .catch(function (error) {
@@ -79,7 +81,7 @@ class PasswordForgetForm extends Component {
                 type="password"
                 name="password"
                 id="inputtext"
-                placeholder="Ingrese la constraseña nueva, por favor recuerdela"
+                placeholder="Ingrese la contraseña nueva, por favor recuerdela"
                 value={password}
                 required
                 onChange={(event) =>
