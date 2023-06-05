@@ -18,8 +18,9 @@ const AddUserPage = (props) => {
   const [long, setLong] = useState(false);
   const [short, setShort] = useState(false);
   const [ae, setAe] = useState(false);
-  const [TTCDate, setTTCDate] = useState(false);
+  const [TTCDate, setTTCDate] = useState('');
   const [sign, setSign] = useState(false);
+  const [mail, setMail] = useState(true);
 
   const [inactive, setInactive] = useState(false);
   const [error, setError] = useState(null);
@@ -41,6 +42,8 @@ const AddUserPage = (props) => {
       .catch((error) => {
         alert(error.message);
       });
+      if (mail) {auth.sendPasswordResetEmail(email);}
+    
   };
 
   //get the key from parameter and set the data in the fields with useEffect
@@ -288,6 +291,16 @@ const AddUserPage = (props) => {
               />
             </InputGroup>
             <Form.Check
+              className="inputradio"
+              label="Enviar mail de bienvenida"
+              type="checkbox"
+              name="mail"
+              defaultChecked={mail}
+              value={mail}
+              onChange={() => setMail(mail)}
+            />
+            <br />
+             <Form.Check
               className="inputradio"
               label="Sign the contract"
               type="checkbox"
