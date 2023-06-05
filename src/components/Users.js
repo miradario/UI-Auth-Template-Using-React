@@ -198,7 +198,9 @@ class UserPage extends Component {
                             onClick={() => {
                               auth
                                 .sendPasswordResetEmail(
-                                  this.state.items[key].email
+                                  this.state.items[key].email, {
+                                    url : 'https://cursos.elartedevivir.org/app'
+                                  }
                                 )
                                 .then(function () {
                                   alert("Password reset email sent");

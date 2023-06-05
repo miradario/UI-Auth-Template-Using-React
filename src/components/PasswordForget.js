@@ -2,15 +2,15 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Button, Form, InputGroup, Container } from "react-bootstrap";
 import Footer from "./Footer";
-import Navigation from "./Navigation";
+import NavigationEmpty from "./NavigationEmpty";
 import { auth } from "../firebase";
 import * as routes from "../constants/routes";
-import MainBanner from "./Banner";
+
 
 //it resets your password. It doesn’t matter if you are authenticated or not
 const PasswordForgetPage = () => (
   <div className="div-flex">
-    <Navigation />
+    <NavigationEmpty />
     <center style={{ marginTop: "110px" }}>
       <PasswordForgetForm />
       <br />
@@ -25,59 +25,72 @@ const byPropKey = (propertyName, value) => () => ({
 
 //################### PasswordForget Form ###################
 const INITIAL_STATE = {
-  email: "",
+  password: "",
 };
 
 class PasswordForgetForm extends Component {
   state = { ...INITIAL_STATE };
 
-  onSubmit = (event) => {
-    const { email } = this.state;
-    auth
-      .doPasswordReset(email)
-      .then(() => {
-        alert(
-          "We have sent you reset password link to your registered email address."
-        );
-        this.setState({ ...INITIAL_STATE });
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
 
+
+  resetPassword = (oobCode, newPassword) => {
+  // [START auth_reset_password]
+  auth
+    .doPasswordReset(oobCode, newPassword)
+    .then(function (resp) {
+      // Password reset has been confirmed and new password updated.
+      console.log(resp);
+    })
+    .catch(function (error) {
+      // Error occurred during confirmation. The code might have expired or the
+      // password is too weak.
+      alert(error.message);
+    });
+  // [END auth_reset_password]
+}
+
+  onSubmit = (event) => {
+    const { password } = this.state;
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const oobCode = urlParams.get('oobCode');
+    console.log(oobCode);
+    this.resetPassword(oobCode, password);
+    this.setState({ ...INITIAL_STATE });
     event.preventDefault();
   };
 
   render() {
-    const { email } = this.state;
+    const { password } = this.state;
+// get query string from url
 
-    const isInvalid = email === "";
+
 
     return (
       <div className="inputclass">
         <Container style={{ marginBottom: "150px" }}>
-          <h2 id="mytexth2">Reset Password</h2>
+          <h2 id="mytexth2">Establecer contraseña</h2>
           <Form onSubmit={this.onSubmit}>
             <InputGroup>
               <InputGroup.Prepend className="inputlabel">
-                Email
+                Nueva Contraseña
               </InputGroup.Prepend>
               <Form.Control
-                type="email"
-                name="email"
+                type="password"
+                name="password"
                 id="inputtext"
-                placeholder="Enter your registered email"
-                value={email}
+                placeholder="Ingrese la constraseña nueva, por favor recuerdela"
+                value={password}
                 required
                 onChange={(event) =>
-                  this.setState(byPropKey("email", event.target.value))
+                  this.setState(byPropKey("password", event.target.value))
                 }
               />
             </InputGroup>
             <br />
             <div className="text-center">
-              <Button disabled={isInvalid} type="submit" id="mybutton">
-                Reset Password
+              <Button  type="submit" id="mybutton">
+               Establecer Contraseña
               </Button>
             </div>
           </Form>
@@ -87,15 +100,8 @@ class PasswordForgetForm extends Component {
   }
 }
 
-//################### PasswordForget Link ###################
-const PasswordForgetLink = () => (
-  <p>
-    <Link to={routes.PASSWORD_FORGET} id="mylink">
-      Forgot Password?
-    </Link>
-  </p>
-);
+
 
 export default PasswordForgetPage;
 
-export { PasswordForgetForm, PasswordForgetLink };
+export { PasswordForgetForm };
