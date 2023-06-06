@@ -42,7 +42,7 @@ const AddUserPage = (props) => {
       .catch((error) => {
         alert(error.message);
       });
-      if (mail) {auth.sendPasswordResetEmail(email);}
+      
     
   };
 
@@ -138,7 +138,9 @@ const AddUserPage = (props) => {
         if (id) {
           alert("User updated successfully");
         } else {
+          if (mail) {auth.sendPasswordResetEmail(email);}
           alert("User added successfully");
+
         }
         setIsLoading(false);
         props.history.push({
