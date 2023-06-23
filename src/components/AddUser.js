@@ -30,16 +30,18 @@ const AddUserPage = (props) => {
 
   const createAuthUser = async (email, password) => {
     setIsLoading(true);
+  
     auth
       .createUserWithEmailAndPassword(email, password)
       .then((authUser) => {
         //save the user id created into the state
         const userNew = authUser.user.uid;
         console.log("userNew", userNew);
-
+      
         handleAddUser(userNew);
       })
       .catch((error) => {
+          setIsLoading(false);
         alert(error.message);
       });
       
@@ -78,6 +80,7 @@ const AddUserPage = (props) => {
           }
         })
         .catch((e) => {
+            setIsLoading(false);
           alert(e.message);
         });
     }
@@ -117,6 +120,8 @@ const AddUserPage = (props) => {
     const ae_1 = ae ? 1 : 0;
     const sign_1 = sign ? 1 : 0;
     console.log("checks", long, short, ae);
+
+     if (mail) {auth.sendPasswordResetEmail(email);}
     db.ref("users/" + userNew)
       .update({
         name: name,
@@ -138,7 +143,10 @@ const AddUserPage = (props) => {
         if (id) {
           alert("User updated successfully");
         } else {
-          if (mail) {auth.sendPasswordResetEmail(email);}
+          // send email
+          
+          // if mail is checked send email
+        
           alert("User added successfully");
 
         }
@@ -299,7 +307,7 @@ const AddUserPage = (props) => {
               name="mail"
               defaultChecked={mail}
               value={mail}
-              onChange={() => setMail(mail)}
+              onChange={() => setMail(!mail)}
             />
             <br />
              <Form.Check
