@@ -14,6 +14,7 @@ class UserPage extends Component {
       error: null,
       isLoaded: false,
       items: [],
+      showDeleted: false,
     };
   }
 
@@ -49,11 +50,31 @@ class UserPage extends Component {
       this.setState({
         items: newState,
       });
+
     });
   }
 
+  // order by email
+  .sort((a, b) => a.itemM > b.itemM ? 1 : -1) = () => {
+    this.setState({
+      items: this.state.items.sort((a, b) => a.email > b.email ? 1 : -1)
+    })
+  }
+
+  
+
+  handleFilterDeleted = () => {
+    this.setState({showDeleted: !this.state.showDeleted})
+  };
+
+
+ 
   componentDidMount() {
+    // db ref user order by name
+    
     db.ref("users/")
+      
+      
       .once("value")
       .then((snapshot) => {
         console.log("snapshot:", snapshot);
@@ -63,6 +84,13 @@ class UserPage extends Component {
             items: snapshot.val(),
           });
           console.log("items:", this.state.items);
+          //order by this.state.item by email name
+          this.handleOrderEmail();
+          
+
+           
+
+
         }
       })
       .catch((e) => {
@@ -94,6 +122,10 @@ class UserPage extends Component {
                 </button>
                 <br />
                 <br />
+                <button className="btn btn-secondary" onClick={()=> this.handleFilterDeleted()}>
+                     {!this.state.showDeleted ? "Show inactive users" : "Hide inactive users"}
+                    
+                </button>
 
                 <table
                   className="table table-striped"
@@ -115,11 +147,18 @@ class UserPage extends Component {
                       <th scope="col">Sign Contract</th>
                       <th scope="col">Action</th>
                       <th scope="col">Delete</th>
+                      <th scope="col">Forgot Password</th>
+                      
                     </tr>
                   </thead>
                   <tbody>
-                    {Object.keys(this.state.items).map((key) => (
-                      //check if inactive
+                    {Object.keys(this.state.items)
+                        .sort((a, b) => a.email > b.email ? 1 : -1)
+                        .map((key) => (
+                      //check if inactive y si showDeleted es true
+                      (this.state.items[key].inactive && this.state.showDeleted) 
+                      || (!this.state.items[key].inactive) ? (
+                        
                       <tr
                         key={key}
                         style={{
@@ -213,8 +252,13 @@ class UserPage extends Component {
                             Reset Password
                           </button>
                         </td>
+                        
+
+
                       </tr>
+                    ) : null
                     ))}
+                    
                   </tbody>
                 </table>
               </div>
