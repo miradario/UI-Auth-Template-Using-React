@@ -54,12 +54,7 @@ class UserPage extends Component {
     });
   }
 
-  // order by email
-  .sort((a, b) => a.itemM > b.itemM ? 1 : -1) = () => {
-    this.setState({
-      items: this.state.items.sort((a, b) => a.email > b.email ? 1 : -1)
-    })
-  }
+ 
 
   
 

@@ -21,3 +21,6 @@ export const doPasswordSet = (code, password) => auth.confirmPasswordReset(code,
 //password change
 export const doPasswordChange = (password) =>
   auth.currentUser.updatePassword(password);
+
+  //verifyPasswordResetCode
+  export const verifyPasswordResetCode = (oobCode) => auth.verifyPasswordResetCode(oobCode);

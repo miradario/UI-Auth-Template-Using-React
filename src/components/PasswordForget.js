@@ -29,13 +29,16 @@ const INITIAL_STATE = {
 };
 
 class PasswordForgetForm extends Component {
-  state = { ...INITIAL_STATE };
+  state = { ...INITIAL_STATE,
+  expiro: false };
+
 
 
 
   resetPassword = (oobCode, newPassword) => {
   // [START auth_reset_password]
   auth
+    .verifyPasswordResetCode(oobCode)
     .doPasswordSet(oobCode, newPassword)
     .then(function (resp) {
       // Password reset has been confirmed and new password updated.
@@ -47,6 +50,8 @@ class PasswordForgetForm extends Component {
       // Error occurred during confirmation. The code might have expired or the
       // password is too weak.
       alert(error.message);
+      this.setState ({ expiro: true });
+      
     });
   // [END auth_reset_password]
 }
@@ -62,6 +67,25 @@ class PasswordForgetForm extends Component {
     event.preventDefault();
   };
 
+  // check if action code in expired
+  componentDidMount() {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const oobCode = urlParams.get('oobCode');
+    console.log(oobCode);
+    auth.verifyPasswordResetCode(oobCode).then(function (email) {
+      alert ('email valido', email);
+    }).catch(function (error) {
+      // Invalid or expired action code. Ask user to try to reset the password
+      // again.
+      this.setState ({ expiro: true });
+      alert('expiro?', error);
+      //window.location.href = "http://cursos.elartedevivir.org/app";
+    });
+  }
+
+
+
   render() {
     const { password } = this.state;
 // get query string from url
@@ -72,6 +96,17 @@ class PasswordForgetForm extends Component {
       <div className="inputclass">
         <Container style={{ marginBottom: "150px" }}>
           <h2 id="mytexth2">Establecer contraseña</h2>
+          {this.state.expiro ? (
+            <div>
+              <p>El link expiro, por favor solicite uno nuevo</p> 
+              <br />
+              <p id="mytextp">
+                Por favor ingrese el email y va recibir un nuevo mail con un link tiene una hora para ingresar.
+              </p>
+              <br />
+           </div>
+
+          ): (
           <Form onSubmit={this.onSubmit}>
             <InputGroup>
               <InputGroup.Prepend className="inputlabel">
@@ -95,7 +130,9 @@ class PasswordForgetForm extends Component {
                Establecer Contraseña
               </Button>
             </div>
-          </Form>
+            <br />
+           </Form>
+          )}
         </Container>
       </div>
     );
