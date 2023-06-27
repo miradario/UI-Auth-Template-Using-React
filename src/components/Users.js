@@ -3,6 +3,8 @@ import Navigation from './Navigation'
 import { db, auth } from '../firebase/firebase'
 import Footer from './Footer'
 import { BsChevronRight, BsChevronLeft } from 'react-icons/bs'
+import { read, utils } from 'xlsx'
+import { updateKeyUser } from '../helpers/updateKeyUser'
 
 const INITIAL_STATE = {
   error: null
@@ -20,7 +22,8 @@ class UserPage extends Component {
       showOrder: false,
       orderActive: { active: false, by: '' },
       pagination: {},
-      showPagination: false
+      showPagination: false,
+      selectedToAuthenticated: []
     }
   }
 
@@ -170,6 +173,37 @@ class UserPage extends Component {
       })
     }
 
+    const createAuthUser = async email => {
+      const userNew = await auth
+        .createUserWithEmailAndPassword(email, 'a1b2c3d4e5') //CREA EL USUARIO DE LA AUTENTICACION
+        .then(authUser => {
+          //save the user id created into the state
+          const userNew = authUser.user.uid
+          //   console.log('authUser (createAuthUser): ', authUser)
+          return userNew
+        })
+        .catch(error => {
+          // setIsLoading(false)
+          alert(error.message)
+        })
+      return userNew
+    }
+
+    const handleAuthenticateUser = async user => {
+      const keyUserAuth = await createAuthUser(user[1].email)
+      //   console.log('USER DATA VIEJA: ', user)
+      await updateKeyUser(user[0], keyUserAuth)
+      auth.sendPasswordResetEmail(user[1].email)
+    }
+
+    const handleCheckbox = e => {
+      const key = e.target.dataset.key
+      if (
+        this.state.selectedToAuthenticated.find(el => el[0] == e.target.data)
+      ) {
+      }
+    }
+
     return (
       <div className='App'>
         <div>
@@ -269,6 +303,16 @@ class UserPage extends Component {
                       </ul>
                     )}
                   </div>
+
+                  <form>
+                    <label for='fileCsv'>IMPORT USERS</label>
+                    <input
+                      type='file'
+                      id='fileCsv'
+                      name='fileCsv'
+                      style={{ display: 'none' }}
+                    />
+                  </form>
                 </div>
 
                 {/* PAGINATION */}
@@ -353,6 +397,7 @@ class UserPage extends Component {
                       <th scope='col'>Action</th>
                       <th scope='col'>Delete</th>
                       <th scope='col'>Forgot Password</th>
+                      <th scope='col'>Authenticate</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -443,6 +488,25 @@ class UserPage extends Component {
                               >
                                 Reset Password
                               </button>
+                            </td>
+                            {user[1].authenticated === 0 ? (
+                              <td>
+                                <button
+                                  onClick={() => handleAuthenticateUser(user)}
+                                >
+                                  Send first mail
+                                </button>
+                              </td>
+                            ) : (
+                              <td>Ya autenticado</td>
+                            )}
+                            <td>
+                              <input
+                                type='checkbox'
+                                data-key={user[0]}
+                                data-active={false}
+                                onClick={handleCheckbox}
+                              />
                             </td>
                           </tr>
                         ) : null
