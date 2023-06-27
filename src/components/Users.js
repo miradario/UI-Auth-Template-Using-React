@@ -90,7 +90,7 @@ class UserPage extends Component {
           })
           // console.log('items:', this.state.items)
           //order by this.state.item by email name
-          this.handleOrderEmail()
+          //   this.handleOrderEmail()
         }
       })
       .catch(e => {
@@ -194,15 +194,31 @@ class UserPage extends Component {
       //   console.log('USER DATA VIEJA: ', user)
       await updateKeyUser(user[0], keyUserAuth)
       auth.sendPasswordResetEmail(user[1].email)
+      window.location.reload()
     }
 
     const handleCheckbox = e => {
       const key = e.target.dataset.key
-      if (
-        this.state.selectedToAuthenticated.find(el => el[0] == e.target.data)
-      ) {
+
+      if (this.state.selectedToAuthenticated.find(el => el[0] == key)) {
+        this.setState({
+          selectedToAuthenticated: this.state.selectedToAuthenticated.filter(
+            el => el[0] != key
+          )
+        })
+        e.target.dataset.active = false
+      } else {
+        this.setState({
+          selectedToAuthenticated: [
+            ...this.state.selectedToAuthenticated,
+            this.state.itemsFilter.find(el => el[0] == key)
+          ]
+        })
+        e.target.dataset.active = true
       }
     }
+
+    // console.log(this.state.selectedToAuthenticated)
 
     return (
       <div className='App'>
@@ -303,61 +319,53 @@ class UserPage extends Component {
                       </ul>
                     )}
                   </div>
-
-                  <form>
-                    <label for='fileCsv'>IMPORT USERS</label>
-                    <input
-                      type='file'
-                      id='fileCsv'
-                      name='fileCsv'
-                      style={{ display: 'none' }}
-                    />
-                  </form>
                 </div>
 
                 {/* PAGINATION */}
-                <div className='containerBtnPage'>
-                  {this.state.pagination.page !== 0 ? (
-                    <div
-                      className='containerBtnPage__btn'
-                      onClick={handlePrevPage}
-                    >
-                      <BsChevronLeft />
-                    </div>
-                  ) : (
-                    <div
-                      className='containerBtnPage__btn'
-                      style={{
-                        backgroundColor: 'inherit',
-                        border: 'none',
-                        color: '#a5a5a5'
-                      }}
-                    >
-                      <BsChevronLeft />
-                    </div>
-                  )}
-                  <p>{this.state.pagination.page + 1}</p>
-                  {this.state.pagination.page !==
-                  this.state.pagination.totalPages ? (
-                    <div
-                      className='containerBtnPage__btn'
-                      onClick={handleNextPage}
-                    >
-                      <BsChevronRight />
-                    </div>
-                  ) : (
-                    <div
-                      className='containerBtnPage__btn'
-                      style={{
-                        backgroundColor: 'inherit',
-                        border: 'none',
-                        color: '#a5a5a5'
-                      }}
-                    >
-                      <BsChevronRight />
-                    </div>
-                  )}
-                </div>
+                {this.state.items.length > 0 && (
+                  <div className='containerBtnPage'>
+                    {this.state.pagination.page !== 0 ? (
+                      <div
+                        className='containerBtnPage__btn'
+                        onClick={handlePrevPage}
+                      >
+                        <BsChevronLeft />
+                      </div>
+                    ) : (
+                      <div
+                        className='containerBtnPage__btn'
+                        style={{
+                          backgroundColor: 'inherit',
+                          border: 'none',
+                          color: '#a5a5a5'
+                        }}
+                      >
+                        <BsChevronLeft />
+                      </div>
+                    )}
+                    <p>{this.state.pagination.page + 1}</p>
+                    {this.state.pagination.page !==
+                    this.state.pagination.totalPages ? (
+                      <div
+                        className='containerBtnPage__btn'
+                        onClick={handleNextPage}
+                      >
+                        <BsChevronRight />
+                      </div>
+                    ) : (
+                      <div
+                        className='containerBtnPage__btn'
+                        style={{
+                          backgroundColor: 'inherit',
+                          border: 'none',
+                          color: '#a5a5a5'
+                        }}
+                      >
+                        <BsChevronRight />
+                      </div>
+                    )}
+                  </div>
+                )}
                 {/* PAGINATION CLOSE */}
 
                 <table
@@ -518,41 +526,44 @@ class UserPage extends Component {
           </div>
 
           {/* PAGINATION */}
-          <div className='containerBtnPage'>
-            {this.state.pagination.page !== 0 ? (
-              <div className='containerBtnPage__btn' onClick={handlePrevPage}>
-                <BsChevronLeft />
-              </div>
-            ) : (
-              <div
-                className='containerBtnPage__btn'
-                style={{
-                  backgroundColor: 'inherit',
-                  border: 'none',
-                  color: '#a5a5a5'
-                }}
-              >
-                <BsChevronLeft />
-              </div>
-            )}
-            <p>{this.state.pagination.page + 1}</p>
-            {this.state.pagination.page !== this.state.pagination.totalPages ? (
-              <div className='containerBtnPage__btn' onClick={handleNextPage}>
-                <BsChevronRight />
-              </div>
-            ) : (
-              <div
-                className='containerBtnPage__btn'
-                style={{
-                  backgroundColor: 'inherit',
-                  border: 'none',
-                  color: '#a5a5a5'
-                }}
-              >
-                <BsChevronRight />
-              </div>
-            )}
-          </div>
+          {this.state.items.length > 0 && (
+            <div className='containerBtnPage'>
+              {this.state.pagination.page !== 0 ? (
+                <div className='containerBtnPage__btn' onClick={handlePrevPage}>
+                  <BsChevronLeft />
+                </div>
+              ) : (
+                <div
+                  className='containerBtnPage__btn'
+                  style={{
+                    backgroundColor: 'inherit',
+                    border: 'none',
+                    color: '#a5a5a5'
+                  }}
+                >
+                  <BsChevronLeft />
+                </div>
+              )}
+              <p>{this.state.pagination.page + 1}</p>
+              {this.state.pagination.page !==
+              this.state.pagination.totalPages ? (
+                <div className='containerBtnPage__btn' onClick={handleNextPage}>
+                  <BsChevronRight />
+                </div>
+              ) : (
+                <div
+                  className='containerBtnPage__btn'
+                  style={{
+                    backgroundColor: 'inherit',
+                    border: 'none',
+                    color: '#a5a5a5'
+                  }}
+                >
+                  <BsChevronRight />
+                </div>
+              )}
+            </div>
+          )}
           {/* PAGINATION CLOSE */}
 
           <Footer />
