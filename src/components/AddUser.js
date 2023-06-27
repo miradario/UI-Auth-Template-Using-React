@@ -134,7 +134,7 @@ const AddUserPage = props => {
         lastName: lastName,
         TTCDate: TTCDate,
         sign: sign_1,
-        authenticated: true,
+        authenticated: 1,
         SKY: {
           long: long_1,
           short: short_1,

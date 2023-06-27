@@ -189,12 +189,12 @@ class UserPage extends Component {
       return userNew
     }
 
-    const handleAuthenticateUser = async user => {
+    const handleAuthenticateUser = async (user, actualizar = true) => {
       const keyUserAuth = await createAuthUser(user[1].email)
       //   console.log('USER DATA VIEJA: ', user)
       await updateKeyUser(user[0], keyUserAuth)
       auth.sendPasswordResetEmail(user[1].email)
-      window.location.reload()
+      if (actualizar) window.location.reload()
     }
 
     const handleCheckbox = e => {
@@ -218,6 +218,24 @@ class UserPage extends Component {
       }
     }
 
+    const sendSelected = () => {
+      console.log('selected')
+
+      console.log(this.state.selectedToAuthenticated)
+
+      const promises = this.state.selectedToAuthenticated.map(el =>
+        handleAuthenticateUser(el, false)
+      )
+
+      Promise.all(promises)
+        .then(() => {
+          window.location.reload()
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    }
+
     // console.log(this.state.selectedToAuthenticated)
 
     return (
@@ -229,10 +247,10 @@ class UserPage extends Component {
           <br />
           <br />
 
-          <div className='container'>
-            <div className='row'>
-              <div className='col-md-12'>
-                <h1>Teachers</h1>
+          <div style={{ width: '100%' }}>
+            <div style={{ width: '90%', margin: '0 auto' }}>
+              <div style={{ width: '100%' }}>
+                <h1 style={{ margin: '20px 0' }}>Teachers</h1>
                 <button className='btn btn-primary'>
                   <a href='/add-users' style={{ color: 'white' }}>
                     Add Teacher
@@ -368,6 +386,30 @@ class UserPage extends Component {
                 )}
                 {/* PAGINATION CLOSE */}
 
+                <div
+                  style={{
+                    textAlign: 'right'
+                  }}
+                >
+                  {/* <button
+                    style={{
+                      backgroundColor:
+                        this.state.selectedToAuthenticated?.length > 0
+                          ? '#feae00'
+                          : '#bbb',
+                      padding: '5px 20px',
+                      marginBottom: '10px',
+                      color:
+                        this.state.selectedToAuthenticated?.length > 0
+                          ? 'white'
+                          : 'black',
+                      fontWeight: 'bold'
+                    }}
+                    onClick={sendSelected}
+                  >
+                    Send Selected
+                  </button> */}
+                </div>
                 <table
                   className='table table-striped'
                   style={{ fontSize: '11px' }}
@@ -509,12 +551,14 @@ class UserPage extends Component {
                               <td>Ya autenticado</td>
                             )}
                             <td>
-                              <input
-                                type='checkbox'
-                                data-key={user[0]}
-                                data-active={false}
-                                onClick={handleCheckbox}
-                              />
+                              {user[1].authenticated === 0 && (
+                                <input
+                                  type='checkbox'
+                                  data-key={user[0]}
+                                  data-active={false}
+                                  onClick={handleCheckbox}
+                                />
+                              )}
                             </td>
                           </tr>
                         ) : null
