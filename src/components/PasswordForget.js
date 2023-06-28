@@ -39,12 +39,12 @@ class PasswordForgetForm extends Component {
     this.setState({ loading: true })
     auth
       .doPasswordSet(oobCode, newPassword)
-      .then(function (resp) {
+      .then(resp => {
         // Password reset has been confirmed and new password updated.
+        this.setState({ loading: false })
         alert('Contraseña correctamente ingresada')
         window.location.href = 'http://cursos.elartedevivir.org/app'
         console.log(resp)
-        this.setState({ loading: false })
       })
       .catch(function (error) {
         // Error occurred during confirmation. The code might have expired or the
