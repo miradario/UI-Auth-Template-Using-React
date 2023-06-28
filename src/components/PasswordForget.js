@@ -6,16 +6,18 @@ import NavigationEmpty from './NavigationEmpty'
 import { auth } from '../firebase'
 
 //it resets your password. It doesn’t matter if you are authenticated or not
-const PasswordForgetPage = () => (
-  <div className='div-flex'>
-    <NavigationEmpty />
-    <center style={{ marginTop: '110px' }}>
-      <PasswordForgetForm />
-      <br />
-    </center>
-    <Footer />
-  </div>
-)
+const PasswordForgetPage = () => {
+  return (
+    <div className='div-flex'>
+      <NavigationEmpty />
+      <center style={{ marginTop: '110px' }}>
+        <PasswordForgetForm />
+        <br />
+      </center>
+      <Footer />
+    </div>
+  )
+}
 
 const byPropKey = (propertyName, value) => () => ({
   [propertyName]: value
@@ -24,7 +26,9 @@ const byPropKey = (propertyName, value) => () => ({
 //################### PasswordForget Form ###################
 const INITIAL_STATE = {
   password: '',
-  email: ''
+  email: '',
+  sendMailExpiro: false,
+  loading: false
 }
 
 class PasswordForgetForm extends Component {
@@ -32,11 +36,12 @@ class PasswordForgetForm extends Component {
 
   resetPassword = (oobCode, newPassword) => {
     // [START auth_reset_password]
+    this.setState({ loading: true })
     auth
-      .verifyPasswordResetCode(oobCode)
       .doPasswordSet(oobCode, newPassword)
-      .then(function (resp) {
+      .then(resp => {
         // Password reset has been confirmed and new password updated.
+        this.setState({ loading: false })
         alert('Contraseña correctamente ingresada')
         window.location.href = 'http://cursos.elartedevivir.org/app'
         console.log(resp)
@@ -45,12 +50,13 @@ class PasswordForgetForm extends Component {
         // Error occurred during confirmation. The code might have expired or the
         // password is too weak.
         alert(error.message)
-        this.setState({ expiro: true })
+        this.setState({ expiro: true, loading: false })
       })
     // [END auth_reset_password]
   }
 
   onSubmit = event => {
+    event.preventDefault()
     const { password } = this.state
     const queryString = window.location.search
     const urlParams = new URLSearchParams(queryString)
@@ -58,7 +64,7 @@ class PasswordForgetForm extends Component {
     console.log(oobCode)
     this.resetPassword(oobCode, password)
     this.setState({ ...INITIAL_STATE })
-    event.preventDefault()
+    console.log(queryString, urlParams, oobCode, password)
   }
 
   // check if action code in expired
@@ -70,13 +76,15 @@ class PasswordForgetForm extends Component {
     auth
       .verifyPasswordResetCode(oobCode)
       .then(function (email) {
-        alert('email valido', email)
+        // alert('email valido', email)
+        console.log('Email valido')
       })
-      .catch(function (error) {
+      .catch(error => {
         // Invalid or expired action code. Ask user to try to reset the password
         // again.
+        console.log('EXPIRO')
         this.setState({ expiro: true })
-        alert('expiro?', error)
+        // alert('expiro?', error)
         //window.location.href = "http://cursos.elartedevivir.org/app";
       })
   }
@@ -85,7 +93,9 @@ class PasswordForgetForm extends Component {
     const { password } = this.state
     // get query string from url
 
-    const handleSubmit = () => {
+    const handleSubmit = e => {
+      e.preventDefault()
+      this.setState({ sendMailExpiro: true })
       auth.doPasswordReset(this.state.email)
       //console.log(this.state.email)
     }
@@ -93,51 +103,92 @@ class PasswordForgetForm extends Component {
     return (
       <div className='inputclass'>
         <Container style={{ marginBottom: '150px' }}>
-          <h2 id='mytexth2'>Establecer contraseña</h2>
           {this.state.expiro ? (
             <div>
-              <p>El link expiro!</p>
+              <p
+                style={{
+                  fontSize: '30px',
+                  fontWeight: 'bold',
+                  letterSpacing: '2px'
+                }}
+              >
+                El link expiro!
+              </p>
               <br />
-              <p id='mytextp'>
+              <p id='mytextp' style={{ fontSize: '20px' }}>
                 Por favor ingrese el email y va recibir un nuevo mail con un
                 link tiene una hora para ingresar.
               </p>
-              <form className='newPassword'>
-                <input
-                  type='email'
-                  placeholder='Ingrese su mail'
-                  onChange={e => this.setState({ email: e.target.value })}
-                />
-                <input type='submit' value='Enviar' onClick={handleSubmit} />
-              </form>
+              {!this.state.sendMailExpiro ? (
+                <form className='newPassword'>
+                  <input
+                    type='email'
+                    placeholder='Ingrese su mail'
+                    onChange={e => this.setState({ email: e.target.value })}
+                    style={{
+                      width: '200px',
+                      marginRight: '15px',
+                      padding: '8px'
+                    }}
+                  />
+                  <input
+                    type='submit'
+                    value='Enviar'
+                    onClick={handleSubmit}
+                    style={{
+                      border: 'none',
+                      backgroundColor: '#d39e00',
+                      color: 'white',
+                      fontWeight: 'bold',
+                      fontSize: '16px',
+                      padding: '8px'
+                    }}
+                  />{' '}
+                </form>
+              ) : (
+                <p
+                  style={{
+                    fontSize: '17px',
+                    textAlign: 'center',
+                    marginTop: '10px'
+                  }}
+                >
+                  Email enviado, por favor revise su casilla o spam!
+                </p>
+              )}
+
               <br />
             </div>
           ) : (
-            <Form onSubmit={this.onSubmit}>
-              <InputGroup>
-                <InputGroup.Prepend className='inputlabel'>
-                  Nueva Contraseña
-                </InputGroup.Prepend>
-                <Form.Control
-                  type='password'
-                  name='password'
-                  id='inputtext'
-                  placeholder='Ingrese la contraseña nueva, por favor recuerdela'
-                  value={password}
-                  required
-                  onChange={event =>
-                    this.setState(byPropKey('password', event.target.value))
-                  }
-                />
-              </InputGroup>
-              <br />
-              <div className='text-center'>
-                <Button type='submit' id='mybutton'>
-                  Establecer Contraseña
-                </Button>
-              </div>
-              <br />
-            </Form>
+            <>
+              <h2 id='mytexth2'>Establecer contraseña</h2>
+              <Form onSubmit={this.onSubmit}>
+                <InputGroup>
+                  <InputGroup.Prepend className='inputlabel'>
+                    Nueva Contraseña
+                  </InputGroup.Prepend>
+                  <Form.Control
+                    type='password'
+                    name='password'
+                    id='inputtext'
+                    placeholder='Ingrese la contraseña nueva, por favor recuerdela'
+                    value={password}
+                    required
+                    onChange={event =>
+                      this.setState(byPropKey('password', event.target.value))
+                    }
+                  />
+                </InputGroup>
+                <br />
+                <div className='text-center'>
+                  <Button type='submit' id='mybutton'>
+                    Establecer Contraseña
+                  </Button>
+                </div>
+                <br />
+                {this.state.loading && <p>Loading...</p>}
+              </Form>
+            </>
           )}
         </Container>
       </div>

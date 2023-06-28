@@ -1,131 +1,130 @@
 // add user component
 
-import React, { useEffect, useState } from "react";
-import { Button, Form, InputGroup, Container } from "react-bootstrap";
-import Navigation from "./Navigation";
-import { db } from "../firebase/firebase";
-import { auth } from "../firebase/firebase";
+import React, { useEffect, useState } from 'react'
+import { Button, Form, InputGroup, Container } from 'react-bootstrap'
+import Navigation from './Navigation'
+import { db } from '../firebase/firebase'
+import { auth } from '../firebase/firebase'
 
-const AddUserPage = (props) => {
-  const [id, setId] = useState(0);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [phone, setPhone] = useState("");
-  const [lastName, setLastname] = useState("");
-  const [country, setCountry] = useState("");
+const AddUserPage = props => {
+  const [id, setId] = useState(0)
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [phone, setPhone] = useState('')
+  const [lastName, setLastname] = useState('')
+  const [country, setCountry] = useState('')
   // const [code, setCode] = useState("");
-  const [long, setLong] = useState(false);
-  const [short, setShort] = useState(false);
-  const [ae, setAe] = useState(false);
-  const [TTCDate, setTTCDate] = useState('');
-  const [sign, setSign] = useState(false);
-  const [mail, setMail] = useState(true);
-  const [comment, setComment] = useState("");
-  const [course, setCourse] = useState("");
-  const [inactive, setInactive] = useState(false);
-  const [error, setError] = useState(null);
-  const [isloading, setIsLoading] = useState(false);
+  const [long, setLong] = useState(false)
+  const [short, setShort] = useState(false)
+  const [ae, setAe] = useState(false)
+  const [TTCDate, setTTCDate] = useState('')
+  const [sign, setSign] = useState(false)
+  const [mail, setMail] = useState(true)
+
+  const [inactive, setInactive] = useState(false)
+  const [error, setError] = useState(null)
+  const [isloading, setIsLoading] = useState(false)
+
+  console.log(props)
 
   // create async createAuthUser
 
   const createAuthUser = async (email, password) => {
-    setIsLoading(true);
-  
+    setIsLoading(true)
+
     auth
       .createUserWithEmailAndPassword(email, password)
-      .then((authUser) => {
+      .then(authUser => {
         //save the user id created into the state
-        const userNew = authUser.user.uid;
-        console.log("userNew", userNew);
-      
-        handleAddUser(userNew);
+        const userNew = authUser.user.uid
+        console.log('userNew', userNew)
+
+        handleAddUser(userNew)
       })
-      .catch((error) => {
-          setIsLoading(false);
-        alert(error.message);
-      });
-      
-    
-  };
+      .catch(error => {
+        setIsLoading(false)
+        alert(error.message)
+      })
+  }
 
   //get the key from parameter and set the data in the fields with useEffect
 
   useEffect(() => {
-    console.log("props", props);
-    const { key } = (props.location && props.location.state) || {};
-    setId(key);
+    console.log('props', props)
+    const { key } = (props.location && props.location.state) || {}
+    setId(key)
     //CHEKC IF THERE IS A PARMATER?
 
-    console.log("id", key);
+    console.log('id', key)
     if (key) {
-      setIsLoading(true);
-      db.ref("users/" + key)
-        .once("value")
-        .then((snapshot) => {
-          console.log("snapshot:", snapshot);
+      setIsLoading(true)
+      db.ref('users/' + key)
+        .once('value')
+        .then(snapshot => {
+          console.log('snapshot:', snapshot)
           if (snapshot) {
-            setPhone(snapshot.val().phone);
-            setName(snapshot.val().name);
-            setEmail(snapshot.val().email);
-            setCountry(snapshot.val().country);
+            setPhone(snapshot.val().phone)
+            setName(snapshot.val().name)
+            setEmail(snapshot.val().email)
+            setCountry(snapshot.val().country)
             //   setCode(snapshot.val().code);
-            setLastname(snapshot.val().lastName);
-            setTTCDate(snapshot.val().TTCDate);
-            const long = snapshot.val().SKY.long === 1 ? true : false;
-            setLong(long);
-            setSign(snapshot.val().sign === 1 ? true : false);
-            setShort(snapshot.val().SKY.short === 1 ? true : false);
-            setAe(snapshot.val().SKY.ae === 1 ? true : false);
-            setIsLoading(false);
+            setLastname(snapshot.val().lastName)
+            setTTCDate(snapshot.val().TTCDate)
+            const long = snapshot.val().SKY.long === 1 ? true : false
+            setLong(long)
+            setSign(snapshot.val().sign === 1 ? true : false)
+            setShort(snapshot.val().SKY.short === 1 ? true : false)
+            setAe(snapshot.val().SKY.ae === 1 ? true : false)
+            setIsLoading(false)
           }
         })
-        .catch((e) => {
-            setIsLoading(false);
-          alert(e.message);
-        });
+        .catch(e => {
+          setIsLoading(false)
+          alert(e.message)
+        })
     }
-  }, [props]);
+  }, [props])
 
-  const handleLong = (long) => {
-    setLong(!long);
-  };
+  const handleLong = long => {
+    setLong(!long)
+  }
 
-  const handleShort = (short) => {
-    setShort(!short);
-  };
+  const handleShort = short => {
+    setShort(!short)
+  }
 
-  const handleAe = (ae) => {
-    setAe(!ae);
-  };
+  const handleAe = ae => {
+    setAe(!ae)
+  }
 
-  const handleSign = (sign) => {
-    setSign(!sign);
-  };
+  const handleSign = sign => {
+    setSign(!sign)
+  }
 
   const cleanFields = () => {
-    setName("");
-    setEmail("");
-    setPassword("");
-    setPhone("");
-    setLastname("");
-    setCountry("");
-    setLong(false);
-    setShort(false);
-    setAe(false);
-  };
+    setName('')
+    setEmail('')
+    setPassword('')
+    setPhone('')
+    setLastname('')
+    setCountry('')
+    setLong(false)
+    setShort(false)
+    setAe(false)
+  }
 
+  const handleAddUser = async userNew => {
+    const long_1 = long ? 1 : 0
+    const short_1 = short ? 1 : 0
+    const ae_1 = ae ? 1 : 0
+    const sign_1 = sign ? 1 : 0
+    console.log('checks', long, short, ae)
 
-
-  const handleAddUser = async (userNew) => {
-    const long_1 = long ? 1 : 0;
-    const short_1 = short ? 1 : 0;
-    const ae_1 = ae ? 1 : 0;
-    const sign_1 = sign ? 1 : 0;
-    console.log("checks", long, short, ae);
-
-     if (mail) {auth.sendPasswordResetEmail(email);}
-    db.ref("users/" + userNew)
+    if (mail) {
+      auth.sendPasswordResetEmail(email)
+    }
+    db.ref('users/' + userNew)
       .update({
         name: name,
         email: email,
@@ -135,231 +134,230 @@ const AddUserPage = (props) => {
         lastName: lastName,
         TTCDate: TTCDate,
         sign: sign_1,
-        
+        authenticated: 1,
         SKY: {
           long: long_1,
           short: short_1,
-          ae: ae_1,
-        },
+          ae: ae_1
+        }
       })
-      .then((data) => {
+      .then(data => {
         //success callback
         if (id) {
-          alert("User updated successfully");
+          alert('User updated successfully')
         } else {
           // send email
-          
+
           // if mail is checked send email
-        
-          alert("User added successfully");
 
+          alert('User added successfully')
         }
-        setIsLoading(false);
+        setIsLoading(false)
         props.history.push({
-          pathname: "/users",
-        });
+          pathname: '/users'
+        })
       })
-      .catch((error) => {
+      .catch(error => {
         //error callback
-        console.log("error ", error);
-      });
-  };
+        console.log('error ', error)
+      })
+  }
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    console.log("email", email);
+  const handleSubmit = async event => {
+    event.preventDefault()
+    console.log('email', email)
     if (id) {
-      handleAddUser(id);
+      handleAddUser(id)
     } else {
-      await createAuthUser(email, password);
+      await createAuthUser(email, password)
     }
-  };
+  }
   // TODO: handle form submission
 
   return (
-    <div className="div-flex" style={{ marginTop: "110px" }}>
+    <div className='div-flex' style={{ marginTop: '110px' }}>
       <Navigation />
 
       <Container>
         <center>
-          <h1>{id ? "Update Teacher" : "Add Teacher"}</h1>
+          <h1>{id ? 'Update Teacher' : 'Add Teacher'}</h1>
         </center>
         <br />
         {isloading ? ( // if loading show 'loading...'
-          <div id="preloader"></div>
+          <div id='preloader'></div>
         ) : (
           <form onSubmit={handleSubmit}>
             <InputGroup>
-              <InputGroup.Prepend className="inputlabel">
+              <InputGroup.Prepend className='inputlabel'>
                 Email
               </InputGroup.Prepend>
               <Form.Control
-                id="inputtext"
-                type="email"
-                placeholder="user@gmail.com"
+                id='inputtext'
+                type='email'
+                placeholder='user@gmail.com'
                 value={email}
                 required
                 autoFocus
                 // change widht of input
-                style={{ width: "300px" }}
-                onChange={(event) => setEmail(event.target.value)}
+                style={{ width: '300px' }}
+                onChange={event => setEmail(event.target.value)}
               />
             </InputGroup>
 
             <br />
             {!id ? (
               <InputGroup>
-                <InputGroup.Prepend className="inputlabel">
+                <InputGroup.Prepend className='inputlabel'>
                   Password
                 </InputGroup.Prepend>
                 <Form.Control
-                  id="inputtext"
-                  type="password"
-                  placeholder="********"
+                  id='inputtext'
+                  type='password'
+                  placeholder='********'
                   value={password}
                   required
                   autoFocus
                   // change widht of input
-                  style={{ width: "300px" }}
-                  onChange={(event) => setPassword(event.target.value)}
+                  style={{ width: '300px' }}
+                  onChange={event => setPassword(event.target.value)}
                 />
               </InputGroup>
             ) : null}
             <br />
             <InputGroup>
-              <InputGroup.Prepend className="inputlabel">
+              <InputGroup.Prepend className='inputlabel'>
                 Name:
               </InputGroup.Prepend>
               <Form.Control
-                type="text"
-                name="name"
-                id="inputtextName"
-                placeholder=" John "
+                type='text'
+                name='name'
+                id='inputtextName'
+                placeholder=' John '
                 value={name}
                 autoFocus
                 required
-                onChange={(event) => setName(event.target.value)}
+                onChange={event => setName(event.target.value)}
               />
             </InputGroup>
             <br />
             <InputGroup>
-              <InputGroup.Prepend className="inputlabel">
+              <InputGroup.Prepend className='inputlabel'>
                 Last Name:
               </InputGroup.Prepend>
               <Form.Control
-                type="text"
-                name="lastName"
-                id="inputtextLN"
-                placeholder=" Doe"
+                type='text'
+                name='lastName'
+                id='inputtextLN'
+                placeholder=' Doe'
                 value={lastName}
                 autoFocus
                 required
-                onChange={(event) => setLastname(event.target.value)}
+                onChange={event => setLastname(event.target.value)}
               />
             </InputGroup>
             <br />
             <InputGroup>
-              <InputGroup.Prepend className="inputlabel">
+              <InputGroup.Prepend className='inputlabel'>
                 Country:
               </InputGroup.Prepend>
               <Form.Control
-                type="text"
-                name="country"
-                id="inputtextCountry"
-                placeholder=" Argentina"
+                type='text'
+                name='country'
+                id='inputtextCountry'
+                placeholder=' Argentina'
                 value={country}
                 autoFocus
                 required
-                onChange={(event) => setCountry(event.target.value)}
+                onChange={event => setCountry(event.target.value)}
               />
             </InputGroup>
             <br />
 
             <InputGroup>
-              <InputGroup.Prepend className="inputlabel">
+              <InputGroup.Prepend className='inputlabel'>
                 Phone:
               </InputGroup.Prepend>
               <Form.Control
-                type="text"
-                name="phone"
-                id="inputtextPhone"
-                placeholder=" +54 9 11 1234 5678"
+                type='text'
+                name='phone'
+                id='inputtextPhone'
+                placeholder=' +54 9 11 1234 5678'
                 value={phone}
                 autoFocus
-                onChange={(event) => setPhone(event.target.value)}
+                onChange={event => setPhone(event.target.value)}
               />
             </InputGroup>
             <br />
             <InputGroup>
-              <InputGroup.Prepend className="inputlabel">
+              <InputGroup.Prepend className='inputlabel'>
                 TTC Date:
               </InputGroup.Prepend>
               <Form.Control
-                type="text"
-                name="ttcdate"
-                id="inputtextTTCDate"
-                placeholder=" 2020-01-01"
+                type='text'
+                name='ttcdate'
+                id='inputtextTTCDate'
+                placeholder=' 2020-01-01'
                 value={TTCDate}
                 autoFocus
-                onChange={(event) => setTTCDate(event.target.value)}
+                onChange={event => setTTCDate(event.target.value)}
               />
             </InputGroup>
             <Form.Check
-              className="inputradio"
-              label="Enviar mail de bienvenida"
-              type="checkbox"
-              name="mail"
+              className='inputradio'
+              label='Enviar mail de bienvenida'
+              type='checkbox'
+              name='mail'
               defaultChecked={mail}
               value={mail}
               onChange={() => setMail(!mail)}
             />
             <br />
-             <Form.Check
-              className="inputradio"
-              label="Sign the contract"
-              type="checkbox"
-              name="Sing"
+            <Form.Check
+              className='inputradio'
+              label='Sign the contract'
+              type='checkbox'
+              name='Sing'
               defaultChecked={sign}
               value={sign}
               onChange={() => handleSign(sign)}
             />
             <br />
-            <InputGroup style={{ width: "60%" }}>
-              <Form.Label className="inputlabel">Kriya Available</Form.Label>
+            <InputGroup style={{ width: '60%' }}>
+              <Form.Label className='inputlabel'>Kriya Available</Form.Label>
               <br />
               <Form.Check
-                className="inputradio"
-                label={"Long"}
-                type="checkbox"
-                name="Long"
+                className='inputradio'
+                label={'Long'}
+                type='checkbox'
+                name='Long'
                 defaultChecked={long}
                 value={long}
                 onChange={() => handleLong(long)}
               />
               <Form.Check
-                className="inputradio"
-                label="Short"
-                type="checkbox"
-                name="Short"
+                className='inputradio'
+                label='Short'
+                type='checkbox'
+                name='Short'
                 defaultChecked={short}
                 value={short}
                 onChange={() => handleShort(short)}
               />
             </InputGroup>
             <br />
-            <div className="text-center">
-              <Button type="submit" id="mybutton">
-                {id ? "Update Teacher" : "Add Teacher"}
+            <div className='text-center'>
+              <Button type='submit' id='mybutton'>
+                {id ? 'Update Teacher' : 'Add Teacher'}
               </Button>
             </div>
           </form>
         )}
       </Container>
     </div>
-  );
-};
+  )
+}
 
-export default AddUserPage;
+export default AddUserPage
 
 /*
 class AddUserPage extends Component {

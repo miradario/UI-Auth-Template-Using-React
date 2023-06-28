@@ -3,6 +3,9 @@ import Navigation from './Navigation'
 import { db, auth } from '../firebase/firebase'
 import Footer from './Footer'
 import { BsChevronRight, BsChevronLeft } from 'react-icons/bs'
+import { MdDelete } from 'react-icons/md'
+import { read, utils } from 'xlsx'
+import { deleteUser, updateKeyUser } from '../helpers/updateKeyUser'
 
 const INITIAL_STATE = {
   error: null
@@ -20,7 +23,9 @@ class UserPage extends Component {
       showOrder: false,
       orderActive: { active: false, by: '' },
       pagination: {},
-      showPagination: false
+      showPagination: false,
+      selectedToAuthenticated: [],
+      selectAll: false
     }
   }
 
@@ -88,7 +93,7 @@ class UserPage extends Component {
           })
           // console.log('items:', this.state.items)
           //order by this.state.item by email name
-          this.handleOrderEmail()
+          //   this.handleOrderEmail()
         }
       })
       .catch(e => {
@@ -171,6 +176,160 @@ class UserPage extends Component {
       })
     }
 
+    const createAuthUser = async email => {
+      const userNew = await auth
+        .createUserWithEmailAndPassword(email, 'a1b2c3d4e5') //CREA EL USUARIO DE LA AUTENTICACION
+        .then(authUser => {
+          //save the user id created into the state
+          const userNew = authUser.user.uid
+          //   console.log('authUser (createAuthUser): ', authUser)
+          return userNew
+        })
+        .catch(error => {
+          // setIsLoading(false)
+          alert(error.message)
+        })
+      return userNew
+    }
+
+    const handleAuthenticateUser = async (user, actualizar = true) => {
+      const keyUserAuth = await createAuthUser(user[1].email)
+      //   console.log('USER DATA VIEJA: ', user)
+      await updateKeyUser(user[0], keyUserAuth)
+      auth.sendPasswordResetEmail(user[1].email)
+      if (actualizar) window.location.reload()
+    }
+
+    const handleCheckbox = e => {
+      const key = e.target.dataset.key
+
+      if (this.state.selectedToAuthenticated.find(el => el[0] == key)) {
+        this.setState({
+          selectedToAuthenticated: this.state.selectedToAuthenticated.filter(
+            el => el[0] != key
+          )
+          //   selectAll: false
+        })
+      } else {
+        this.setState({
+          selectedToAuthenticated: [
+            ...this.state.selectedToAuthenticated,
+            this.state.itemsFilter.find(el => el[0] == key)
+          ]
+        })
+      }
+    }
+
+    const sendSelected = () => {
+      const promises = this.state.selectedToAuthenticated.map(
+        async el => await handleAuthenticateUser(el, false)
+      )
+
+      Promise.all(promises)
+        .then(() => {
+          window.location.reload()
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    }
+
+    const deleteOneUser = async (key, email) => {
+      //   console.log(key, email)
+      try {
+        const confirm = window.confirm(
+          '¿Seguro que desea eliminar el usuario: ' + email + '?'
+        )
+        if (confirm) {
+          const oldUserRef = db.ref('users/' + key)
+          await oldUserRef.remove()
+          window.location.reload()
+        } else {
+          window.alert('ELIMINACION CANCELADA')
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    }
+
+    // console.log(this.state.selectedToAuthenticated)
+
+    // const filterAuths = array =>
+    //   array.filter(
+    //     el => el[1].authenticated === 1 || el[1].authenticated == undefined
+    //   )
+
+    // const filterNoAuths = array => array.filter(el => el[1].authenticated === 0)
+
+    // const deleteDuplicate = async () => {
+    //   const arrayAuths = filterAuths([...this.state.itemsFilter])
+    //   const arrayNotAuths = filterNoAuths([...this.state.itemsFilter])
+
+    //   //De los que ya estan autenticados (no puede haber dos autenticados con igual mail), cuantos se repiten que no esten autenticados?
+    //   //   const repeatsNotAuth = []
+
+    //   //   arrayAuths.forEach(auth => {
+    //   //     arrayNotAuths.forEach(notAuth => {
+    //   //       if (notAuth[1].email == auth[1].email) repeatsNotAuth.push(notAuth[0])
+    //   //     })
+    //   //   })
+
+    //   const set = new Set()
+    //   const repeats = []
+    //   let array
+    //   arrayNotAuths.forEach(el => {
+    //     set.add(el[1].email)
+    //   })
+    //   array = [...set]
+
+    //   //Aca en array guardo que emails estan repetidos y cuantas coincidencias hay de ese email
+    //   array.forEach(el => {
+    //     let count = 0
+    //     arrayNotAuths.forEach(element => {
+    //       if (el === element[1].email) {
+    //         count++
+    //       }
+    //     })
+    //     if (count >= 2) repeats.push({ el, coincidencias: count })
+    //   })
+
+    //   //Aca genero un nuevo array que va a tener todos los elementos que se repiten y eliminar el primero de cada uno para borrar los otros dos (consultar porque hay 2 repetidos que tienen igual email pero diferente pais, TTCDate, etc)
+    //   let newArray = []
+
+    //   repeats.forEach(el => {
+    //     newArray = [
+    //       ...newArray,
+    //       ...arrayNotAuths
+    //         .filter(element => element[1].email == el.el && el.el != '')
+    //         .slice(1)
+    //     ]
+    //   })
+
+    //   newArray.forEach(el =>
+    //     console.log(`${el[0]} ||| ${el[1].email} ||| ${el[1].authenticated}`)
+    //   )
+
+    //   //   try {
+    //   //     const deletePromises = repeatsNotAuth.map(async el => deleteUser(el))
+
+    //   //     await Promise.all(deletePromises)
+    //   //     console.log('Todos los usuarios han sido eliminados')
+    //   //   } catch (e) {
+    //   //     console.log(e)
+    //   //   }
+    // }
+
+    const selectAll = () => {
+      const notAuth = !this.state.selectAll
+        ? this.state.items.filter(el => el[1].authenticated === 0)
+        : []
+
+      this.setState({
+        selectedToAuthenticated: notAuth
+        // selectAll: !this.state.selectAll
+      })
+    }
+
     return (
       <div className='App'>
         <div>
@@ -180,10 +339,10 @@ class UserPage extends Component {
           <br />
           <br />
 
-          <div className='container'>
-            <div className='row'>
-              <div className='col-md-12'>
-                <h1>Teachers</h1>
+          <div style={{ width: '100%' }}>
+            <div style={{ width: '90%', margin: '0 auto' }}>
+              <div style={{ width: '100%' }}>
+                <h1 style={{ margin: '20px 0' }}>Teachers</h1>
                 <button className='btn btn-primary'>
                   <a href='/add-users' style={{ color: 'white' }}>
                     Add Teacher
@@ -272,51 +431,98 @@ class UserPage extends Component {
                   </div>
                 </div>
 
+                {/* BOTON PARA ELIMINAR DUPLICADOS */}
+                {/* <button onClick={deleteDuplicate}>DELETE DUPLICATES</button> */}
+
                 {/* PAGINATION */}
-                <div className='containerBtnPage'>
-                  {this.state.pagination.page !== 0 ? (
-                    <div
-                      className='containerBtnPage__btn'
-                      onClick={handlePrevPage}
-                    >
-                      <BsChevronLeft />
-                    </div>
-                  ) : (
-                    <div
-                      className='containerBtnPage__btn'
-                      style={{
-                        backgroundColor: 'inherit',
-                        border: 'none',
-                        color: '#a5a5a5'
-                      }}
-                    >
-                      <BsChevronLeft />
-                    </div>
-                  )}
-                  <p>{this.state.pagination.page + 1}</p>
-                  {this.state.pagination.page !==
-                  this.state.pagination.totalPages ? (
-                    <div
-                      className='containerBtnPage__btn'
-                      onClick={handleNextPage}
-                    >
-                      <BsChevronRight />
-                    </div>
-                  ) : (
-                    <div
-                      className='containerBtnPage__btn'
-                      style={{
-                        backgroundColor: 'inherit',
-                        border: 'none',
-                        color: '#a5a5a5'
-                      }}
-                    >
-                      <BsChevronRight />
-                    </div>
-                  )}
-                </div>
+                {this.state.items.length > 0 && (
+                  <div className='containerBtnPage'>
+                    {this.state.pagination.page !== 0 ? (
+                      <div
+                        className='containerBtnPage__btn'
+                        onClick={handlePrevPage}
+                      >
+                        <BsChevronLeft />
+                      </div>
+                    ) : (
+                      <div
+                        className='containerBtnPage__btn'
+                        style={{
+                          backgroundColor: 'inherit',
+                          border: 'none',
+                          color: '#a5a5a5'
+                        }}
+                      >
+                        <BsChevronLeft />
+                      </div>
+                    )}
+                    <p>{this.state.pagination.page + 1}</p>
+                    {this.state.pagination.page !==
+                    this.state.pagination.totalPages ? (
+                      <div
+                        className='containerBtnPage__btn'
+                        onClick={handleNextPage}
+                      >
+                        <BsChevronRight />
+                      </div>
+                    ) : (
+                      <div
+                        className='containerBtnPage__btn'
+                        style={{
+                          backgroundColor: 'inherit',
+                          border: 'none',
+                          color: '#a5a5a5'
+                        }}
+                      >
+                        <BsChevronRight />
+                      </div>
+                    )}
+                  </div>
+                )}
                 {/* PAGINATION CLOSE */}
 
+                <div
+                  style={{
+                    textAlign: 'right'
+                  }}
+                >
+                  <button
+                    style={{
+                      backgroundColor:
+                        this.state.selectedToAuthenticated?.length > 0
+                          ? '#feae00'
+                          : '#bbb',
+                      padding: '5px 20px',
+                      marginBottom: '10px',
+                      color:
+                        this.state.selectedToAuthenticated?.length > 0
+                          ? 'white'
+                          : 'black',
+                      fontWeight: 'bold'
+                    }}
+                    onClick={() =>
+                      this.state.selectedToAuthenticated.length !== 0
+                        ? sendSelected()
+                        : console.log('Deshabilitado')
+                    }
+                  >
+                    Send Selected
+                  </button>
+                  {/* SELECT ALL BUTTON */}
+                  {/* <button
+                    style={{
+                      backgroundColor: '#feae00',
+                      padding: '5px 20px',
+                      marginBottom: '10px',
+                      color: 'black',
+                      fontWeight: 'bold',
+                      marginLeft: '10px'
+                    }}
+                    onClick={selectAll}
+                  >
+                    {this.state.selectAll ? 'Uncheck All' : 'Check All'}
+                  </button> */}
+                </div>
                 <table
                   className='table table-striped'
                   style={{ fontSize: '11px' }}
@@ -358,6 +564,9 @@ class UserPage extends Component {
                       <th scope='col'>Action</th>
                       <th scope='col'>Delete</th>
                       <th scope='col'>Forgot Password</th>
+                      <th scope='col'>Authenticate</th>
+                      <th scope='col'></th>
+                      <th scope='col'>Delete</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -451,6 +660,39 @@ class UserPage extends Component {
                                 Reset Password
                               </button>
                             </td>
+                            {user[1].authenticated === 0 ? (
+                              <td>
+                                <button
+                                  onClick={() => handleAuthenticateUser(user)}
+                                >
+                                  Send first mail
+                                </button>
+                              </td>
+                            ) : (
+                              <td>Ya autenticado</td>
+                            )}
+                            <td>
+                              {user[1].authenticated === 0 && (
+                                <input
+                                  type='checkbox'
+                                  data-key={user[0]}
+                                  //   checked={this.state.selectAll && true}
+                                  onClick={handleCheckbox}
+                                />
+                              )}
+                            </td>
+                            <td>
+                              <MdDelete
+                                style={{
+                                  fontSize: '22px',
+                                  color: 'rgb(167, 0, 0)',
+                                  cursor: 'pointer'
+                                }}
+                                onClick={() =>
+                                  deleteOneUser(user[0], user[1].email)
+                                }
+                              />
+                            </td>
                           </tr>
                         ) : null
                       )}
@@ -461,41 +703,44 @@ class UserPage extends Component {
           </div>
 
           {/* PAGINATION */}
-          <div className='containerBtnPage'>
-            {this.state.pagination.page !== 0 ? (
-              <div className='containerBtnPage__btn' onClick={handlePrevPage}>
-                <BsChevronLeft />
-              </div>
-            ) : (
-              <div
-                className='containerBtnPage__btn'
-                style={{
-                  backgroundColor: 'inherit',
-                  border: 'none',
-                  color: '#a5a5a5'
-                }}
-              >
-                <BsChevronLeft />
-              </div>
-            )}
-            <p>{this.state.pagination.page + 1}</p>
-            {this.state.pagination.page !== this.state.pagination.totalPages ? (
-              <div className='containerBtnPage__btn' onClick={handleNextPage}>
-                <BsChevronRight />
-              </div>
-            ) : (
-              <div
-                className='containerBtnPage__btn'
-                style={{
-                  backgroundColor: 'inherit',
-                  border: 'none',
-                  color: '#a5a5a5'
-                }}
-              >
-                <BsChevronRight />
-              </div>
-            )}
-          </div>
+          {this.state.items.length > 0 && (
+            <div className='containerBtnPage'>
+              {this.state.pagination.page !== 0 ? (
+                <div className='containerBtnPage__btn' onClick={handlePrevPage}>
+                  <BsChevronLeft />
+                </div>
+              ) : (
+                <div
+                  className='containerBtnPage__btn'
+                  style={{
+                    backgroundColor: 'inherit',
+                    border: 'none',
+                    color: '#a5a5a5'
+                  }}
+                >
+                  <BsChevronLeft />
+                </div>
+              )}
+              <p>{this.state.pagination.page + 1}</p>
+              {this.state.pagination.page !==
+              this.state.pagination.totalPages ? (
+                <div className='containerBtnPage__btn' onClick={handleNextPage}>
+                  <BsChevronRight />
+                </div>
+              ) : (
+                <div
+                  className='containerBtnPage__btn'
+                  style={{
+                    backgroundColor: 'inherit',
+                    border: 'none',
+                    color: '#a5a5a5'
+                  }}
+                >
+                  <BsChevronRight />
+                </div>
+              )}
+            </div>
+          )}
           {/* PAGINATION CLOSE */}
 
           <Footer />
