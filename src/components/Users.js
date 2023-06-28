@@ -201,7 +201,6 @@ class UserPage extends Component {
 
     const handleCheckbox = e => {
       const key = e.target.dataset.key
-      console.log(e.target.checked)
 
       if (this.state.selectedToAuthenticated.find(el => el[0] == key)) {
         this.setState({
@@ -235,7 +234,7 @@ class UserPage extends Component {
     }
 
     const deleteOneUser = async (key, email) => {
-      console.log(key, email)
+      //   console.log(key, email)
       try {
         const confirm = window.confirm(
           '¿Seguro que desea eliminar el usuario: ' + email + '?'
@@ -252,7 +251,7 @@ class UserPage extends Component {
       }
     }
 
-    console.log(this.state.selectedToAuthenticated)
+    // console.log(this.state.selectedToAuthenticated)
 
     // const filterAuths = array =>
     //   array.filter(
