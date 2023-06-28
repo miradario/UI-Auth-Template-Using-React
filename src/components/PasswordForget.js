@@ -27,7 +27,8 @@ const byPropKey = (propertyName, value) => () => ({
 const INITIAL_STATE = {
   password: '',
   email: '',
-  sendMailExpiro: false
+  sendMailExpiro: false,
+  loading: false
 }
 
 class PasswordForgetForm extends Component {
@@ -35,6 +36,7 @@ class PasswordForgetForm extends Component {
 
   resetPassword = (oobCode, newPassword) => {
     // [START auth_reset_password]
+    this.setState({ loading: true })
     auth
       .verifyPasswordResetCode(oobCode)
       .doPasswordSet(oobCode, newPassword)
@@ -43,12 +45,13 @@ class PasswordForgetForm extends Component {
         alert('Contraseña correctamente ingresada')
         window.location.href = 'http://cursos.elartedevivir.org/app'
         console.log(resp)
+        this.setState({ loading: false })
       })
       .catch(function (error) {
         // Error occurred during confirmation. The code might have expired or the
         // password is too weak.
         alert(error.message)
-        this.setState({ expiro: true })
+        this.setState({ expiro: true, loading: false })
       })
     // [END auth_reset_password]
   }
@@ -62,6 +65,7 @@ class PasswordForgetForm extends Component {
     console.log(oobCode)
     this.resetPassword(oobCode, password)
     this.setState({ ...INITIAL_STATE })
+    console.log(queryString, urlParams, oobCode, password)
   }
 
   // check if action code in expired
