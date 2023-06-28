@@ -26,7 +26,8 @@ const byPropKey = (propertyName, value) => () => ({
 //################### PasswordForget Form ###################
 const INITIAL_STATE = {
   password: '',
-  email: ''
+  email: '',
+  sendMailExpiro: false
 }
 
 class PasswordForgetForm extends Component {
@@ -91,6 +92,7 @@ class PasswordForgetForm extends Component {
 
     const handleSubmit = e => {
       e.preventDefault()
+      this.setState({ sendMailExpiro: true })
       auth.doPasswordReset(this.state.email)
       //console.log(this.state.email)
     }
@@ -114,31 +116,44 @@ class PasswordForgetForm extends Component {
                 Por favor ingrese el email y va recibir un nuevo mail con un
                 link tiene una hora para ingresar.
               </p>
-              <form className='newPassword'>
-                <input
-                  type='email'
-                  placeholder='Ingrese su mail'
-                  onChange={e => this.setState({ email: e.target.value })}
+              {!this.state.sendMailExpiro ? (
+                <form className='newPassword'>
+                  <input
+                    type='email'
+                    placeholder='Ingrese su mail'
+                    onChange={e => this.setState({ email: e.target.value })}
+                    style={{
+                      width: '200px',
+                      marginRight: '15px',
+                      padding: '8px'
+                    }}
+                  />
+                  <input
+                    type='submit'
+                    value='Enviar'
+                    onClick={handleSubmit}
+                    style={{
+                      border: 'none',
+                      backgroundColor: '#d39e00',
+                      color: 'white',
+                      fontWeight: 'bold',
+                      fontSize: '16px',
+                      padding: '8px'
+                    }}
+                  />{' '}
+                </form>
+              ) : (
+                <p
                   style={{
-                    width: '200px',
-                    marginRight: '15px',
-                    padding: '8px'
+                    fontSize: '17px',
+                    textAlign: 'center',
+                    marginTop: '10px'
                   }}
-                />
-                <input
-                  type='submit'
-                  value='Enviar'
-                  onClick={handleSubmit}
-                  style={{
-                    border: 'none',
-                    backgroundColor: '#d39e00',
-                    color: 'white',
-                    fontWeight: 'bold',
-                    fontSize: '16px',
-                    padding: '8px'
-                  }}
-                />
-              </form>
+                >
+                  Email enviado, por favor revise su casilla o spam!
+                </p>
+              )}
+
               <br />
             </div>
           ) : (
