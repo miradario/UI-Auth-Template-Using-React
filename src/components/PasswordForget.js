@@ -74,7 +74,7 @@ class PasswordForgetForm extends Component {
       .then(function (email) {
         alert('email valido', email)
       })
-      .catch(function (error) {
+      .catch(error => {
         // Invalid or expired action code. Ask user to try to reset the password
         // again.
         console.log('EXPIRO')
