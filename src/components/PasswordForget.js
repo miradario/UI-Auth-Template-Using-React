@@ -53,6 +53,7 @@ class PasswordForgetForm extends Component {
   }
 
   onSubmit = event => {
+    event.preventDefault()
     const { password } = this.state
     const queryString = window.location.search
     const urlParams = new URLSearchParams(queryString)
@@ -60,7 +61,6 @@ class PasswordForgetForm extends Component {
     console.log(oobCode)
     this.resetPassword(oobCode, password)
     this.setState({ ...INITIAL_STATE })
-    event.preventDefault()
   }
 
   // check if action code in expired
@@ -77,6 +77,7 @@ class PasswordForgetForm extends Component {
       .catch(function (error) {
         // Invalid or expired action code. Ask user to try to reset the password
         // again.
+        console.log('EXPIRO')
         this.setState({ expiro: true })
         alert('expiro?', error)
         //window.location.href = "http://cursos.elartedevivir.org/app";

@@ -219,10 +219,6 @@ class UserPage extends Component {
     }
 
     const sendSelected = () => {
-      console.log('selected')
-
-      console.log(this.state.selectedToAuthenticated)
-
       const promises = this.state.selectedToAuthenticated.map(
         async el => await handleAuthenticateUser(el, false)
       )
@@ -236,71 +232,70 @@ class UserPage extends Component {
         })
     }
 
-    const filterAuths = array =>
-      array.filter(
-        el => el[1].authenticated === 1 || el[1].authenticated == undefined
-      )
+    // const filterAuths = array =>
+    //   array.filter(
+    //     el => el[1].authenticated === 1 || el[1].authenticated == undefined
+    //   )
 
-    const filterNoAuths = array => array.filter(el => el[1].authenticated === 0)
+    // const filterNoAuths = array => array.filter(el => el[1].authenticated === 0)
 
-    const deleteDuplicate = async () => {
-      const arrayAuths = filterAuths([...this.state.itemsFilter])
-      const arrayNotAuths = filterNoAuths([...this.state.itemsFilter])
+    // const deleteDuplicate = async () => {
+    //   const arrayAuths = filterAuths([...this.state.itemsFilter])
+    //   const arrayNotAuths = filterNoAuths([...this.state.itemsFilter])
 
-      //De los que ya estan autenticados (no puede haber dos autenticados con igual mail), cuantos se repiten que no esten autenticados?
-      //   const repeatsNotAuth = []
+    //   //De los que ya estan autenticados (no puede haber dos autenticados con igual mail), cuantos se repiten que no esten autenticados?
+    //   //   const repeatsNotAuth = []
 
-      //   arrayAuths.forEach(auth => {
-      //     arrayNotAuths.forEach(notAuth => {
-      //       if (notAuth[1].email == auth[1].email) repeatsNotAuth.push(notAuth[0])
-      //     })
-      //   })
+    //   //   arrayAuths.forEach(auth => {
+    //   //     arrayNotAuths.forEach(notAuth => {
+    //   //       if (notAuth[1].email == auth[1].email) repeatsNotAuth.push(notAuth[0])
+    //   //     })
+    //   //   })
 
-      const set = new Set()
-      const repeats = []
-      let array
-      arrayNotAuths.forEach(el => {
-        set.add(el[1].email)
-      })
-      array = [...set]
+    //   const set = new Set()
+    //   const repeats = []
+    //   let array
+    //   arrayNotAuths.forEach(el => {
+    //     set.add(el[1].email)
+    //   })
+    //   array = [...set]
 
-      //Aca en array guardo que emails estan repetidos y cuantas coincidencias hay de ese email
-      array.forEach(el => {
-        let count = 0
-        arrayNotAuths.forEach(element => {
-          if (el === element[1].email) {
-            count++
-          }
-        })
-        if (count >= 2) repeats.push({ el, coincidencias: count })
-      })
+    //   //Aca en array guardo que emails estan repetidos y cuantas coincidencias hay de ese email
+    //   array.forEach(el => {
+    //     let count = 0
+    //     arrayNotAuths.forEach(element => {
+    //       if (el === element[1].email) {
+    //         count++
+    //       }
+    //     })
+    //     if (count >= 2) repeats.push({ el, coincidencias: count })
+    //   })
 
-      //Aca genero un nuevo array que va a tener todos los elementos que se repiten y eliminar el primero de cada uno para borrar los otros dos (consultar porque hay 2 repetidos que tienen igual email pero diferente pais, TTCDate, etc)
-      let newArray = []
+    //   //Aca genero un nuevo array que va a tener todos los elementos que se repiten y eliminar el primero de cada uno para borrar los otros dos (consultar porque hay 2 repetidos que tienen igual email pero diferente pais, TTCDate, etc)
+    //   let newArray = []
 
-      repeats.forEach(el => {
-        newArray = [
-          ...newArray,
-          ...arrayNotAuths
-            .filter(element => element[1].email == el.el && el.el != '')
-            .slice(1)
-        ]
-      })
+    //   repeats.forEach(el => {
+    //     newArray = [
+    //       ...newArray,
+    //       ...arrayNotAuths
+    //         .filter(element => element[1].email == el.el && el.el != '')
+    //         .slice(1)
+    //     ]
+    //   })
 
-      newArray.forEach(el =>
-        console.log(`${el[0]} ||| ${el[1].email} ||| ${el[1].authenticated}`)
-      )
+    //   newArray.forEach(el =>
+    //     console.log(`${el[0]} ||| ${el[1].email} ||| ${el[1].authenticated}`)
+    //   )
 
-      //   try {
-      //     const deletePromises = repeatsNotAuth.map(async el => deleteUser(el))
+    //   //   try {
+    //   //     const deletePromises = repeatsNotAuth.map(async el => deleteUser(el))
 
-      //     await Promise.all(deletePromises)
-      //     console.log('Todos los usuarios han sido eliminados')
-      //   } catch (e) {
-      //     console.log(e)
-      //   }
-    }
-    // console.log(this.state.itemsFilter.length)
+    //   //     await Promise.all(deletePromises)
+    //   //     console.log('Todos los usuarios han sido eliminados')
+    //   //   } catch (e) {
+    //   //     console.log(e)
+    //   //   }
+    // }
 
     return (
       <div className='App'>
