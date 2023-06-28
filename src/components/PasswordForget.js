@@ -38,7 +38,6 @@ class PasswordForgetForm extends Component {
     // [START auth_reset_password]
     this.setState({ loading: true })
     auth
-      .verifyPasswordResetCode(oobCode)
       .doPasswordSet(oobCode, newPassword)
       .then(function (resp) {
         // Password reset has been confirmed and new password updated.
