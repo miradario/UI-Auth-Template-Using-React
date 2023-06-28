@@ -3,6 +3,7 @@ import Navigation from './Navigation'
 import { db, auth } from '../firebase/firebase'
 import Footer from './Footer'
 import { BsChevronRight, BsChevronLeft } from 'react-icons/bs'
+import { MdDelete } from 'react-icons/md'
 import { read, utils } from 'xlsx'
 import { deleteUser, updateKeyUser } from '../helpers/updateKeyUser'
 
@@ -23,7 +24,8 @@ class UserPage extends Component {
       orderActive: { active: false, by: '' },
       pagination: {},
       showPagination: false,
-      selectedToAuthenticated: []
+      selectedToAuthenticated: [],
+      selectAll: false
     }
   }
 
@@ -199,14 +201,15 @@ class UserPage extends Component {
 
     const handleCheckbox = e => {
       const key = e.target.dataset.key
+      console.log(e.target.checked)
 
       if (this.state.selectedToAuthenticated.find(el => el[0] == key)) {
         this.setState({
           selectedToAuthenticated: this.state.selectedToAuthenticated.filter(
             el => el[0] != key
           )
+          //   selectAll: false
         })
-        e.target.dataset.active = false
       } else {
         this.setState({
           selectedToAuthenticated: [
@@ -214,7 +217,6 @@ class UserPage extends Component {
             this.state.itemsFilter.find(el => el[0] == key)
           ]
         })
-        e.target.dataset.active = true
       }
     }
 
@@ -231,6 +233,26 @@ class UserPage extends Component {
           console.log(error)
         })
     }
+
+    const deleteOneUser = async (key, email) => {
+      console.log(key, email)
+      try {
+        const confirm = window.confirm(
+          '¿Seguro que desea eliminar el usuario: ' + email + '?'
+        )
+        if (confirm) {
+          const oldUserRef = db.ref('users/' + key)
+          await oldUserRef.remove()
+          window.location.reload()
+        } else {
+          window.alert('ELIMINACION CANCELADA')
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    }
+
+    console.log(this.state.selectedToAuthenticated)
 
     // const filterAuths = array =>
     //   array.filter(
@@ -296,6 +318,17 @@ class UserPage extends Component {
     //   //     console.log(e)
     //   //   }
     // }
+
+    const selectAll = () => {
+      const notAuth = !this.state.selectAll
+        ? this.state.items.filter(el => el[1].authenticated === 0)
+        : []
+
+      this.setState({
+        selectedToAuthenticated: notAuth
+        // selectAll: !this.state.selectAll
+      })
+    }
 
     return (
       <div className='App'>
@@ -475,6 +508,20 @@ class UserPage extends Component {
                   >
                     Send Selected
                   </button>
+                  {/* SELECT ALL BUTTON */}
+                  {/* <button
+                    style={{
+                      backgroundColor: '#feae00',
+                      padding: '5px 20px',
+                      marginBottom: '10px',
+                      color: 'black',
+                      fontWeight: 'bold',
+                      marginLeft: '10px'
+                    }}
+                    onClick={selectAll}
+                  >
+                    {this.state.selectAll ? 'Uncheck All' : 'Check All'}
+                  </button> */}
                 </div>
                 <table
                   className='table table-striped'
@@ -514,6 +561,8 @@ class UserPage extends Component {
                       <th scope='col'>Delete</th>
                       <th scope='col'>Forgot Password</th>
                       <th scope='col'>Authenticate</th>
+                      <th scope='col'></th>
+                      <th scope='col'>Delete</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -621,10 +670,22 @@ class UserPage extends Component {
                                 <input
                                   type='checkbox'
                                   data-key={user[0]}
-                                  data-active={false}
+                                  //   checked={this.state.selectAll && true}
                                   onClick={handleCheckbox}
                                 />
                               )}
+                            </td>
+                            <td>
+                              <MdDelete
+                                style={{
+                                  fontSize: '22px',
+                                  color: 'rgb(167, 0, 0)',
+                                  cursor: 'pointer'
+                                }}
+                                onClick={() =>
+                                  deleteOneUser(user[0], user[1].email)
+                                }
+                              />
                             </td>
                           </tr>
                         ) : null
