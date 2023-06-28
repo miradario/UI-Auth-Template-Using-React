@@ -187,6 +187,7 @@ class PasswordForgetForm extends Component {
                   </Button>
                 </div>
                 <br />
+                {this.state.loading && <p>Loading...</p>}
               </Form>
             </>
           )}
