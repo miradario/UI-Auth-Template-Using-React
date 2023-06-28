@@ -6,16 +6,18 @@ import NavigationEmpty from './NavigationEmpty'
 import { auth } from '../firebase'
 
 //it resets your password. It doesn’t matter if you are authenticated or not
-const PasswordForgetPage = () => (
-  <div className='div-flex'>
-    <NavigationEmpty />
-    <center style={{ marginTop: '110px' }}>
-      <PasswordForgetForm />
-      <br />
-    </center>
-    <Footer />
-  </div>
-)
+const PasswordForgetPage = () => {
+  return (
+    <div className='div-flex'>
+      <NavigationEmpty />
+      <center style={{ marginTop: '110px' }}>
+        <PasswordForgetForm />
+        <br />
+      </center>
+      <Footer />
+    </div>
+  )
+}
 
 const byPropKey = (propertyName, value) => () => ({
   [propertyName]: value

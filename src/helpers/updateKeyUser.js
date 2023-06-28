@@ -43,3 +43,12 @@ export const updateKeyUser = async (keyRDB, keyUserAuth) => {
     console.log('ERROR ' + e)
   }
 }
+
+export const deleteUser = async key => {
+  try {
+    const oldUserRef = db.ref('users/' + key)
+    await oldUserRef.remove()
+  } catch (e) {
+    console.log(e)
+  }
+}

@@ -4,7 +4,7 @@ import { db, auth } from '../firebase/firebase'
 import Footer from './Footer'
 import { BsChevronRight, BsChevronLeft } from 'react-icons/bs'
 import { read, utils } from 'xlsx'
-import { updateKeyUser } from '../helpers/updateKeyUser'
+import { deleteUser, updateKeyUser } from '../helpers/updateKeyUser'
 
 const INITIAL_STATE = {
   error: null
@@ -223,8 +223,8 @@ class UserPage extends Component {
 
       console.log(this.state.selectedToAuthenticated)
 
-      const promises = this.state.selectedToAuthenticated.map(el =>
-        handleAuthenticateUser(el, false)
+      const promises = this.state.selectedToAuthenticated.map(
+        async el => await handleAuthenticateUser(el, false)
       )
 
       Promise.all(promises)
@@ -236,7 +236,71 @@ class UserPage extends Component {
         })
     }
 
-    // console.log(this.state.selectedToAuthenticated)
+    const filterAuths = array =>
+      array.filter(
+        el => el[1].authenticated === 1 || el[1].authenticated == undefined
+      )
+
+    const filterNoAuths = array => array.filter(el => el[1].authenticated === 0)
+
+    const deleteDuplicate = async () => {
+      const arrayAuths = filterAuths([...this.state.itemsFilter])
+      const arrayNotAuths = filterNoAuths([...this.state.itemsFilter])
+
+      //De los que ya estan autenticados (no puede haber dos autenticados con igual mail), cuantos se repiten que no esten autenticados?
+      //   const repeatsNotAuth = []
+
+      //   arrayAuths.forEach(auth => {
+      //     arrayNotAuths.forEach(notAuth => {
+      //       if (notAuth[1].email == auth[1].email) repeatsNotAuth.push(notAuth[0])
+      //     })
+      //   })
+
+      const set = new Set()
+      const repeats = []
+      let array
+      arrayNotAuths.forEach(el => {
+        set.add(el[1].email)
+      })
+      array = [...set]
+
+      //Aca en array guardo que emails estan repetidos y cuantas coincidencias hay de ese email
+      array.forEach(el => {
+        let count = 0
+        arrayNotAuths.forEach(element => {
+          if (el === element[1].email) {
+            count++
+          }
+        })
+        if (count >= 2) repeats.push({ el, coincidencias: count })
+      })
+
+      //Aca genero un nuevo array que va a tener todos los elementos que se repiten y eliminar el primero de cada uno para borrar los otros dos (consultar porque hay 2 repetidos que tienen igual email pero diferente pais, TTCDate, etc)
+      let newArray = []
+
+      repeats.forEach(el => {
+        newArray = [
+          ...newArray,
+          ...arrayNotAuths
+            .filter(element => element[1].email == el.el && el.el != '')
+            .slice(1)
+        ]
+      })
+
+      newArray.forEach(el =>
+        console.log(`${el[0]} ||| ${el[1].email} ||| ${el[1].authenticated}`)
+      )
+
+      //   try {
+      //     const deletePromises = repeatsNotAuth.map(async el => deleteUser(el))
+
+      //     await Promise.all(deletePromises)
+      //     console.log('Todos los usuarios han sido eliminados')
+      //   } catch (e) {
+      //     console.log(e)
+      //   }
+    }
+    // console.log(this.state.itemsFilter.length)
 
     return (
       <div className='App'>
@@ -339,6 +403,9 @@ class UserPage extends Component {
                   </div>
                 </div>
 
+                {/* BOTON PARA ELIMINAR DUPLICADOS */}
+                {/* <button onClick={deleteDuplicate}>DELETE DUPLICATES</button> */}
+
                 {/* PAGINATION */}
                 {this.state.items.length > 0 && (
                   <div className='containerBtnPage'>
@@ -391,7 +458,7 @@ class UserPage extends Component {
                     textAlign: 'right'
                   }}
                 >
-                  {/* <button
+                  <button
                     style={{
                       backgroundColor:
                         this.state.selectedToAuthenticated?.length > 0
@@ -405,10 +472,14 @@ class UserPage extends Component {
                           : 'black',
                       fontWeight: 'bold'
                     }}
-                    onClick={sendSelected}
+                    onClick={() =>
+                      this.state.selectedToAuthenticated.length !== 0
+                        ? sendSelected()
+                        : console.log('Deshabilitado')
+                    }
                   >
                     Send Selected
-                  </button> */}
+                  </button>
                 </div>
                 <table
                   className='table table-striped'
