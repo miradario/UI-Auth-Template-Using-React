@@ -72,14 +72,15 @@ class PasswordForgetForm extends Component {
     auth
       .verifyPasswordResetCode(oobCode)
       .then(function (email) {
-        alert('email valido', email)
+        // alert('email valido', email)
+        console.log('Email valido')
       })
       .catch(error => {
         // Invalid or expired action code. Ask user to try to reset the password
         // again.
         console.log('EXPIRO')
         this.setState({ expiro: true })
-        alert('expiro?', error)
+        // alert('expiro?', error)
         //window.location.href = "http://cursos.elartedevivir.org/app";
       })
   }
@@ -88,7 +89,8 @@ class PasswordForgetForm extends Component {
     const { password } = this.state
     // get query string from url
 
-    const handleSubmit = () => {
+    const handleSubmit = e => {
+      e.preventDefault()
       auth.doPasswordReset(this.state.email)
       //console.log(this.state.email)
     }
@@ -96,12 +98,19 @@ class PasswordForgetForm extends Component {
     return (
       <div className='inputclass'>
         <Container style={{ marginBottom: '150px' }}>
-          <h2 id='mytexth2'>Establecer contraseña</h2>
           {this.state.expiro ? (
             <div>
-              <p>El link expiro!</p>
+              <p
+                style={{
+                  fontSize: '30px',
+                  fontWeight: 'bold',
+                  letterSpacing: '2px'
+                }}
+              >
+                El link expiro!
+              </p>
               <br />
-              <p id='mytextp'>
+              <p id='mytextp' style={{ fontSize: '20px' }}>
                 Por favor ingrese el email y va recibir un nuevo mail con un
                 link tiene una hora para ingresar.
               </p>
@@ -110,37 +119,57 @@ class PasswordForgetForm extends Component {
                   type='email'
                   placeholder='Ingrese su mail'
                   onChange={e => this.setState({ email: e.target.value })}
+                  style={{
+                    width: '200px',
+                    marginRight: '15px',
+                    padding: '8px'
+                  }}
                 />
-                <input type='submit' value='Enviar' onClick={handleSubmit} />
+                <input
+                  type='submit'
+                  value='Enviar'
+                  onClick={handleSubmit}
+                  style={{
+                    border: 'none',
+                    backgroundColor: '#d39e00',
+                    color: 'white',
+                    fontWeight: 'bold',
+                    fontSize: '16px',
+                    padding: '8px'
+                  }}
+                />
               </form>
               <br />
             </div>
           ) : (
-            <Form onSubmit={this.onSubmit}>
-              <InputGroup>
-                <InputGroup.Prepend className='inputlabel'>
-                  Nueva Contraseña
-                </InputGroup.Prepend>
-                <Form.Control
-                  type='password'
-                  name='password'
-                  id='inputtext'
-                  placeholder='Ingrese la contraseña nueva, por favor recuerdela'
-                  value={password}
-                  required
-                  onChange={event =>
-                    this.setState(byPropKey('password', event.target.value))
-                  }
-                />
-              </InputGroup>
-              <br />
-              <div className='text-center'>
-                <Button type='submit' id='mybutton'>
-                  Establecer Contraseña
-                </Button>
-              </div>
-              <br />
-            </Form>
+            <>
+              <h2 id='mytexth2'>Establecer contraseña</h2>
+              <Form onSubmit={this.onSubmit}>
+                <InputGroup>
+                  <InputGroup.Prepend className='inputlabel'>
+                    Nueva Contraseña
+                  </InputGroup.Prepend>
+                  <Form.Control
+                    type='password'
+                    name='password'
+                    id='inputtext'
+                    placeholder='Ingrese la contraseña nueva, por favor recuerdela'
+                    value={password}
+                    required
+                    onChange={event =>
+                      this.setState(byPropKey('password', event.target.value))
+                    }
+                  />
+                </InputGroup>
+                <br />
+                <div className='text-center'>
+                  <Button type='submit' id='mybutton'>
+                    Establecer Contraseña
+                  </Button>
+                </div>
+                <br />
+              </Form>
+            </>
           )}
         </Container>
       </div>
