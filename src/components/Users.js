@@ -48,7 +48,8 @@ class UserPage extends Component {
           code: items[item].code,
           TTCDate: items[item].TTCDate,
           sign: items[item].sign,
-
+          comment: items[item].comment,
+          course: items[item].course,
           address: items[item].address,
           inactive: items[item].inactive
         })
@@ -349,7 +350,11 @@ class UserPage extends Component {
                       <th scope='col' data-id='ttcdate'>
                         First TTC Date
                       </th>
+                      <th scope='col'>Courses</th>
+                      <th scope='col'>Comment</th>
                       <th scope='col'>Sign Contract</th>
+                      <th scope='col'>Courses</th>
+                      <th scope='col'>Comment</th>
                       <th scope='col'>Action</th>
                       <th scope='col'>Delete</th>
                       <th scope='col'>Forgot Password</th>
@@ -384,6 +389,8 @@ class UserPage extends Component {
                             <td>{user[1].inactive ? 'Disable' : 'Enable'}</td>
                             <td>{user[1].TTCDate}</td>
                             <td>{user[1].sign === 1 ? 'Yes' : 'No'}</td>
+                            <td>{user[1].comment}</td>
+                            <td>{user[1].course}</td>
                             <td>
                               <button
                                 className='btn btn-primary'

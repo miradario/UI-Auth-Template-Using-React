@@ -21,7 +21,8 @@ const AddUserPage = (props) => {
   const [TTCDate, setTTCDate] = useState('');
   const [sign, setSign] = useState(false);
   const [mail, setMail] = useState(true);
-
+  const [comment, setComment] = useState("");
+  const [course, setCourse] = useState("");
   const [inactive, setInactive] = useState(false);
   const [error, setError] = useState(null);
   const [isloading, setIsLoading] = useState(false);
@@ -114,6 +115,8 @@ const AddUserPage = (props) => {
     setAe(false);
   };
 
+
+
   const handleAddUser = async (userNew) => {
     const long_1 = long ? 1 : 0;
     const short_1 = short ? 1 : 0;
@@ -132,6 +135,7 @@ const AddUserPage = (props) => {
         lastName: lastName,
         TTCDate: TTCDate,
         sign: sign_1,
+        
         SKY: {
           long: long_1,
           short: short_1,
