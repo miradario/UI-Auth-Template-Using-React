@@ -529,6 +529,12 @@ class UserPage extends Component {
                 >
                   <thead>
                     <tr>
+                      <th scope='col'>Action</th>
+                      <th scope='col'>Delete</th>
+                      <th scope='col'>Forgot Password</th>
+                      <th scope='col'>Authenticate</th>
+                      <th scope='col'></th>
+                      <th scope='col'>Delete</th>
                       <th scope='col' data-id='name'>
                         Name
                       </th>
@@ -556,17 +562,22 @@ class UserPage extends Component {
                       <th scope='col' data-id='ttcdate'>
                         First TTC Date
                       </th>
-                      <th scope='col'>Courses</th>
-                      <th scope='col'>Comment</th>
+                    
                       <th scope='col'>Sign Contract</th>
-                      <th scope='col'>Courses</th>
                       <th scope='col'>Comment</th>
-                      <th scope='col'>Action</th>
-                      <th scope='col'>Delete</th>
-                      <th scope='col'>Forgot Password</th>
-                      <th scope='col'>Authenticate</th>
-                      <th scope='col'></th>
-                      <th scope='col'>Delete</th>
+                      <th scope='col'>HP</th>
+                      <th scope='col'>SSY</th>
+                      <th scope='col'>Yes+</th>
+                      <th scope='col'>Yes</th>
+                      <th scope='col'>AE</th>
+                      <th scope='col'>Sahaj</th>
+                      <th scope='col'>P2</th>
+                      <th scope='col'>SSY2</th>
+                      <th scope='col'>DSN</th>
+                      <th scope='col'>VTP</th>
+                      <th scope='col'>TTC</th>
+                      
+                      
                     </tr>
                   </thead>
                   <tbody>
@@ -587,20 +598,7 @@ class UserPage extends Component {
                               backgroundColor: user[1].inactive ? 'orange' : ''
                             }}
                           >
-                            <td>{user[1].name}</td>
-                            <td>{user[1].lastName}</td>
-                            <td>{user[1].email}</td>
-                            <td>{user[1].phone}</td>
-                            <td>{user[1].country}</td>
-                            <td>{user[1].code}</td>
-                            <td>{user[1].SKY.long === 1 ? 'On' : 'Off'}</td>
-                            <td>{user[1].SKY.short === 1 ? 'On' : 'Off'}</td>
-                            <td>{user[1].inactive ? 'Disable' : 'Enable'}</td>
-                            <td>{user[1].TTCDate}</td>
-                            <td>{user[1].sign === 1 ? 'Yes' : 'No'}</td>
-                            <td>{user[1].comment}</td>
-                            <td>{user[1].course}</td>
-                            <td>
+                          <td>
                               <button
                                 className='btn btn-primary'
                                 style={{
@@ -693,6 +691,32 @@ class UserPage extends Component {
                                 }
                               />
                             </td>
+                            <td>{user[1].name}</td>
+                            <td>{user[1].lastName}</td>
+                            <td>{user[1].email}</td>
+                            <td>{user[1].phone}</td>
+                            <td>{user[1].country}</td>
+                            <td>{user[1].code}</td>
+                            <td>{user[1].SKY.long === 1 ? 'On' : 'Off'}</td>
+                            <td>{user[1].SKY.short === 1 ? 'On' : 'Off'}</td>
+                            <td>{user[1].inactive ? 'Disable' : 'Enable'}</td>
+                            <td>{user[1].TTCDate}</td>
+                            <td>{user[1].sign === 1 ? 'Yes' : 'No'}</td>
+                            <td>{user[1].comment}</td>
+                            <td>{user[1].course?.HP}</td>
+                            <td>{user[1].course?.SSY}</td>
+                            <td>{user[1].course?.YesPlus}</td>
+                            <td>{user[1].course?.Yes}</td>
+                            <td>{user[1].course?.AE}</td>
+                            <td>{user[1].course?.Sahaj}</td>
+                            <td>{user[1].course?.Parte2}</td>
+                            <td>{user[1].course?.Parte2SSY}</td>
+                            <td>{user[1].course?.DSN}</td>
+                            <td>{user[1].course?.VTP}</td>
+                            <td>{user[1].course?.TTC}</td>
+                            
+                           
+                            
                           </tr>
                         ) : null
                       )}

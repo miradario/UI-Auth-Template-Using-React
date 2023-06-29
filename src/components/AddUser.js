@@ -1,7 +1,7 @@
 // add user component
 
 import React, { useEffect, useState } from 'react'
-import { Button, Form, InputGroup, Container } from 'react-bootstrap'
+import { Button, Form, InputGroup, Container, Alert } from 'react-bootstrap'
 import Navigation from './Navigation'
 import { db } from '../firebase/firebase'
 import { auth } from '../firebase/firebase'
@@ -21,6 +21,23 @@ const AddUserPage = props => {
   const [TTCDate, setTTCDate] = useState('')
   const [sign, setSign] = useState(false)
   const [mail, setMail] = useState(true)
+
+  // course
+  const [HP, setHP] = useState(false)
+  const [AE, setAE] = useState(false)
+  const [TTC, setTTC] = useState(false)
+  const [DSN, setDSN] = useState(false)
+  const [Parte2, setParte2] = useState(false)
+  const [Parte2SSY, setParte2SSY] = useState(false)
+  const [Prision, setPrision] = useState(false)
+  const [SSY, setSSY] = useState(false)
+  const [Sahaj, setSahaj] = useState(false)
+  const [VTP, setVTP] = useState(false)
+  const [YesPlus, setYesPlus] = useState(false)
+  const [YES, setYES] = useState(false)
+  
+  const [comment, setComment] = useState('')
+  
 
   const [inactive, setInactive] = useState(false)
   const [error, setError] = useState(null)
@@ -68,6 +85,7 @@ const AddUserPage = props => {
             setName(snapshot.val().name)
             setEmail(snapshot.val().email)
             setCountry(snapshot.val().country)
+            setComment(snapshot.val().comment)
             //   setCode(snapshot.val().code);
             setLastname(snapshot.val().lastName)
             setTTCDate(snapshot.val().TTCDate)
@@ -76,6 +94,19 @@ const AddUserPage = props => {
             setSign(snapshot.val().sign === 1 ? true : false)
             setShort(snapshot.val().SKY.short === 1 ? true : false)
             setAe(snapshot.val().SKY.ae === 1 ? true : false)
+            setHP(snapshot.val().course.HP === 'si'  ? true : false)
+            setAE(snapshot.val().course.AE === 'si'  ? true : false)
+            setTTC(snapshot.val().course.TTC === 'si'  ? true : false)
+            setDSN(snapshot.val().course.DSN === 'si'  ? true : false)
+            setParte2(snapshot.val().course.Parte2 === 'si'  ? true : false)
+            setParte2SSY(snapshot.val().course.Parte2SSY === 'si'  ? true : false)
+            setPrision(snapshot.val().course.Prision === 'si'  ? true : false)
+            setSSY(snapshot.val().course.SSY === 'si'  ? true : false)
+            setSahaj(snapshot.val().course.Sahaj === 'si'  ? true : false)
+            setVTP(snapshot.val().course.VTP === 'si'  ? true : false)
+            setYesPlus(snapshot.val().course.YesPlus === 'si'  ? true : false)
+
+
             setIsLoading(false)
           }
         })
@@ -94,8 +125,8 @@ const AddUserPage = props => {
     setShort(!short)
   }
 
-  const handleAe = ae => {
-    setAe(!ae)
+  const handleHP = hp => {
+    setHP(!hp)
   }
 
   const handleSign = sign => {
@@ -112,6 +143,21 @@ const AddUserPage = props => {
     setLong(false)
     setShort(false)
     setAe(false)
+    setSign(false)
+    setTTCDate('')
+    setMail(true)
+    setHP(false)
+    setAE(false)
+    setTTC(false)
+    setDSN(false)
+    setParte2(false)
+    setParte2SSY(false)
+    setPrision(false)
+    setSSY(false)
+    setSahaj(false)
+    setVTP(false)
+    setYesPlus(false)
+
   }
 
   const handleAddUser = async userNew => {
@@ -119,9 +165,22 @@ const AddUserPage = props => {
     const short_1 = short ? 1 : 0
     const ae_1 = ae ? 1 : 0
     const sign_1 = sign ? 1 : 0
+    const hp_1 = HP ? 'si' : 'no'
+    
+    const ae_2 = AE ? 'si' : 'no'
+    const ttc_1 = TTC ? 'si' : 'no'
+    const dsn_1 = DSN ? 'si' : 'no'
+    const parte2_1 = Parte2 ? 'si' : 'no'
+    const parte2SSY_1 = Parte2SSY ? 'si' : 'no'
+    const prision_1 = Prision ? 'si' : 'no'
+    const ssy_1 = SSY ? 'si' : 'no'
+    const sahaj_1 = Sahaj ? 'si' : 'no'
+    const vtp_1 = VTP ? 'si' : 'no'
+    const yesPlus_1 = YesPlus ? 'si' : 'no'
+
     console.log('checks', long, short, ae)
 
-    if (mail) {
+    if (mail && !id) {
       auth.sendPasswordResetEmail(email)
     }
     db.ref('users/' + userNew)
@@ -135,11 +194,27 @@ const AddUserPage = props => {
         TTCDate: TTCDate,
         sign: sign_1,
         authenticated: 1,
+        comment: comment,
         SKY: {
           long: long_1,
           short: short_1,
           ae: ae_1
+        },
+        couse:
+        {
+          HP: hp_1,
+          AE: ae_2,
+          TTC: ttc_1,
+          DSN: dsn_1,
+          Parte2: parte2_1,
+          Parte2SSY: parte2SSY_1,
+          Prision: prision_1,
+          SSY: ssy_1,
+          Sahaj: sahaj_1,
+          VTP: vtp_1,
+          YesPlus: yesPlus_1
         }
+
       })
       .then(data => {
         //success callback
@@ -302,6 +377,23 @@ const AddUserPage = props => {
                 onChange={event => setTTCDate(event.target.value)}
               />
             </InputGroup>
+            <br />
+            <InputGroup>
+              <InputGroup.Prepend className='inputlabel'>
+              Comment:
+              </InputGroup.Prepend>
+              <Form.Control
+                type='text'
+                name='comment'
+                id='inputtextComment'
+                placeholder=' Comment'
+                value={comment}
+                autoFocus
+                onChange={event => setComment(event.target.value)}
+              />
+            </InputGroup>
+            <br />
+
             <Form.Check
               className='inputradio'
               label='Enviar mail de bienvenida'
@@ -322,7 +414,7 @@ const AddUserPage = props => {
               onChange={() => handleSign(sign)}
             />
             <br />
-            <InputGroup style={{ width: '60%' }}>
+            <InputGroup style={{ width: '80%' }}>
               <Form.Label className='inputlabel'>Kriya Available</Form.Label>
               <br />
               <Form.Check
@@ -343,6 +435,123 @@ const AddUserPage = props => {
                 value={short}
                 onChange={() => handleShort(short)}
               />
+            </InputGroup>
+            <br />
+            <InputGroup style={{ width: '100%' }}>
+              <Form.Label className='inputlabel'>Courses</Form.Label>
+              <br />
+              <Form.Check
+                className='inputradio'
+                label={'HP'}
+                type='checkbox'
+                name='HP'
+                defaultChecked={HP}
+                value={HP}
+                onChange={() => handleHP(HP)}
+              />
+              <Form.Check
+                className='inputradio'
+                label={'Yes Plus'}
+                type='checkbox'
+                name='YesPlus'
+                defaultChecked={YesPlus}
+                value={YesPlus}
+                onChange={() => setYesPlus(!YesPlus)}
+              />
+              <Form.Check
+                className='inputradio'
+                label='AE'
+                type='checkbox'
+                name='AE'
+                defaultChecked={AE}
+                value={AE}
+                onChange={() => setAE(!AE)}
+              />
+              <Form.Check
+                className='inputradio'
+                label='Prision'
+                type='checkbox'
+                name='Prision'
+                defaultChecked={Prision}
+                value={Prision}
+                onChange={() => setPrision(!Prision)}
+              />
+              <Form.Check
+                className='inputradio'
+                label='SSY'
+                type='checkbox'
+                name='SSY'
+                defaultChecked={SSY}
+                value={SSY}
+                onChange={() => setSSY(!SSY)}
+              />
+              <Form.Check
+                className='inputradio'
+                label='YES'
+                type='checkbox'
+                name='YES'
+                defaultChecked={YES}
+                value={YES}
+                onChange={() => setYES(!YES)}
+              />
+              <Form.Check
+                className='inputradio'
+                label='Sahaj'
+                type='checkbox'
+                name='Sahaj'
+                defaultChecked={Sahaj}
+                value={Sahaj}
+                onChange={() => setSahaj(!Sahaj)}
+              />
+              <Form.Check
+                className='inputradio'
+                label='Parte2 SSY'
+                type='checkbox'
+                name='Parte2SSY'
+                defaultChecked={Parte2SSY}
+                value={Parte2SSY}
+                onChange={() => setParte2SSY(!Parte2SSY)}
+              />
+              <Form.Check
+                className='inputradio'
+                label='DSN'
+                type='checkbox'
+                name='DSN'
+                defaultChecked={DSN}
+                value={DSN}
+                onChange={() => setDSN(!DSN)}
+              />
+              <Form.Check
+                className='inputradio'
+                label='VTP'
+                type='checkbox'
+                name='VTP'
+                defaultChecked={VTP}
+                value={VTP}
+                onChange={() => setVTP(!VTP)}
+              />
+              <Form.Check 
+                className='inputradio'
+                label='Parte 2'
+                type='checkbox'
+                name='Parte2'
+                defaultChecked={Parte2}
+                value={Parte2}
+                onChange={() => setParte2(!Parte2)}
+              />
+              <Form.Check
+                className='inputradio'
+                label='TTC'
+                type='checkbox'
+                name='TTC'
+                defaultChecked={TTC}
+                value={TTC}
+                onChange={() => setTTC(!TTC)}
+              />
+              
+
+
+
             </InputGroup>
             <br />
             <div className='text-center'>
