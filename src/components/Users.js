@@ -319,6 +319,22 @@ class UserPage extends Component {
     //   //   }
     // }
 
+    const coursesConcatenate = courses => {
+      let coursesString = ''
+      courses.forEach((el, i) => {
+        if (i == courses.length - 1) {
+          alert (el);
+          // if content = 'si' then add key to string
+          if (el === 'si') coursesString += 'key: ' + i + ', '
+
+        } else {
+          coursesString += el + ', '
+        }
+      })
+      return coursesString
+    }
+
+
     const selectAll = () => {
       const notAuth = !this.state.selectAll
         ? this.state.items.filter(el => el[1].authenticated === 0)

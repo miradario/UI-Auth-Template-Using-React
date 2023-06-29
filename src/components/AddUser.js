@@ -165,8 +165,9 @@ const AddUserPage = props => {
     const short_1 = short ? 1 : 0
     const ae_1 = ae ? 1 : 0
     const sign_1 = sign ? 1 : 0
+
     const hp_1 = HP ? 'si' : 'no'
-    
+
     const ae_2 = AE ? 'si' : 'no'
     const ttc_1 = TTC ? 'si' : 'no'
     const dsn_1 = DSN ? 'si' : 'no'
@@ -200,7 +201,7 @@ const AddUserPage = props => {
           short: short_1,
           ae: ae_1
         },
-        couse:
+        course:
         {
           HP: hp_1,
           AE: ae_2,
