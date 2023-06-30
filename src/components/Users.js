@@ -9,6 +9,8 @@ import { useState } from 'react'
 import { useEffect } from 'react'
 import { AiOutlineSearch } from 'react-icons/ai'
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
+import { ModalFilters } from './Filters/ModalFilters'
+import { filterUsers } from '../helpers/filterUsers'
 
 export default function Users () {
   const history = useHistory()
@@ -24,6 +26,7 @@ export default function Users () {
   const [selectedToAuthenticated, setSelectedToAuthenticated] = useState([])
   //   const [selectAll, useSelectAll] = useState(false)
   const [valueSearchAux, setValueSearchAux] = useState('')
+  const [showFilters, setShowFilters] = useState(false)
 
   const [filtersActive, setFiltersActive] = useState({
     searchValue: '',
@@ -32,14 +35,26 @@ export default function Users () {
       by: '',
       value: ''
     },
-    filters: ''
+    filters: {
+      active: false,
+      name: 'Not selected',
+      lastName: 'Not selected',
+      email: 'Not selected',
+      country: 'Not selected',
+      state: 'Not selected',
+      TTCDate: 'Not selected',
+      phone: 'Not selected'
+    }
   })
 
   useEffect(() => {
-    const totalPages =
+    let totalPages =
       Math.floor(itemsFilter.length / perPage) != itemsFilter.length / perPage
         ? Math.floor(itemsFilter.length / perPage)
         : itemsFilter.length / perPage - 1
+
+    if (totalPages == -1) totalPages = 0
+
     setPagination({
       page: totalPages >= pagination.page ? pagination.page : 0,
       perPage: perPage,
@@ -48,15 +63,20 @@ export default function Users () {
   }, [perPage, itemsFilter])
 
   useEffect(() => {
-    let array = [...items]
-    console.log(filtersActive)
-    if (filtersActive.searchValue)
-      array = filterDataSearch([...array], filtersActive.searchValue)
+    if (items.length > 0) {
+      let array = [...items]
+      console.log(filtersActive.filters)
+      if (filtersActive.searchValue)
+        array = filterDataSearch([...array], filtersActive.searchValue)
 
-    if (filtersActive.orderActive.active)
-      array = orderArray([...array], filtersActive.orderActive.value)
+      if (filtersActive.orderActive.active)
+        array = orderArray([...array], filtersActive.orderActive.value)
 
-    setItemsFilter(array)
+      if (filtersActive.filters.active)
+        array = filterUsers([...array], filtersActive.filters)
+
+      setItemsFilter(array)
+    }
   }, [filtersActive])
 
   const filterDataSearch = (array, value) => {
@@ -130,7 +150,7 @@ export default function Users () {
 
   const orderArray = (array, param) => {
     let min, aux
-    console.log(param, array.length)
+    // console.log(param, array.length)
     for (let i = 0; i < array.length - 1; i++) {
       min = i
       for (let j = i + 1; j < array.length; j++) {
@@ -345,9 +365,37 @@ export default function Users () {
 
                 <div
                   className='orderContainer'
-                  onClick={() => setShowOrder(!showOrder)}
+                  onClick={() => setShowFilters(true)}
+                  style={{
+                    backgroundColor: filtersActive.filters.active
+                      ? '#feae00'
+                      : 'white'
+                  }}
                 >
                   <p>
+                    Filtro{' '}
+                    {filtersActive.filters.active ? `: Activo` : ': Inactivo'}
+                  </p>
+                </div>
+
+                <ModalFilters
+                  visible={showFilters}
+                  data={items}
+                  setShowFilters={setShowFilters}
+                  setFiltersActive={setFiltersActive}
+                  filtersActive={filtersActive}
+                />
+
+                <div
+                  className='orderContainer'
+                  style={{
+                    backgroundColor: filtersActive.orderActive.active
+                      ? '#feae00'
+                      : 'white'
+                  }}
+                  onClick={() => setShowOrder(!showOrder)}
+                >
+                  <p style={{ color: 'black' }}>
                     {'Order by ' + filtersActive.orderActive.by ||
                       'Order by...'}
                   </p>
