@@ -3,6 +3,7 @@ import { getCountries } from '../../helpers/getCountries'
 import { useEffect } from 'react'
 import { SelectForm } from './SelectForm'
 import { getTTCDate } from '../../helpers/getTTCDate'
+import { getCountriesTeach } from '../../helpers/getCountriesTeach'
 
 export const ModalFilters = ({
   data,
@@ -13,12 +14,15 @@ export const ModalFilters = ({
 }) => {
   const [countries, setCountries] = useState([])
   const [TTCDate, setTTCDate] = useState([])
+  const [teachCountries, setTeachCountries] = useState([])
 
   useEffect(() => {
     const ct = getCountries(data)
     const ttc = getTTCDate(data)
+    const teachC = getCountriesTeach(data)
     setCountries(ct)
     setTTCDate(ttc)
+    setTeachCountries(teachC)
   }, [data])
 
   return (
@@ -77,8 +81,15 @@ export const ModalFilters = ({
           />
           <SelectForm
             options={['Vacio', ...countries]}
-            title='Country'
+            title='Country Origin'
             identify='country'
+            setFiltersActive={setFiltersActive}
+            filtersActive={filtersActive}
+          />
+          <SelectForm
+            options={['Vacio', ...teachCountries]}
+            title='Country Residence'
+            identify='teach_country'
             setFiltersActive={setFiltersActive}
             filtersActive={filtersActive}
           />

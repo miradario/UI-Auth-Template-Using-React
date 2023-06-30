@@ -12,6 +12,7 @@ const AddUserPage = props => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [phone, setPhone] = useState('')
+  const [teachCountry, setTeachCountry] = useState('')
   const [lastName, setLastname] = useState('')
   const [country, setCountry] = useState('')
   // const [code, setCode] = useState("");
@@ -35,9 +36,8 @@ const AddUserPage = props => {
   const [VTP, setVTP] = useState(false)
   const [YesPlus, setYesPlus] = useState(false)
   const [YES, setYES] = useState(false)
-  
+
   const [comment, setComment] = useState('')
-  
 
   const [inactive, setInactive] = useState(false)
   const [error, setError] = useState(null)
@@ -81,6 +81,7 @@ const AddUserPage = props => {
         .then(snapshot => {
           console.log('snapshot:', snapshot)
           if (snapshot) {
+            setTeachCountry(snapshot.val().teach_country)
             setPhone(snapshot.val().phone)
             setName(snapshot.val().name)
             setEmail(snapshot.val().email)
@@ -94,18 +95,19 @@ const AddUserPage = props => {
             setSign(snapshot.val().sign === 1 ? true : false)
             setShort(snapshot.val().SKY.short === 1 ? true : false)
             setAe(snapshot.val().SKY.ae === 1 ? true : false)
-            setHP(snapshot.val().course.HP === 'si'  ? true : false)
-            setAE(snapshot.val().course.AE === 'si'  ? true : false)
-            setTTC(snapshot.val().course.TTC === 'si'  ? true : false)
-            setDSN(snapshot.val().course.DSN === 'si'  ? true : false)
-            setParte2(snapshot.val().course.Parte2 === 'si'  ? true : false)
-            setParte2SSY(snapshot.val().course.Parte2SSY === 'si'  ? true : false)
-            setPrision(snapshot.val().course.Prision === 'si'  ? true : false)
-            setSSY(snapshot.val().course.SSY === 'si'  ? true : false)
-            setSahaj(snapshot.val().course.Sahaj === 'si'  ? true : false)
-            setVTP(snapshot.val().course.VTP === 'si'  ? true : false)
-            setYesPlus(snapshot.val().course.YesPlus === 'si'  ? true : false)
-
+            setHP(snapshot.val().course.HP === 'si' ? true : false)
+            setAE(snapshot.val().course.AE === 'si' ? true : false)
+            setTTC(snapshot.val().course.TTC === 'si' ? true : false)
+            setDSN(snapshot.val().course.DSN === 'si' ? true : false)
+            setParte2(snapshot.val().course.Parte2 === 'si' ? true : false)
+            setParte2SSY(
+              snapshot.val().course.Parte2SSY === 'si' ? true : false
+            )
+            setPrision(snapshot.val().course.Prision === 'si' ? true : false)
+            setSSY(snapshot.val().course.SSY === 'si' ? true : false)
+            setSahaj(snapshot.val().course.Sahaj === 'si' ? true : false)
+            setVTP(snapshot.val().course.VTP === 'si' ? true : false)
+            setYesPlus(snapshot.val().course.YesPlus === 'si' ? true : false)
 
             setIsLoading(false)
           }
@@ -134,6 +136,7 @@ const AddUserPage = props => {
   }
 
   const cleanFields = () => {
+    setTeachCountry('')
     setName('')
     setEmail('')
     setPassword('')
@@ -157,7 +160,6 @@ const AddUserPage = props => {
     setSahaj(false)
     setVTP(false)
     setYesPlus(false)
-
   }
 
   const handleAddUser = async userNew => {
@@ -191,6 +193,7 @@ const AddUserPage = props => {
         phone: phone,
         country: country,
         //     code: code,
+        teach_country: teachCountry,
         lastName: lastName,
         TTCDate: TTCDate,
         sign: sign_1,
@@ -201,8 +204,7 @@ const AddUserPage = props => {
           short: short_1,
           ae: ae_1
         },
-        course:
-        {
+        course: {
           HP: hp_1,
           AE: ae_2,
           TTC: ttc_1,
@@ -215,7 +217,6 @@ const AddUserPage = props => {
           VTP: vtp_1,
           YesPlus: yesPlus_1
         }
-
       })
       .then(data => {
         //success callback
@@ -334,7 +335,7 @@ const AddUserPage = props => {
             <br />
             <InputGroup>
               <InputGroup.Prepend className='inputlabel'>
-                Country:
+                Origin Country:
               </InputGroup.Prepend>
               <Form.Control
                 type='text'
@@ -366,6 +367,21 @@ const AddUserPage = props => {
             <br />
             <InputGroup>
               <InputGroup.Prepend className='inputlabel'>
+                Residence Country:
+              </InputGroup.Prepend>
+              <Form.Control
+                type='text'
+                name='teach_country'
+                id='inputtextTeachCountry'
+                value={teachCountry}
+                placeholder='Argentina'
+                autoFocus
+                onChange={event => setTeachCountry(event.target.value)}
+              />
+            </InputGroup>
+            <br />
+            <InputGroup>
+              <InputGroup.Prepend className='inputlabel'>
                 TTC Date:
               </InputGroup.Prepend>
               <Form.Control
@@ -381,7 +397,7 @@ const AddUserPage = props => {
             <br />
             <InputGroup>
               <InputGroup.Prepend className='inputlabel'>
-              Comment:
+                Comment:
               </InputGroup.Prepend>
               <Form.Control
                 type='text'
@@ -531,7 +547,7 @@ const AddUserPage = props => {
                 value={VTP}
                 onChange={() => setVTP(!VTP)}
               />
-              <Form.Check 
+              <Form.Check
                 className='inputradio'
                 label='Parte 2'
                 type='checkbox'
@@ -549,10 +565,6 @@ const AddUserPage = props => {
                 value={TTC}
                 onChange={() => setTTC(!TTC)}
               />
-              
-
-
-
             </InputGroup>
             <br />
             <div className='text-center'>

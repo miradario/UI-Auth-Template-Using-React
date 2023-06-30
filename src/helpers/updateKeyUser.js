@@ -25,7 +25,7 @@ export const updateKeyUser = async (keyRDB, keyUserAuth) => {
     // console.log(`KEY RDB: ${keyRDB} ||||| keyUserAuth: ${keyUserAuth}`)
     const data = await getDataUser(keyRDB)
 
-    const newData = { ...data, authenticated: 1 }
+    const newData = { teach_country: '', ...data, authenticated: 1 }
     // console.log('NEW DATA: ', newData)
 
     //CREAR EL USUARIO PERO AHORA YA AUTENTICADO y con la clave que se genero cuando se autenticó!

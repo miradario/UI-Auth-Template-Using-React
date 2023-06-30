@@ -1,5 +1,7 @@
 export const filterUsers = (array, filtros) => {
   let filterArray = [...array]
+
+  //FILTRO EXISTENCIA DE NOMBRE
   if (filtros.name !== 'Not selected')
     filterArray = filterByValue(
       [...filterArray],
@@ -7,6 +9,8 @@ export const filterUsers = (array, filtros) => {
       '',
       filtros.name === 'vacio'
     )
+
+  //FILTRO EXISTENCIA DE LASTNAME
   if (filtros.lastName !== 'Not selected')
     filterArray = filterByValue(
       [...filterArray],
@@ -14,6 +18,8 @@ export const filterUsers = (array, filtros) => {
       '',
       filtros.lastName === 'vacio'
     )
+
+  //FILTRO EXISTENCIA DE EMAIL
   if (filtros.email !== 'Not selected')
     filterArray = filterByValue(
       [...filterArray],
@@ -21,18 +27,23 @@ export const filterUsers = (array, filtros) => {
       '',
       filtros.email === 'vacio'
     )
+
+  //FILTRO PAIS DE ORIGEN
   if (filtros.country !== 'Not selected')
     filterArray = filterByValue(
       [...filterArray],
       'country',
       filtros.country === 'vacio' ? '' : filtros.country
     )
+  //FILTRO TTCDATE
   if (filtros.TTCDate !== 'Not selected')
     filterArray = filterByValue(
       [...filterArray],
       'TTCDate',
       filtros.TTCDate === 'vacio' ? '' : filtros.TTCDate
     )
+
+  //FILTRO ESTADO (AUTENTICADO/NO)
   if (filtros.state !== 'Not selected')
     filterArray = filterByValue(
       [...filterArray],
@@ -40,6 +51,7 @@ export const filterUsers = (array, filtros) => {
       filtros.state === 'autenticados' ? '1' : '0'
     )
 
+  //FILTRO TELEFONO
   if (filtros.phone !== 'Not selected')
     filterArray = filterByValue(
       [...filterArray],
@@ -47,6 +59,15 @@ export const filterUsers = (array, filtros) => {
       '',
       filtros.phone === 'vacio'
     )
+
+  //FILTRO PAIS DE RESIDENCIA
+  if (filtros.teach_country !== 'Not selected') {
+    filterArray = filterByValue(
+      [...filterArray],
+      'teach_country',
+      filtros.teach_country === 'vacio' ? '' : filtros.teach_country
+    )
+  }
 
   return filterArray
 }

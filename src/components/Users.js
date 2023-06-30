@@ -43,7 +43,8 @@ export default function Users () {
       country: 'Not selected',
       state: 'Not selected',
       TTCDate: 'Not selected',
-      phone: 'Not selected'
+      phone: 'Not selected',
+      teach_country: 'Not selected'
     }
   })
 
@@ -111,7 +112,6 @@ export default function Users () {
           code: items[item].code,
           TTCDate: items[item].TTCDate,
           sign: items[item].sign,
-
           address: items[item].address,
           inactive: items[item].inactive
         })
@@ -126,7 +126,6 @@ export default function Users () {
 
   useEffect(() => {
     db.ref('users/')
-
       .once('value')
       .then(snapshot => {
         if (snapshot) {
@@ -425,7 +424,10 @@ export default function Users () {
                         First TTC Date
                       </li>
                       <li data-id='country' onClick={orderDataByParam}>
-                        Country
+                        Origin Country
+                      </li>
+                      <li data-id='teach_country' onClick={orderDataByParam}>
+                        Residence Country
                       </li>
                       <li data-id='email' onClick={orderDataByParam}>
                         Email
@@ -570,7 +572,10 @@ export default function Users () {
                       Phone
                     </th>
                     <th scope='col' data-id='country'>
-                      Country
+                      Country Origin
+                    </th>
+                    <th scope='col' data-id='teach_country'>
+                      Country Residence
                     </th>
                     <th scope='col'>Code</th>
                     <th scope='col'>Long</th>
@@ -706,6 +711,7 @@ export default function Users () {
                           <td>{user[1].email}</td>
                           <td>{user[1].phone}</td>
                           <td>{user[1].country}</td>
+                          <td>{user[1].teach_country}</td>
                           <td>{user[1].code}</td>
                           <td>{user[1].SKY.long === 1 ? 'On' : 'Off'}</td>
                           <td>{user[1].SKY.short === 1 ? 'On' : 'Off'}</td>
