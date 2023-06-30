@@ -487,3 +487,30 @@ footer Form {
     font-weight: bold;
 
 }
+
+.formSearch{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.formSearch > label{
+    width:40px;
+    height: 40px;
+    background-color: #d39e00;
+    color:white;
+    font-size:25px;
+    font-weight: bold;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    outline:2px solid black;
+    margin:0;
+    cursor: pointer;
+    transition: 0.2s all ease;
+}
+
+.formSearch > label:hover{
+    background-color: #feae00;
+}
