@@ -558,6 +558,7 @@ body{
 
 .formFilters option{
     text-transform: capitalize;
+    color:'black'
 }
 
 .formFilters label{

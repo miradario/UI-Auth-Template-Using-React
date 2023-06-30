@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { verifyFiltersActive } from '../../helpers/verifyFiltersActive'
+import { useState } from 'react'
 
 export const SelectForm = ({
   options,
@@ -8,7 +9,10 @@ export const SelectForm = ({
   setFiltersActive,
   filtersActive
 }) => {
+  const [notSelect, setNotSelect] = useState(true)
+
   const handleChangeSelect = e => {
+    setNotSelect(e.target.value === 'Not selected')
     const value =
       e.target.value === 'Not selected'
         ? 'Not selected'
@@ -38,7 +42,10 @@ export const SelectForm = ({
       }}
     >
       <label>{title}</label>
-      <select onChange={handleChangeSelect}>
+      <select
+        onChange={handleChangeSelect}
+        style={{ backgroundColor: !notSelect ? '#feae00' : 'white' }}
+      >
         <option>Not selected</option>
         {options.map((el, index) => (
           <option key={index}>{el}</option>
