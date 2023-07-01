@@ -317,219 +317,236 @@ export default function Users () {
         <br />
         <br />
 
-        <div style={{ width: '100%' }}>
-          <div style={{ width: '90%', margin: '0 auto' }}>
+        {email === 'sistemas@elartedevivir.org' ? (
+          <>
             <div style={{ width: '100%' }}>
-              <h1 style={{ margin: '20px 0' }}>Teachers</h1>
-              <form className='formSearch' onSubmit={handleSearch}>
-                <input
-                  type='text'
-                  placeholder='Nombre, apellido o email...'
-                  style={{
-                    display: 'block',
-                    padding: '8px'
-                  }}
-                  name='search'
-                  value={valueSearchAux}
-                  onChange={e => setValueSearchAux(e.target.value)}
-                />
-                <label htmlFor='search'>
-                  <AiOutlineSearch />
-                </label>
-                <input
-                  type='submit'
-                  name='search'
-                  id='search'
-                  style={{ display: 'none' }}
-                />
-              </form>
-              <button className='btn btn-primary'>
-                <a href='/add-users' style={{ color: 'white' }}>
-                  Add Teacher
-                </a>
-              </button>
-              <br />
-              <br />
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  marginBottom: 20
-                }}
-              >
-                <button
-                  className='btn btn-secondary'
-                  onClick={() => handleFilterDeleted()}
-                >
-                  {!showDeleted ? 'Show inactive users' : 'Hide inactive users'}
-                </button>
+              <div style={{ width: '90%', margin: '0 auto' }}>
+                <div style={{ width: '100%' }}>
+                  <h1 style={{ margin: '20px 0' }}>Teachers</h1>
+                  <form className='formSearch' onSubmit={handleSearch}>
+                    <input
+                      type='text'
+                      placeholder='Nombre, apellido o email...'
+                      style={{
+                        display: 'block',
+                        padding: '8px'
+                      }}
+                      name='search'
+                      value={valueSearchAux}
+                      onChange={e => setValueSearchAux(e.target.value)}
+                    />
+                    <label htmlFor='search'>
+                      <AiOutlineSearch />
+                    </label>
+                    <input
+                      type='submit'
+                      name='search'
+                      id='search'
+                      style={{ display: 'none' }}
+                    />
+                  </form>
+                  <button className='btn btn-primary'>
+                    <a href='/add-users' style={{ color: 'white' }}>
+                      Add Teacher
+                    </a>
+                  </button>
+                  <br />
+                  <br />
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      marginBottom: 20
+                    }}
+                  >
+                    <button
+                      className='btn btn-secondary'
+                      onClick={() => handleFilterDeleted()}
+                    >
+                      {!showDeleted
+                        ? 'Show inactive users'
+                        : 'Hide inactive users'}
+                    </button>
 
-                <div
-                  className='orderContainer'
-                  onClick={() => setShowFilters(true)}
-                  style={{
-                    backgroundColor: filtersActive.filters.active
-                      ? '#feae00'
-                      : 'white'
-                  }}
-                >
-                  <p>
-                    Filtro{' '}
-                    {filtersActive.filters.active ? `: Activo` : ': Inactivo'}
-                  </p>
-                </div>
+                    <div
+                      className='orderContainer'
+                      onClick={() => setShowFilters(true)}
+                      style={{
+                        backgroundColor: filtersActive.filters.active
+                          ? '#feae00'
+                          : 'white'
+                      }}
+                    >
+                      <p>
+                        Filtro{' '}
+                        {filtersActive.filters.active
+                          ? `: Activo`
+                          : ': Inactivo'}
+                      </p>
+                    </div>
 
-                <ModalFilters
-                  visible={showFilters}
-                  data={items}
-                  setShowFilters={setShowFilters}
-                  setFiltersActive={setFiltersActive}
-                  filtersActive={filtersActive}
-                />
+                    <ModalFilters
+                      visible={showFilters}
+                      data={items}
+                      setShowFilters={setShowFilters}
+                      setFiltersActive={setFiltersActive}
+                      filtersActive={filtersActive}
+                    />
 
-                <div
-                  className='orderContainer'
-                  style={{
-                    backgroundColor: filtersActive.orderActive.active
-                      ? '#feae00'
-                      : 'white'
-                  }}
-                  onClick={() => setShowOrder(!showOrder)}
-                >
-                  <p style={{ color: 'black' }}>
-                    {'Order by ' + filtersActive.orderActive.by ||
-                      'Order by...'}
-                  </p>
-                  {showOrder && (
-                    <ul className='orderOptions'>
-                      {filtersActive.orderActive.active && (
-                        <li
-                          className='delete-order'
-                          onClick={() => {
-                            setItemsFilter(items)
-                            setFiltersActive({
-                              ...filtersActive,
-                              orderActive: { active: false, by: '', value: '' }
-                            })
+                    <div
+                      className='orderContainer'
+                      style={{
+                        backgroundColor: filtersActive.orderActive.active
+                          ? '#feae00'
+                          : 'white'
+                      }}
+                      onClick={() => setShowOrder(!showOrder)}
+                    >
+                      <p style={{ color: 'black' }}>
+                        {'Order by ' + filtersActive.orderActive.by ||
+                          'Order by...'}
+                      </p>
+                      {showOrder && (
+                        <ul className='orderOptions'>
+                          {filtersActive.orderActive.active && (
+                            <li
+                              className='delete-order'
+                              onClick={() => {
+                                setItemsFilter(items)
+                                setFiltersActive({
+                                  ...filtersActive,
+                                  orderActive: {
+                                    active: false,
+                                    by: '',
+                                    value: ''
+                                  }
+                                })
+                              }}
+                            >
+                              Eliminar Orden: {filtersActive.orderActive.value}
+                            </li>
+                          )}
+                          <li data-id='name' onClick={orderDataByParam}>
+                            Name
+                          </li>
+                          <li data-id='lastName' onClick={orderDataByParam}>
+                            Last Name
+                          </li>
+                          <li data-id='TTCDate' onClick={orderDataByParam}>
+                            First TTC Date
+                          </li>
+                          <li data-id='country' onClick={orderDataByParam}>
+                            Origin Country
+                          </li>
+                          <li
+                            data-id='teach_country'
+                            onClick={orderDataByParam}
+                          >
+                            Residence Country
+                          </li>
+                          <li data-id='email' onClick={orderDataByParam}>
+                            Email
+                          </li>
+                          <li data-id='phone' onClick={orderDataByParam}>
+                            Phone
+                          </li>
+                        </ul>
+                      )}
+                    </div>
+
+                    <div
+                      className='orderContainer'
+                      onClick={() => setShowPagination(!showPagination)}
+                    >
+                      <p>Por pagina: {perPage}</p>
+                      {showPagination && (
+                        <ul className='orderOptions'>
+                          <li onClick={() => setPerPage(25)}>25</li>
+                          <li onClick={() => setPerPage(50)}>50</li>
+                          <li onClick={() => setPerPage(100)}>100</li>
+                        </ul>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* BOTON PARA ELIMINAR DUPLICADOS */}
+                  {/* <button onClick={deleteDuplicate}>DELETE DUPLICATES</button> */}
+
+                  {/* PAGINATION */}
+                  {items.length > 0 && (
+                    <div className='containerBtnPage'>
+                      {pagination.page !== 0 ? (
+                        <div
+                          className='containerBtnPage__btn'
+                          onClick={handlePrevPage}
+                        >
+                          <BsChevronLeft />
+                        </div>
+                      ) : (
+                        <div
+                          className='containerBtnPage__btn'
+                          style={{
+                            backgroundColor: 'inherit',
+                            border: 'none',
+                            color: '#a5a5a5'
                           }}
                         >
-                          Eliminar Orden: {filtersActive.orderActive.value}
-                        </li>
+                          <BsChevronLeft />
+                        </div>
                       )}
-                      <li data-id='name' onClick={orderDataByParam}>
-                        Name
-                      </li>
-                      <li data-id='lastName' onClick={orderDataByParam}>
-                        Last Name
-                      </li>
-                      <li data-id='TTCDate' onClick={orderDataByParam}>
-                        First TTC Date
-                      </li>
-                      <li data-id='country' onClick={orderDataByParam}>
-                        Origin Country
-                      </li>
-                      <li data-id='teach_country' onClick={orderDataByParam}>
-                        Residence Country
-                      </li>
-                      <li data-id='email' onClick={orderDataByParam}>
-                        Email
-                      </li>
-                      <li data-id='phone' onClick={orderDataByParam}>
-                        Phone
-                      </li>
-                    </ul>
-                  )}
-                </div>
-
-                <div
-                  className='orderContainer'
-                  onClick={() => setShowPagination(!showPagination)}
-                >
-                  <p>Por pagina: {perPage}</p>
-                  {showPagination && (
-                    <ul className='orderOptions'>
-                      <li onClick={() => setPerPage(25)}>25</li>
-                      <li onClick={() => setPerPage(50)}>50</li>
-                      <li onClick={() => setPerPage(100)}>100</li>
-                    </ul>
-                  )}
-                </div>
-              </div>
-
-              {/* BOTON PARA ELIMINAR DUPLICADOS */}
-              {/* <button onClick={deleteDuplicate}>DELETE DUPLICATES</button> */}
-
-              {/* PAGINATION */}
-              {items.length > 0 && (
-                <div className='containerBtnPage'>
-                  {pagination.page !== 0 ? (
-                    <div
-                      className='containerBtnPage__btn'
-                      onClick={handlePrevPage}
-                    >
-                      <BsChevronLeft />
+                      <p>{pagination.page + 1}</p>
+                      {pagination.page !== pagination.totalPages ? (
+                        <div
+                          className='containerBtnPage__btn'
+                          onClick={handleNextPage}
+                        >
+                          <BsChevronRight />
+                        </div>
+                      ) : (
+                        <div
+                          className='containerBtnPage__btn'
+                          style={{
+                            backgroundColor: 'inherit',
+                            border: 'none',
+                            color: '#a5a5a5'
+                          }}
+                        >
+                          <BsChevronRight />
+                        </div>
+                      )}
                     </div>
-                  ) : (
-                    <div
-                      className='containerBtnPage__btn'
+                  )}
+                  {/* PAGINATION CLOSE */}
+
+                  <div
+                    style={{
+                      textAlign: 'left'
+                    }}
+                  >
+                    <button
                       style={{
-                        backgroundColor: 'inherit',
-                        border: 'none',
-                        color: '#a5a5a5'
+                        backgroundColor:
+                          selectedToAuthenticated?.length > 0
+                            ? '#feae00'
+                            : '#bbb',
+                        padding: '5px 20px',
+                        marginBottom: '10px',
+                        color:
+                          selectedToAuthenticated?.length > 0
+                            ? 'white'
+                            : 'black',
+                        fontWeight: 'bold'
                       }}
+                      onClick={() =>
+                        selectedToAuthenticated.length !== 0
+                          ? sendSelected()
+                          : console.log('Deshabilitado')
+                      }
                     >
-                      <BsChevronLeft />
-                    </div>
-                  )}
-                  <p>{pagination.page + 1}</p>
-                  {pagination.page !== pagination.totalPages ? (
-                    <div
-                      className='containerBtnPage__btn'
-                      onClick={handleNextPage}
-                    >
-                      <BsChevronRight />
-                    </div>
-                  ) : (
-                    <div
-                      className='containerBtnPage__btn'
-                      style={{
-                        backgroundColor: 'inherit',
-                        border: 'none',
-                        color: '#a5a5a5'
-                      }}
-                    >
-                      <BsChevronRight />
-                    </div>
-                  )}
-                </div>
-              )}
-              {/* PAGINATION CLOSE */}
-
-              <div
-                style={{
-                  textAlign: 'left'
-                }}
-              >
-                <button
-                  style={{
-                    backgroundColor:
-                      selectedToAuthenticated?.length > 0 ? '#feae00' : '#bbb',
-                    padding: '5px 20px',
-                    marginBottom: '10px',
-                    color:
-                      selectedToAuthenticated?.length > 0 ? 'white' : 'black',
-                    fontWeight: 'bold'
-                  }}
-                  onClick={() =>
-                    selectedToAuthenticated.length !== 0
-                      ? sendSelected()
-                      : console.log('Deshabilitado')
-                  }
-                >
-                  Send Selected
-                </button>
-                {/* SELECT ALL BUTTON */}
-                {/* <button
+                      Send Selected
+                    </button>
+                    {/* SELECT ALL BUTTON */}
+                    {/* <button
                       style={{
                         backgroundColor: '#feae00',
                         padding: '5px 20px',
@@ -542,244 +559,267 @@ export default function Users () {
                     >
                       {selectAll ? 'Uncheck All' : 'Check All'}
                     </button> */}
-              </div>
-              <table
-                className='table table-striped'
-                style={{
-                  fontSize: '12px'
-                }}
-              >
-                <thead>
-                  <tr>
-                    <th scope='col'>Action</th>
-                    <th scope='col'>Delete</th>
-                    <th scope='col'>Forgot Password</th>
-                    <th scope='col'>Authenticate</th>
-                    <th scope='col'></th>
-                    <th scope='col'>Delete</th>
-                    <th scope='col' data-id='name'>
-                      Name
-                    </th>
-                    <th scope='col' data-id='lastName'>
-                      Last Name
-                    </th>
-                    <th scope='col' data-id='email'>
-                      Email
-                    </th>
-                    <th
-                      scope='col'
-                      //
-                      data-id='phone'
-                    >
-                      Phone
-                    </th>
-                    <th scope='col' data-id='country'>
-                      Country Origin
-                    </th>
-                    <th scope='col' data-id='teach_country'>
-                      Country Residence
-                    </th>
-                    <th scope='col'>Code</th>
-                    <th scope='col'>Long</th>
-                    <th scope='col'>Short</th>
-
-                    <th scope='col'>Status</th>
-                    <th scope='col' data-id='ttcdate'>
-                      First TTC Date
-                    </th>
-
-                    <th scope='col'>Sign Contract</th>
-                    <th scope='col'>Comment</th>
-                    <th scope='col'>HP</th>
-                    <th scope='col'>SSY</th>
-                    <th scope='col'>Yes+</th>
-                    <th scope='col'>Yes</th>
-                    <th scope='col'>AE</th>
-                    <th scope='col'>Sahaj</th>
-                    <th scope='col'>P2</th>
-                    <th scope='col'>SSY2</th>
-                    <th scope='col'>DSN</th>
-                    <th scope='col'>VTP</th>
-                    <th scope='col'>TTC</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {itemsFilter
-                    .slice(
-                      pagination.page * pagination.perPage,
-                      (pagination.page + 1) * pagination.perPage
-                    )
-                    .map(user =>
-                      //check if inactive y si showDeleted es true
-                      (user[1].inactive && showDeleted) || !user[1].inactive ? (
-                        <tr
-                          key={user[0]}
-                          style={{
-                            backgroundColor: user[1].inactive ? 'orange' : ''
-                          }}
+                  </div>
+                  <table
+                    className='table table-striped'
+                    style={{
+                      fontSize: '12px'
+                    }}
+                  >
+                    <thead>
+                      <tr>
+                        <th scope='col'>Action</th>
+                        <th scope='col'>Delete</th>
+                        <th scope='col'>Forgot Password</th>
+                        <th scope='col'>Authenticate</th>
+                        <th scope='col'></th>
+                        <th scope='col'>Delete</th>
+                        <th scope='col' data-id='name'>
+                          Name
+                        </th>
+                        <th scope='col' data-id='lastName'>
+                          Last Name
+                        </th>
+                        <th scope='col' data-id='email'>
+                          Email
+                        </th>
+                        <th
+                          scope='col'
+                          //
+                          data-id='phone'
                         >
-                          <td>
-                            <button
-                              className='btn btn-primary'
-                              style={{
-                                fontSize: '11px'
-                              }}
-                              onClick={() => {
-                                history.push({
-                                  pathname: '/add-users',
-                                  state: { key: user[0] }
-                                })
-                              }}
-                            >
-                              Edit
-                            </button>
-                          </td>
-                          <td>
-                            <button
+                          Phone
+                        </th>
+                        <th scope='col' data-id='country'>
+                          Country Origin
+                        </th>
+                        <th scope='col' data-id='teach_country'>
+                          Country Residence
+                        </th>
+                        <th scope='col'>Code</th>
+                        <th scope='col'>Long</th>
+                        <th scope='col'>Short</th>
+
+                        <th scope='col'>Status</th>
+                        <th scope='col' data-id='ttcdate'>
+                          First TTC Date
+                        </th>
+
+                        <th scope='col'>Sign Contract</th>
+                        <th scope='col'>Comment</th>
+                        <th scope='col'>HP</th>
+                        <th scope='col'>SSY</th>
+                        <th scope='col'>Yes+</th>
+                        <th scope='col'>Yes</th>
+                        <th scope='col'>AE</th>
+                        <th scope='col'>Sahaj</th>
+                        <th scope='col'>P2</th>
+                        <th scope='col'>SSY2</th>
+                        <th scope='col'>DSN</th>
+                        <th scope='col'>VTP</th>
+                        <th scope='col'>TTC</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {itemsFilter
+                        .slice(
+                          pagination.page * pagination.perPage,
+                          (pagination.page + 1) * pagination.perPage
+                        )
+                        .map(user =>
+                          //check if inactive y si showDeleted es true
+                          (user[1].inactive && showDeleted) ||
+                          !user[1].inactive ? (
+                            <tr
+                              key={user[0]}
                               style={{
                                 backgroundColor: user[1].inactive
-                                  ? ''
-                                  : 'orange',
-                                fontSize: '11px'
-                              }}
-                              className={
-                                user[1].inactive
-                                  ? 'btn btn-danger'
-                                  : 'btn btn-success'
-                              }
-                              onClick={() => {
-                                deleteAuthUser(user[0], !user[1].inactive)
+                                  ? 'orange'
+                                  : ''
                               }}
                             >
-                              {user[1].inactive ? 'Activate' : 'Inactive'}
-                            </button>
-                          </td>
-                          <td>
-                            {/* send a forgot password */}
-                            <button
-                              className='btn btn-info'
-                              style={{ fontSize: 8 }}
-                              onClick={() => {
-                                auth
-                                  .sendPasswordResetEmail(user[1].email, {
-                                    url: 'https://cursos.elartedevivir.org/app'
-                                  })
-                                  .then(function () {
-                                    alert('Password reset email sent')
-                                  })
-                                  .catch(function (error) {
-                                    alert(error.message)
-                                  })
-                              }}
-                            >
-                              Reset Password
-                            </button>
-                          </td>
-                          {user[1].authenticated === 0 ? (
-                            <td>
-                              <button
-                                onClick={() => handleAuthenticateUser(user)}
-                              >
-                                Send first mail
-                              </button>
-                            </td>
-                          ) : (
-                            <td>Ya autenticado</td>
-                          )}
-                          <td>
-                            {user[1].authenticated === 0 && (
-                              <input
-                                type='checkbox'
-                                data-key={user[0]}
-                                //   checked={this.state.selectAll && true}
-                                onClick={handleCheckbox}
-                              />
-                            )}
-                          </td>
-                          <td>
-                            <MdDelete
-                              style={{
-                                fontSize: '22px',
-                                color: 'rgb(167, 0, 0)',
-                                cursor: 'pointer'
-                              }}
-                              onClick={() =>
-                                deleteOneUser(user[0], user[1].email)
-                              }
-                            />
-                          </td>
-                          <td>{user[1].name}</td>
-                          <td>{user[1].lastName}</td>
-                          <td>{user[1].email}</td>
-                          <td>{user[1].phone}</td>
-                          <td>{user[1].country}</td>
-                          <td>{user[1].teach_country}</td>
-                          <td>{user[1].code}</td>
-                          <td>{user[1].SKY.long === 1 ? 'On' : 'Off'}</td>
-                          <td>{user[1].SKY.short === 1 ? 'On' : 'Off'}</td>
-                          <td>{user[1].inactive ? 'Disable' : 'Enable'}</td>
-                          <td>{user[1].TTCDate}</td>
-                          <td>{user[1].sign === 1 ? 'Yes' : 'No'}</td>
-                          <td>{user[1].comment}</td>
-                          <td>{user[1].course?.HP}</td>
-                          <td>{user[1].course?.SSY}</td>
-                          <td>{user[1].course?.YesPlus}</td>
-                          <td>{user[1].course?.Yes}</td>
-                          <td>{user[1].course?.AE}</td>
-                          <td>{user[1].course?.Sahaj}</td>
-                          <td>{user[1].course?.Parte2}</td>
-                          <td>{user[1].course?.Parte2SSY}</td>
-                          <td>{user[1].course?.DSN}</td>
-                          <td>{user[1].course?.VTP}</td>
-                          <td>{user[1].course?.TTC}</td>
-                        </tr>
-                      ) : null
-                    )}
-                </tbody>
-              </table>
+                              <td>
+                                <button
+                                  className='btn btn-primary'
+                                  style={{
+                                    fontSize: '11px'
+                                  }}
+                                  onClick={() => {
+                                    history.push({
+                                      pathname: '/add-users',
+                                      state: { key: user[0] }
+                                    })
+                                  }}
+                                >
+                                  Edit
+                                </button>
+                              </td>
+                              <td>
+                                <button
+                                  style={{
+                                    backgroundColor: user[1].inactive
+                                      ? ''
+                                      : 'orange',
+                                    fontSize: '11px'
+                                  }}
+                                  className={
+                                    user[1].inactive
+                                      ? 'btn btn-danger'
+                                      : 'btn btn-success'
+                                  }
+                                  onClick={() => {
+                                    deleteAuthUser(user[0], !user[1].inactive)
+                                  }}
+                                >
+                                  {user[1].inactive ? 'Activate' : 'Inactive'}
+                                </button>
+                              </td>
+                              <td>
+                                {/* send a forgot password */}
+                                <button
+                                  className='btn btn-info'
+                                  style={{ fontSize: 8 }}
+                                  onClick={() => {
+                                    auth
+                                      .sendPasswordResetEmail(user[1].email, {
+                                        url: 'https://cursos.elartedevivir.org/app'
+                                      })
+                                      .then(function () {
+                                        alert('Password reset email sent')
+                                      })
+                                      .catch(function (error) {
+                                        alert(error.message)
+                                      })
+                                  }}
+                                >
+                                  Reset Password
+                                </button>
+                              </td>
+                              {user[1].authenticated === 0 ? (
+                                <td>
+                                  <button
+                                    onClick={() => handleAuthenticateUser(user)}
+                                  >
+                                    Send first mail
+                                  </button>
+                                </td>
+                              ) : (
+                                <td>Ya autenticado</td>
+                              )}
+                              <td>
+                                {user[1].authenticated === 0 && (
+                                  <input
+                                    type='checkbox'
+                                    data-key={user[0]}
+                                    //   checked={this.state.selectAll && true}
+                                    onClick={handleCheckbox}
+                                  />
+                                )}
+                              </td>
+                              <td>
+                                <MdDelete
+                                  style={{
+                                    fontSize: '22px',
+                                    color: 'rgb(167, 0, 0)',
+                                    cursor: 'pointer'
+                                  }}
+                                  onClick={() =>
+                                    deleteOneUser(user[0], user[1].email)
+                                  }
+                                />
+                              </td>
+                              <td>{user[1].name}</td>
+                              <td>{user[1].lastName}</td>
+                              <td>{user[1].email}</td>
+                              <td>{user[1].phone}</td>
+                              <td>{user[1].country}</td>
+                              <td>{user[1].teach_country}</td>
+                              <td>{user[1].code}</td>
+                              <td>{user[1].SKY.long === 1 ? 'On' : 'Off'}</td>
+                              <td>{user[1].SKY.short === 1 ? 'On' : 'Off'}</td>
+                              <td>{user[1].inactive ? 'Disable' : 'Enable'}</td>
+                              <td>{user[1].TTCDate}</td>
+                              <td>{user[1].sign === 1 ? 'Yes' : 'No'}</td>
+                              <td>{user[1].comment}</td>
+                              <td>{user[1].course?.HP}</td>
+                              <td>{user[1].course?.SSY}</td>
+                              <td>{user[1].course?.YesPlus}</td>
+                              <td>{user[1].course?.Yes}</td>
+                              <td>{user[1].course?.AE}</td>
+                              <td>{user[1].course?.Sahaj}</td>
+                              <td>{user[1].course?.Parte2}</td>
+                              <td>{user[1].course?.Parte2SSY}</td>
+                              <td>{user[1].course?.DSN}</td>
+                              <td>{user[1].course?.VTP}</td>
+                              <td>{user[1].course?.TTC}</td>
+                            </tr>
+                          ) : null
+                        )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
 
-        {/* PAGINATION */}
-        {items.length > 0 && (
-          <div className='containerBtnPage'>
-            {pagination.page !== 0 ? (
-              <div className='containerBtnPage__btn' onClick={handlePrevPage}>
-                <BsChevronLeft />
-              </div>
-            ) : (
-              <div
-                className='containerBtnPage__btn'
-                style={{
-                  backgroundColor: 'inherit',
-                  border: 'none',
-                  color: '#a5a5a5'
-                }}
-              >
-                <BsChevronLeft />
+            {/* PAGINATION */}
+            {items.length > 0 && (
+              <div className='containerBtnPage'>
+                {pagination.page !== 0 ? (
+                  <div
+                    className='containerBtnPage__btn'
+                    onClick={handlePrevPage}
+                  >
+                    <BsChevronLeft />
+                  </div>
+                ) : (
+                  <div
+                    className='containerBtnPage__btn'
+                    style={{
+                      backgroundColor: 'inherit',
+                      border: 'none',
+                      color: '#a5a5a5'
+                    }}
+                  >
+                    <BsChevronLeft />
+                  </div>
+                )}
+                <p>{pagination.page + 1}</p>
+                {pagination.page !== pagination.totalPages ? (
+                  <div
+                    className='containerBtnPage__btn'
+                    onClick={handleNextPage}
+                  >
+                    <BsChevronRight />
+                  </div>
+                ) : (
+                  <div
+                    className='containerBtnPage__btn'
+                    style={{
+                      backgroundColor: 'inherit',
+                      border: 'none',
+                      color: '#a5a5a5'
+                    }}
+                  >
+                    <BsChevronRight />
+                  </div>
+                )}
               </div>
             )}
-            <p>{pagination.page + 1}</p>
-            {pagination.page !== pagination.totalPages ? (
-              <div className='containerBtnPage__btn' onClick={handleNextPage}>
-                <BsChevronRight />
-              </div>
-            ) : (
-              <div
-                className='containerBtnPage__btn'
-                style={{
-                  backgroundColor: 'inherit',
-                  border: 'none',
-                  color: '#a5a5a5'
-                }}
+            {/* PAGINATION CLOSE */}
+          </>
+        ) : (
+          <div className='not_permisions'>
+            <p>
+              No tiene permisos! Por favor{' '}
+              <span
+                className='not_permisions_link'
+                onClick={() => history.push('/signin')}
               >
-                <BsChevronRight />
-              </div>
-            )}
+                inicie sesion de Administrador
+              </span>
+            </p>
           </div>
         )}
-        {/* PAGINATION CLOSE */}
 
         <Footer />
       </div>
