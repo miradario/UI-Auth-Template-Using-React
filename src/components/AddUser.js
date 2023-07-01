@@ -44,7 +44,7 @@ const AddUserPage = props => {
   const [error, setError] = useState(null)
   const [isloading, setIsLoading] = useState(false)
 
-//   console.log(props)
+  //   console.log(props)
 
   // create async createAuthUser
 
@@ -80,7 +80,7 @@ const AddUserPage = props => {
       db.ref('users/' + key)
         .once('value')
         .then(snapshot => {
-        //   console.log('snapshot:', snapshot)
+          //   console.log('snapshot:', snapshot)
           if (snapshot) {
             setTeachCountry(snapshot.val()?.teach_country)
             setPhone(snapshot.val()?.phone)
@@ -182,15 +182,15 @@ const AddUserPage = props => {
     const vtp_1 = VTP ? 'si' : 'no'
     const yesPlus_1 = YesPlus ? 'si' : 'no'
     const data = await getDataUser(userNew)
-    let authent;
-    if(data){
-        if(data.authenticated === 0){
-            authent = 0
-        }else{
-            authent = 1;
-        }
-    }else{
+    let authent
+    if (data) {
+      if (data.authenticated === 0) {
+        authent = 0
+      } else {
         authent = 1
+      }
+    } else {
+      authent = 1
     }
 
     // console.log(userNew, authent)
@@ -207,7 +207,7 @@ const AddUserPage = props => {
         phone: phone,
         country: country,
         //     code: code,
-        teach_country: teachCountry,
+        teach_country: teachCountry || '',
         lastName: lastName,
         TTCDate: TTCDate,
         sign: sign_1,
@@ -250,6 +250,7 @@ const AddUserPage = props => {
       })
       .catch(error => {
         //error callback
+        console.log('NOT EXISTS SOMEONE PROPERTY')
         console.log('error ', error)
       })
   }
@@ -257,6 +258,7 @@ const AddUserPage = props => {
   const handleSubmit = async event => {
     event.preventDefault()
     // console.log('email', email)
+    console.log(id)
     if (id) {
       handleAddUser(id)
     } else {
