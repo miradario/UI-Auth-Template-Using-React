@@ -212,7 +212,7 @@ const AddUserPage = props => {
         TTCDate: TTCDate,
         sign: sign_1,
         authenticated: authent,
-        comment: comment,
+        comment: comment || '',
         SKY: {
           long: long_1,
           short: short_1,

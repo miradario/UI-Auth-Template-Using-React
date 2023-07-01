@@ -16,6 +16,8 @@ export default function Users () {
   const history = useHistory()
   const [error, setError] = useState(null)
   const [isLoaded, setIsLoaded] = useState(false)
+  const email = localStorage.getItem('email')
+
   const [items, setItems] = useState([])
   const [itemsFilter, setItemsFilter] = useState([])
   const [showDeleted, setShowDeleted] = useState(false)
@@ -66,7 +68,7 @@ export default function Users () {
   useEffect(() => {
     if (items.length > 0) {
       let array = [...items]
-    //   console.log(filtersActive.filters)
+      //   console.log(filtersActive.filters)
       if (filtersActive.searchValue)
         array = filterDataSearch([...array], filtersActive.searchValue)
 
