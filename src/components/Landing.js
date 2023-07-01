@@ -12,7 +12,7 @@ class Landing extends Component {
   state = { ...INITIAL_STATE };
 
   handleClick = () => {
-    console.log("clicked");
+    // console.log("clicked");
     if (auth.currentUser === null) {
       this.props.history.push({
         pathname: "/signin",

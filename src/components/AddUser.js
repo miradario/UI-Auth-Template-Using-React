@@ -44,7 +44,7 @@ const AddUserPage = props => {
   const [error, setError] = useState(null)
   const [isloading, setIsLoading] = useState(false)
 
-  console.log(props)
+//   console.log(props)
 
   // create async createAuthUser
 
@@ -56,7 +56,7 @@ const AddUserPage = props => {
       .then(authUser => {
         //save the user id created into the state
         const userNew = authUser.user.uid
-        console.log('userNew', userNew)
+        // console.log('userNew', userNew)
 
         handleAddUser(userNew)
       })
@@ -69,7 +69,7 @@ const AddUserPage = props => {
   //get the key from parameter and set the data in the fields with useEffect
 
   useEffect(() => {
-    console.log('props', props)
+    // console.log('props', props)
     const { key } = (props.location && props.location.state) || {}
     setId(key)
     //CHEKC IF THERE IS A PARMATER?
@@ -80,7 +80,7 @@ const AddUserPage = props => {
       db.ref('users/' + key)
         .once('value')
         .then(snapshot => {
-          console.log('snapshot:', snapshot)
+        //   console.log('snapshot:', snapshot)
           if (snapshot) {
             setTeachCountry(snapshot.val()?.teach_country)
             setPhone(snapshot.val()?.phone)
@@ -193,9 +193,9 @@ const AddUserPage = props => {
         authent = 1
     }
 
-    console.log(userNew, authent)
+    // console.log(userNew, authent)
 
-    console.log('checks', long, short, ae)
+    // console.log('checks', long, short, ae)
 
     if (mail && !id) {
       auth.sendPasswordResetEmail(email)
@@ -256,7 +256,7 @@ const AddUserPage = props => {
 
   const handleSubmit = async event => {
     event.preventDefault()
-    console.log('email', email)
+    // console.log('email', email)
     if (id) {
       handleAddUser(id)
     } else {

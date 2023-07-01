@@ -44,7 +44,7 @@ class PasswordForgetForm extends Component {
         this.setState({ loading: false })
         alert('Contraseña correctamente ingresada')
         window.location.href = 'http://cursos.elartedevivir.org/app'
-        console.log(resp)
+        // console.log(resp)
       })
       .catch(function (error) {
         // Error occurred during confirmation. The code might have expired or the
@@ -61,10 +61,10 @@ class PasswordForgetForm extends Component {
     const queryString = window.location.search
     const urlParams = new URLSearchParams(queryString)
     const oobCode = urlParams.get('oobCode')
-    console.log(oobCode)
+    // console.log(oobCode)
     this.resetPassword(oobCode, password)
     this.setState({ ...INITIAL_STATE })
-    console.log(queryString, urlParams, oobCode, password)
+    // console.log(queryString, urlParams, oobCode, password)
   }
 
   // check if action code in expired
@@ -72,12 +72,12 @@ class PasswordForgetForm extends Component {
     const queryString = window.location.search
     const urlParams = new URLSearchParams(queryString)
     const oobCode = urlParams.get('oobCode')
-    console.log(oobCode)
+    // console.log(oobCode)
     auth
       .verifyPasswordResetCode(oobCode)
       .then(function (email) {
         // alert('email valido', email)
-        console.log('Email valido')
+        // console.log('Email valido')
       })
       .catch(error => {
         // Invalid or expired action code. Ask user to try to reset the password

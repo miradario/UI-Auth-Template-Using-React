@@ -66,7 +66,7 @@ export default function Users () {
   useEffect(() => {
     if (items.length > 0) {
       let array = [...items]
-      console.log(filtersActive.filters)
+    //   console.log(filtersActive.filters)
       if (filtersActive.searchValue)
         array = filterDataSearch([...array], filtersActive.searchValue)
 
