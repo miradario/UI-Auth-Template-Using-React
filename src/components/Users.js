@@ -151,12 +151,16 @@ export default function Users () {
           })
         }
         setFiltersActive(filters || initialFiltersActive)
-        setValueSearchAux(filters.searchValue)
+        setValueSearchAux(
+          filters?.searchValue || initialFiltersActive.searchValue
+        )
         setIsLoaded(false)
       })
       .catch(e => {
         setFiltersActive(filters || initialFiltersActive)
-        setValueSearchAux(filters.searchValue)
+        setValueSearchAux(
+          filters?.searchValue || initialFiltersActive.searchValue
+        )
         setIsLoaded(false)
         alert(e.message)
       })
