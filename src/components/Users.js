@@ -162,7 +162,7 @@ export default function Users () {
           filters?.searchValue || initialFiltersActive.searchValue
         )
         setIsLoaded(false)
-        alert(e.message)
+        // alert(e.message)
       })
   }, [])
 
