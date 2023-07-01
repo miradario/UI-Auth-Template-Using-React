@@ -82,33 +82,33 @@ const AddUserPage = props => {
         .then(snapshot => {
           console.log('snapshot:', snapshot)
           if (snapshot) {
-            setTeachCountry(snapshot.val().teach_country)
-            setPhone(snapshot.val().phone)
-            setName(snapshot.val().name)
-            setEmail(snapshot.val().email)
-            setCountry(snapshot.val().country)
-            setComment(snapshot.val().comment)
+            setTeachCountry(snapshot.val()?.teach_country)
+            setPhone(snapshot.val()?.phone)
+            setName(snapshot.val()?.name)
+            setEmail(snapshot.val()?.email)
+            setCountry(snapshot.val()?.country)
+            setComment(snapshot.val()?.comment)
             //   setCode(snapshot.val().code);
-            setLastname(snapshot.val().lastName)
-            setTTCDate(snapshot.val().TTCDate)
-            const long = snapshot.val().SKY.long === 1 ? true : false
+            setLastname(snapshot.val()?.lastName)
+            setTTCDate(snapshot.val()?.TTCDate)
+            const long = snapshot.val()?.SKY.long === 1 ? true : false
             setLong(long)
-            setSign(snapshot.val().sign === 1 ? true : false)
-            setShort(snapshot.val().SKY.short === 1 ? true : false)
-            setAe(snapshot.val().SKY.ae === 1 ? true : false)
-            setHP(snapshot.val().course.HP === 'si' ? true : false)
-            setAE(snapshot.val().course.AE === 'si' ? true : false)
-            setTTC(snapshot.val().course.TTC === 'si' ? true : false)
-            setDSN(snapshot.val().course.DSN === 'si' ? true : false)
-            setParte2(snapshot.val().course.Parte2 === 'si' ? true : false)
+            setSign(snapshot.val()?.sign === 1 ? true : false)
+            setShort(snapshot.val()?.SKY.short === 1 ? true : false)
+            setAe(snapshot.val()?.SKY.ae === 1 ? true : false)
+            setHP(snapshot.val()?.course.HP === 'si' ? true : false)
+            setAE(snapshot.val()?.course.AE === 'si' ? true : false)
+            setTTC(snapshot.val()?.course.TTC === 'si' ? true : false)
+            setDSN(snapshot.val()?.course.DSN === 'si' ? true : false)
+            setParte2(snapshot.val()?.course.Parte2 === 'si' ? true : false)
             setParte2SSY(
-              snapshot.val().course.Parte2SSY === 'si' ? true : false
+              snapshot.val()?.course.Parte2SSY === 'si' ? true : false
             )
-            setPrision(snapshot.val().course.Prision === 'si' ? true : false)
-            setSSY(snapshot.val().course.SSY === 'si' ? true : false)
-            setSahaj(snapshot.val().course.Sahaj === 'si' ? true : false)
-            setVTP(snapshot.val().course.VTP === 'si' ? true : false)
-            setYesPlus(snapshot.val().course.YesPlus === 'si' ? true : false)
+            setPrision(snapshot.val()?.course.Prision === 'si' ? true : false)
+            setSSY(snapshot.val()?.course.SSY === 'si' ? true : false)
+            setSahaj(snapshot.val()?.course.Sahaj === 'si' ? true : false)
+            setVTP(snapshot.val()?.course.VTP === 'si' ? true : false)
+            setYesPlus(snapshot.val()?.course.YesPlus === 'si' ? true : false)
 
             setIsLoading(false)
           }
