@@ -5,6 +5,7 @@ import { Button, Form, InputGroup, Container, Alert } from 'react-bootstrap'
 import Navigation from './Navigation'
 import { db } from '../firebase/firebase'
 import { auth } from '../firebase/firebase'
+import { getDataUser } from '../helpers/updateKeyUser'
 
 const AddUserPage = props => {
   const [id, setId] = useState(0)
@@ -180,6 +181,19 @@ const AddUserPage = props => {
     const sahaj_1 = Sahaj ? 'si' : 'no'
     const vtp_1 = VTP ? 'si' : 'no'
     const yesPlus_1 = YesPlus ? 'si' : 'no'
+    const data = await getDataUser(userNew)
+    let authent;
+    if(data){
+        if(data.authenticated === 0){
+            authent = 0
+        }else{
+            authent = 1;
+        }
+    }else{
+        authent = 1
+    }
+
+    console.log(userNew, authent)
 
     console.log('checks', long, short, ae)
 
@@ -197,7 +211,7 @@ const AddUserPage = props => {
         lastName: lastName,
         TTCDate: TTCDate,
         sign: sign_1,
-        authenticated: id ? 0 : 1,
+        authenticated: authent,
         comment: comment,
         SKY: {
           long: long_1,

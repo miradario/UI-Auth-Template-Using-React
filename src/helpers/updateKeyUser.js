@@ -1,6 +1,6 @@
 import { db } from '../firebase/firebase.js'
 
-const getDataUser = async key => {
+export const getDataUser = async key => {
   try {
     // Obtén la referencia al nodo utilizando la clave
     const nodeRef = db.ref('users/' + key)
@@ -16,7 +16,7 @@ const getDataUser = async key => {
   } catch (error) {
     // Maneja cualquier error que pueda ocurrir
     console.error('Error al obtener los datos:', error)
-    throw error
+    return null
   }
 }
 
