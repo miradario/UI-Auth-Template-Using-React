@@ -602,10 +602,10 @@ body{
     position: absolute !important;
     width: 80px !important;
     height: 80px !important;
-    border: 8px solid #e9b8bc !important;
+    border: 8px solid #feae00 !important;
     border-radius: 50% !important;
     animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite !important;
-    border-color: #e9b8bc transparent transparent transparent !important;
+    border-color: #feae00 transparent transparent transparent !important;
   }
   .lds-ring div:nth-child(1) {
     animation-delay: -0.45s;
@@ -633,8 +633,8 @@ body{
     width: 80px;
     height: 80px;
     margin: 4px;
-    border: 4px solid #eaa5ab;
-    border-color: #eaa5ab transparent transparent transparent;
+    border: 4px solid #d39e00;
+    border-color: #d39e00 transparent transparent transparent;
   }
 
   .loader_container{
