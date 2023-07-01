@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { verifyFiltersActive } from '../../helpers/verifyFiltersActive'
 import { useState } from 'react'
 
@@ -10,9 +10,14 @@ export const SelectForm = ({
   filtersActive
 }) => {
   const [notSelect, setNotSelect] = useState(true)
+  const refSelect = useRef()
+
+  useEffect(
+    () => setNotSelect(refSelect.current.value === 'Not selected'),
+    [filtersActive]
+  )
 
   const handleChangeSelect = e => {
-    setNotSelect(e.target.value === 'Not selected')
     const value =
       e.target.value === 'Not selected'
         ? 'Not selected'
@@ -45,10 +50,16 @@ export const SelectForm = ({
       <select
         onChange={handleChangeSelect}
         style={{ backgroundColor: !notSelect ? '#feae00' : 'white' }}
+        ref={refSelect}
       >
         <option>Not selected</option>
         {options.map((el, index) => (
-          <option key={index}>{el}</option>
+          <option
+            key={index}
+            selected={filtersActive.filters[identify] !== 'Not selected'}
+          >
+            {el}
+          </option>
         ))}
       </select>
     </div>

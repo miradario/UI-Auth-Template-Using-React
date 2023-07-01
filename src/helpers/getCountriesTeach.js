@@ -1,7 +1,7 @@
 export const getCountriesTeach = array => {
   const countries = new Set()
   array.forEach(el => {
-    if (el[1]?.country)
+    if (el[1]?.teach_country)
       countries.add(el[1]?.teach_country?.toLowerCase().trim())
   })
   const arrayCountry = [...countries]

@@ -4,5 +4,6 @@ export const getCountries = array => {
     if (el[1]?.country) countries.add(el[1]?.country?.toLowerCase().trim())
   })
   const arrayCountry = [...countries]
+  console.log(arrayCountry)
   return arrayCountry
 }
