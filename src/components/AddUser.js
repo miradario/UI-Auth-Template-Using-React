@@ -109,6 +109,7 @@ const AddUserPage = props => {
             setSahaj(snapshot.val()?.course?.Sahaj === 'si' ? true : false)
             setVTP(snapshot.val()?.course?.VTP === 'si' ? true : false)
             setYesPlus(snapshot.val()?.course?.YesPlus === 'si' ? true : false)
+            setYES(snapshot.val()?.course?.Yes === 'si' ? true : false)
 
             setIsLoading(false)
           }
@@ -161,6 +162,7 @@ const AddUserPage = props => {
     setSahaj(false)
     setVTP(false)
     setYesPlus(false)
+    setYES(false)
   }
 
   const handleAddUser = async userNew => {
@@ -181,6 +183,8 @@ const AddUserPage = props => {
     const sahaj_1 = Sahaj ? 'si' : 'no'
     const vtp_1 = VTP ? 'si' : 'no'
     const yesPlus_1 = YesPlus ? 'si' : 'no'
+    const yes = YES ? 'si' : 'no'
+
     const data = await getDataUser(userNew)
     let authent
     if (data) {
@@ -190,6 +194,7 @@ const AddUserPage = props => {
         authent = 1
       }
     } else {
+      // authent = mail ? 1 : 0  // Esto deberia ser si el usuario es totalmente nuevo y no se lo quiere autenticar
       authent = 1
     }
 
@@ -200,59 +205,90 @@ const AddUserPage = props => {
     if (mail && !id) {
       auth.sendPasswordResetEmail(email)
     }
-    db.ref('users/' + userNew)
-      .update({
-        name: name,
-        email: email,
-        phone: phone,
-        country: country,
-        //     code: code,
-        teach_country: teachCountry || '',
-        lastName: lastName,
-        TTCDate: TTCDate,
-        sign: sign_1,
-        authenticated: authent,
-        comment: comment || '',
-        SKY: {
-          long: long_1,
-          short: short_1,
-          ae: ae_1
-        },
-        course: {
-          HP: hp_1,
-          AE: ae_2,
-          TTC: ttc_1,
-          DSN: dsn_1,
-          Parte2: parte2_1,
-          Parte2SSY: parte2SSY_1,
-          Prision: prision_1,
-          SSY: ssy_1,
-          Sahaj: sahaj_1,
-          VTP: vtp_1,
-          YesPlus: yesPlus_1
-        }
-      })
-      .then(data => {
-        //success callback
-        if (id) {
-          alert('User updated successfully')
-        } else {
-          // send email
+    const updateData = {
+      name: name,
+      email: email,
+      phone: phone,
+      country: country,
+      //     code: code,
+      teach_country: teachCountry || '',
+      lastName: lastName,
+      TTCDate: TTCDate,
+      sign: sign_1,
+      authenticated: authent,
+      comment: comment || '',
+      SKY: {
+        long: long_1,
+        short: short_1,
+        ae: ae_1
+      },
+      course: {
+        HP: hp_1,
+        AE: ae_2,
+        TTC: ttc_1,
+        DSN: dsn_1,
+        Parte2: parte2_1,
+        Parte2SSY: parte2SSY_1,
+        Prision: prision_1,
+        SSY: ssy_1,
+        Sahaj: sahaj_1,
+        VTP: vtp_1,
+        YesPlus: yesPlus_1,
+        Yes: yes
+      }
+    }
+    console.log(updateData)
+    if (userNew) {
+      db.ref('users/' + userNew)
+        .update(updateData)
+        .then(data => {
+          //success callback
+          if (id) {
+            alert('User updated successfully')
+          } else {
+            // send email
 
-          // if mail is checked send email
+            // if mail is checked send email
 
-          alert('User added successfully')
-        }
-        setIsLoading(false)
-        props.history.push({
-          pathname: '/users'
+            alert('User added successfully')
+          }
+          setIsLoading(false)
+          props.history.push({
+            pathname: '/users'
+          })
         })
-      })
-      .catch(error => {
-        //error callback
-        console.log('NOT EXISTS SOMEONE PROPERTY')
-        console.log('error ', error)
-      })
+        .catch(error => {
+          //error callback
+          console.log('NOT EXISTS SOMEONE PROPERTY')
+          console.log('error ', error)
+        })
+    } else {
+      const usersRef = db.ref('users')
+      const newUserRef = usersRef.push()
+      const userNewId = newUserRef.key
+
+      // Crea el objeto de usuario con los datos que deseas agregar
+      const newUser = { ...updateData, id: userNewId }
+
+      console.log(usersRef, newUserRef, userNewId)
+      alert(userNewId)
+
+      //   Agrega el nuevo usuario al ID generado en la ubicación "users"
+      newUserRef
+        .set(newUser)
+        .then(() => {
+          alert('User added successfully')
+
+          setIsLoading(false)
+          props.history.push({
+            pathname: '/users'
+          })
+        })
+        .catch(error => {
+          setIsLoading(false)
+          console.log('Error al agregar el usuario:', error)
+        })
+    }
   }
 
   const handleSubmit = async event => {
@@ -262,7 +298,12 @@ const AddUserPage = props => {
     if (id) {
       handleAddUser(id)
     } else {
-      await createAuthUser(email, password)
+      if (mail) {
+        await createAuthUser(email, password)
+      } else {
+        await createAuthUser(email, password)
+        //handleAddUser(undefined) ---> FUNCION PARA QUE PUEDA CREAR UN USUARIO SIN TENER QUE AUTENTICARLO, FIJARSE QUE NOS DE PERMISOS PARA PONER ID RANDOM FIREBASE
+      }
     }
   }
   // TODO: handle form submission

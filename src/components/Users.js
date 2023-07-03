@@ -227,6 +227,7 @@ export default function Users () {
   }
 
   const createAuthUser = async email => {
+    setIsLoaded(true)
     const userNew = await auth
       .createUserWithEmailAndPassword(email, 'a1b2c3d4e5') //CREA EL USUARIO DE LA AUTENTICACION
       .then(authUser => {
@@ -351,7 +352,8 @@ export default function Users () {
                         placeholder='Nombre, apellido o email...'
                         style={{
                           display: 'block',
-                          padding: '8px'
+                          padding: '8px',
+                          width: '350px'
                         }}
                         name='search'
                         value={valueSearchAux}
