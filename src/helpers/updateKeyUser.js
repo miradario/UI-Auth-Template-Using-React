@@ -52,3 +52,16 @@ export const deleteUser = async key => {
     console.log(e)
   }
 }
+
+export const editUserAuthenticate = async keyUser => {
+  try {
+    const data = await getDataUser(keyUser)
+
+    const newData = { teach_country: '', ...data, authenticated: 1 }
+
+    const userRef = db.ref('users/' + keyUser)
+    await userRef.update(newData)
+  } catch (e) {
+    console.log(e)
+  }
+}

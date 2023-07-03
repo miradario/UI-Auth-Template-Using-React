@@ -198,8 +198,7 @@ const AddUserPage = props => {
         authent = 1
       }
     } else {
-      // authent = mail ? 1 : 0  // Esto deberia ser si el usuario es totalmente nuevo y no se lo quiere autenticar
-      authent = 1
+      authent = mail ? 1 : 0 // Esto deberia ser si el usuario es totalmente nuevo y no se lo quiere autenticar
     }
 
     // console.log(userNew, authent)
@@ -242,58 +241,29 @@ const AddUserPage = props => {
         Yes: yes
       }
     }
-    alert(JSON.stringify(updateData))
-    if (userNew) {
-      db.ref('users/' + userNew)
-        .update(updateData)
-        .then(data => {
-          //success callback
-          if (id) {
-            alert('User updated successfully')
-          } else {
-            // send email
+    // alert(JSON.stringify(updateData))
 
-            // if mail is checked send email
-
-            alert('User added successfully')
-          }
-          setIsLoading(false)
-          props.history.push({
-            pathname: '/users'
-          })
-        })
-        .catch(error => {
-          //error callback
-          console.log('NOT EXISTS SOMEONE PROPERTY')
-          console.log('error ', error)
-        })
-    } else {
-      const usersRef = db.ref('users')
-      const newUserRef = usersRef.push()
-      const userNewId = newUserRef.key
-
-      // Crea el objeto de usuario con los datos que deseas agregar
-      const newUser = { ...updateData, id: userNewId }
-
-      console.log(usersRef, newUserRef, userNewId)
-      alert(userNewId)
-
-      //   Agrega el nuevo usuario al ID generado en la ubicación "users"
-      newUserRef
-        .set(newUser)
-        .then(() => {
+    db.ref('users/' + userNew)
+      .update(updateData)
+      .then(data => {
+        //success callback
+        if (id) {
+          alert('User updated successfully')
+        } else {
+          // send email
+          // if mail is checked send email
           alert('User added successfully')
-
-          setIsLoading(false)
-          props.history.push({
-            pathname: '/users'
-          })
+        }
+        setIsLoading(false)
+        props.history.push({
+          pathname: '/users'
         })
-        .catch(error => {
-          setIsLoading(false)
-          console.log('Error al agregar el usuario:', error)
-        })
-    }
+      })
+      .catch(error => {
+        //error callback
+        console.log('NOT EXISTS SOMEONE PROPERTY')
+        console.log('error ', error)
+      })
   }
 
   const handleSubmit = async event => {

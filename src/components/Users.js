@@ -4,7 +4,11 @@ import { db, auth } from '../firebase/firebase'
 import Footer from './Footer'
 import { BsChevronRight, BsChevronLeft } from 'react-icons/bs'
 import { MdDelete } from 'react-icons/md'
-import { deleteUser, updateKeyUser } from '../helpers/updateKeyUser'
+import {
+  deleteUser,
+  editUserAuthenticate,
+  updateKeyUser
+} from '../helpers/updateKeyUser'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { AiOutlineSearch } from 'react-icons/ai'
@@ -238,15 +242,23 @@ export default function Users () {
       })
       .catch(error => {
         // setIsLoading(false)
-        alert(error.message)
+        console.log(error)
+        // alert(error.message)
+        return null
       })
     return userNew
   }
 
   const handleAuthenticateUser = async (user, actualizar = true) => {
     const keyUserAuth = await createAuthUser(user[1].email)
-    //   console.log('USER DATA VIEJA: ', user)
-    await updateKeyUser(user[0], keyUserAuth)
+
+    if (keyUserAuth) {
+      //   console.log('USER DATA VIEJA: ', user)
+      await updateKeyUser(user[0], keyUserAuth)
+    } else {
+      await editUserAuthenticate(user[0])
+    }
+    console.log(keyUserAuth)
     auth.sendPasswordResetEmail(user[1].email)
     if (actualizar) window.location.reload()
   }
