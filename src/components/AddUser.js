@@ -501,6 +501,7 @@ const AddUserPage = props => {
               />
             </InputGroup>
             <br />
+            {/* COURSES */}
             <InputGroup style={{ width: '100%' }}>
               <Form.Label className='inputlabel'>Courses</Form.Label>
               <br />
@@ -515,39 +516,21 @@ const AddUserPage = props => {
               />
               <Form.Check
                 className='inputradio'
-                label={'Yes Plus'}
-                type='checkbox'
-                name='YesPlus'
-                defaultChecked={YesPlus}
-                value={YesPlus}
-                onChange={() => setYesPlus(!YesPlus)}
-              />
-              <Form.Check
-                className='inputradio'
-                label='AE'
-                type='checkbox'
-                name='AE'
-                defaultChecked={AE}
-                value={AE}
-                onChange={() => setAE(!AE)}
-              />
-              <Form.Check
-                className='inputradio'
-                label='Prision'
-                type='checkbox'
-                name='Prision'
-                defaultChecked={Prision}
-                value={Prision}
-                onChange={() => setPrision(!Prision)}
-              />
-              <Form.Check
-                className='inputradio'
                 label='SSY'
                 type='checkbox'
                 name='SSY'
                 defaultChecked={SSY}
                 value={SSY}
                 onChange={() => setSSY(!SSY)}
+              />
+              <Form.Check
+                className='inputradio'
+                label={'Yes Plus'}
+                type='checkbox'
+                name='YesPlus'
+                defaultChecked={YesPlus}
+                value={YesPlus}
+                onChange={() => setYesPlus(!YesPlus)}
               />
               <Form.Check
                 className='inputradio'
@@ -560,6 +543,15 @@ const AddUserPage = props => {
               />
               <Form.Check
                 className='inputradio'
+                label='AE'
+                type='checkbox'
+                name='AE'
+                defaultChecked={AE}
+                value={AE}
+                onChange={() => setAE(!AE)}
+              />
+              <Form.Check
+                className='inputradio'
                 label='Sahaj'
                 type='checkbox'
                 name='Sahaj'
@@ -569,12 +561,30 @@ const AddUserPage = props => {
               />
               <Form.Check
                 className='inputradio'
+                label='Parte 2'
+                type='checkbox'
+                name='Parte2'
+                defaultChecked={Parte2}
+                value={Parte2}
+                onChange={() => setParte2(!Parte2)}
+              />
+              <Form.Check
+                className='inputradio'
                 label='Parte2 SSY'
                 type='checkbox'
                 name='Parte2SSY'
                 defaultChecked={Parte2SSY}
                 value={Parte2SSY}
                 onChange={() => setParte2SSY(!Parte2SSY)}
+              />
+              <Form.Check
+                className='inputradio'
+                label='Prision'
+                type='checkbox'
+                name='Prision'
+                defaultChecked={Prision}
+                value={Prision}
+                onChange={() => setPrision(!Prision)}
               />
               <Form.Check
                 className='inputradio'
@@ -593,15 +603,6 @@ const AddUserPage = props => {
                 defaultChecked={VTP}
                 value={VTP}
                 onChange={() => setVTP(!VTP)}
-              />
-              <Form.Check
-                className='inputradio'
-                label='Parte 2'
-                type='checkbox'
-                name='Parte2'
-                defaultChecked={Parte2}
-                value={Parte2}
-                onChange={() => setParte2(!Parte2)}
               />
               <Form.Check
                 className='inputradio'

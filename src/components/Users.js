@@ -652,6 +652,7 @@ export default function Users () {
                           <th scope='col'>Sahaj</th>
                           <th scope='col'>P2</th>
                           <th scope='col'>SSY2</th>
+                          <th scope='col'>Prision</th>
                           <th scope='col'>DSN</th>
                           <th scope='col'>VTP</th>
                           <th scope='col'>TTC</th>
@@ -785,6 +786,7 @@ export default function Users () {
                                 <td>{user[1].placeTTC}</td>
                                 <td>{user[1].sign === 1 ? 'Yes' : 'No'}</td>
                                 <td>{user[1].comment}</td>
+                                {/* CURSOS */}
                                 <td>{user[1].course?.HP}</td>
                                 <td>{user[1].course?.SSY}</td>
                                 <td>{user[1].course?.YesPlus}</td>
@@ -793,6 +795,7 @@ export default function Users () {
                                 <td>{user[1].course?.Sahaj}</td>
                                 <td>{user[1].course?.Parte2}</td>
                                 <td>{user[1].course?.Parte2SSY}</td>
+                                <td>{user[1].course?.Prision}</td>
                                 <td>{user[1].course?.DSN}</td>
                                 <td>{user[1].course?.VTP}</td>
                                 <td>{user[1].course?.TTC}</td>
