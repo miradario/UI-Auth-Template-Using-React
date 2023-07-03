@@ -220,7 +220,7 @@ const AddUserPage = props => {
       sign: sign_1,
       authenticated: authent,
       comment: comment || '',
-      placeTTC: placeTTC,
+      placeTTC: placeTTC || '',
       SKY: {
         long: long_1,
         short: short_1,
@@ -255,12 +255,14 @@ const AddUserPage = props => {
           alert('User added successfully')
         }
         setIsLoading(false)
+        console.log(data)
         props.history.push({
           pathname: '/users'
         })
       })
       .catch(error => {
         //error callback
+        console.log(error)
         console.log('NOT EXISTS SOMEONE PROPERTY')
         console.log('error ', error)
       })
