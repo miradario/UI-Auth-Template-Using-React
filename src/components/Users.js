@@ -629,7 +629,7 @@ export default function Users () {
                           <th scope='col' data-id='ttcdate'>
                             First TTC Date
                           </th>
-
+                          <th scope='col'>TTC Place</th>
                           <th scope='col'>Sign Contract</th>
                           <th scope='col'>Comment</th>
                           <th scope='col'>HP</th>
@@ -770,6 +770,7 @@ export default function Users () {
                                   {user[1].inactive ? 'Disable' : 'Enable'}
                                 </td>
                                 <td>{user[1].TTCDate}</td>
+                                <td>{user[1].placeTTC}</td>
                                 <td>{user[1].sign === 1 ? 'Yes' : 'No'}</td>
                                 <td>{user[1].comment}</td>
                                 <td>{user[1].course?.HP}</td>

@@ -16,7 +16,8 @@ const AddUserPage = props => {
   const [teachCountry, setTeachCountry] = useState('')
   const [lastName, setLastname] = useState('')
   const [country, setCountry] = useState('')
-  // const [code, setCode] = useState("");
+  const [placeTTC, setPlaceTTC] = useState('')
+  //   const [code, setCode] = useState("");
   const [long, setLong] = useState(false)
   const [short, setShort] = useState(false)
   const [ae, setAe] = useState(false)
@@ -88,7 +89,8 @@ const AddUserPage = props => {
             setEmail(snapshot.val()?.email)
             setCountry(snapshot.val()?.country)
             setComment(snapshot.val()?.comment)
-            //   setCode(snapshot.val().code);
+            setPlaceTTC(snapshot.val()?.placeTTC)
+            //   setCode(snapshot.val()?.code);
             setLastname(snapshot.val()?.lastName)
             setTTCDate(snapshot.val()?.TTCDate)
             const long = snapshot.val()?.SKY?.long === 1 ? true : false
@@ -163,6 +165,8 @@ const AddUserPage = props => {
     setVTP(false)
     setYesPlus(false)
     setYES(false)
+    setPlaceTTC('')
+    // setCode('')
   }
 
   const handleAddUser = async userNew => {
@@ -210,13 +214,14 @@ const AddUserPage = props => {
       email: email,
       phone: phone,
       country: country,
-      //     code: code,
+      //   code: code,
       teach_country: teachCountry || '',
       lastName: lastName,
       TTCDate: TTCDate,
       sign: sign_1,
       authenticated: authent,
       comment: comment || '',
+      placeTTC: placeTTC,
       SKY: {
         long: long_1,
         short: short_1,
@@ -237,7 +242,7 @@ const AddUserPage = props => {
         Yes: yes
       }
     }
-    console.log(updateData)
+    alert(JSON.stringify(updateData))
     if (userNew) {
       db.ref('users/' + userNew)
         .update(updateData)
@@ -449,6 +454,21 @@ const AddUserPage = props => {
                 value={TTCDate}
                 autoFocus
                 onChange={event => setTTCDate(event.target.value)}
+              />
+            </InputGroup>
+            <br />
+            <InputGroup>
+              <InputGroup.Prepend className='inputlabel'>
+                Place TTC:
+              </InputGroup.Prepend>
+              <Form.Control
+                type='text'
+                name='placeTTC'
+                id='inputtextplaceTTC'
+                placeholder='Argentina'
+                value={placeTTC}
+                autoFocus
+                onChange={event => setPlaceTTC(event.target.value)}
               />
             </InputGroup>
             <br />
