@@ -49,22 +49,28 @@ const AddUserPage = props => {
 
   // create async createAuthUser
 
-  const createAuthUser = async (email, password) => {
+  const createAuthUser = async (email, password, diferenteEmail = false) => {
     setIsLoading(true)
 
-    auth
+    const data = auth
       .createUserWithEmailAndPassword(email, password)
       .then(authUser => {
         //save the user id created into the state
         const userNew = authUser.user.uid
         // console.log('userNew', userNew)
 
-        handleAddUser(userNew)
+        if (!diferenteEmail) {
+          handleAddUser(userNew)
+          return null
+        } else {
+          return userNew
+        }
       })
       .catch(error => {
         setIsLoading(false)
         alert(error.message)
       })
+    if (data) return data
   }
 
   //get the key from parameter and set the data in the fields with useEffect
@@ -139,36 +145,6 @@ const AddUserPage = props => {
     setSign(!sign)
   }
 
-  const cleanFields = () => {
-    setTeachCountry('')
-    setName('')
-    setEmail('')
-    setPassword('')
-    setPhone('')
-    setLastname('')
-    setCountry('')
-    setLong(false)
-    setShort(false)
-    setAe(false)
-    setSign(false)
-    setTTCDate('')
-    setMail(true)
-    setHP(false)
-    setAE(false)
-    setTTC(false)
-    setDSN(false)
-    setParte2(false)
-    setParte2SSY(false)
-    setPrision(false)
-    setSSY(false)
-    setSahaj(false)
-    setVTP(false)
-    setYesPlus(false)
-    setYES(false)
-    setPlaceTTC('')
-    // setCode('')
-  }
-
   const handleAddUser = async userNew => {
     const long_1 = long ? 1 : 0
     const short_1 = short ? 1 : 0
@@ -208,6 +184,7 @@ const AddUserPage = props => {
     if (mail && !id) {
       auth.sendPasswordResetEmail(email)
     }
+
     const updateData = {
       name: name,
       email: email,
@@ -241,12 +218,46 @@ const AddUserPage = props => {
         Yes: yes
       }
     }
+    console.log(userNew)
     // alert(JSON.stringify(updateData))
+    console.log(data?.email, email, data)
+    if (data?.email == email || !data) {
+      db.ref('users/' + userNew)
+        .update(updateData)
+        .then(data => {
+          //success callback
+          if (id) {
+            alert('User updated successfully')
+          } else {
+            // send email
+            // if mail is checked send email
+            alert('User added successfully')
+          }
+          setIsLoading(false)
+          console.log(data)
+          props.history.push({
+            pathname: '/users'
+          })
+        })
+        .catch(error => {
+          //error callback
+          console.log(error)
+          console.log('NOT EXISTS SOMEONE PROPERTY')
+          console.log('error ', error)
+        })
+    } else {
+      console.log(email + ' ||| ' + data.email)
+      try {
+        const newId = await createAuthUser(email, 'a1b2c3e4d5', true)
+        console.log(newId)
+        const user = db.ref('users/' + newId)
+        await user.update(updateData)
 
-    db.ref('users/' + userNew)
-      .update(updateData)
-      .then(data => {
-        //success callback
+        const oldUserRef = db.ref('users/' + userNew)
+        await oldUserRef.remove()
+
+        if (authent == 1) auth.sendPasswordResetEmail(email)
+
         if (id) {
           alert('User updated successfully')
         } else {
@@ -255,17 +266,18 @@ const AddUserPage = props => {
           alert('User added successfully')
         }
         setIsLoading(false)
-        console.log(data)
         props.history.push({
           pathname: '/users'
         })
-      })
-      .catch(error => {
+
+        if (authent == 1) await auth.sendPasswordResetEmail(email)
+      } catch (error) {
         //error callback
         console.log(error)
         console.log('NOT EXISTS SOMEONE PROPERTY')
         console.log('error ', error)
-      })
+      }
+    }
   }
 
   const handleSubmit = async event => {
@@ -460,16 +472,18 @@ const AddUserPage = props => {
             </InputGroup>
             <br />
 
-            <Form.Check
-              className='inputradio'
-              label='Enviar mail de bienvenida'
-              type='checkbox'
-              name='mail'
-              defaultChecked={mail}
-              value={mail}
-              onChange={() => setMail(!mail)}
-            />
-            <br />
+            {!id && (
+              <Form.Check
+                className='inputradio'
+                label='Enviar mail de bienvenida'
+                type='checkbox'
+                name='mail'
+                defaultChecked={mail}
+                value={mail}
+                onChange={() => setMail(!mail)}
+              />
+            )}
+            {/* <br /> */}
             <Form.Check
               className='inputradio'
               label='Sign the contract'
@@ -778,3 +792,33 @@ class AddUserPage extends Component {
 
 export default AddUserPage;
 */
+
+//const cleanFields = () => {
+//     setTeachCountry('')
+//     setName('')
+//     setEmail('')
+//     setPassword('')
+//     setPhone('')
+//     setLastname('')
+//     setCountry('')
+//     setLong(false)
+//     setShort(false)
+//     setAe(false)
+//     setSign(false)
+//     setTTCDate('')
+//     setMail(true)
+//     setHP(false)
+//     setAE(false)
+//     setTTC(false)
+//     setDSN(false)
+//     setParte2(false)
+//     setParte2SSY(false)
+//     setPrision(false)
+//     setSSY(false)
+//     setSahaj(false)
+//     setVTP(false)
+//     setYesPlus(false)
+//     setYES(false)
+//     setPlaceTTC('')
+//     // setCode('')
+//   }
