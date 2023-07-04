@@ -51,7 +51,7 @@ export default function Users () {
   const [perPage, setPerPage] = useState(25)
   const [showPagination, setShowPagination] = useState(false)
   const [selectedToAuthenticated, setSelectedToAuthenticated] = useState([])
-  //   const [selectAll, useSelectAll] = useState(false)
+  const [selectAll, setSelectAll] = useState(false)
   const [valueSearchAux, setValueSearchAux] = useState('')
   const [showFilters, setShowFilters] = useState(false)
 
@@ -90,6 +90,10 @@ export default function Users () {
       setItemsFilter(array)
     }
   }, [filtersActive])
+
+  //   useEffect(() => {
+  //     if (selectAll) allChecks()
+  //   })
 
   const filterDataSearch = (array, value) => {
     return array?.filter(
@@ -258,7 +262,7 @@ export default function Users () {
     } else {
       await editUserAuthenticate(user[0])
     }
-    console.log(keyUserAuth)
+    // console.log(keyUserAuth)
     auth.sendPasswordResetEmail(user[1].email)
     if (actualizar) window.location.reload()
   }
@@ -309,16 +313,26 @@ export default function Users () {
     }
   }
 
-  //   const selectAll = () => {
-  //     const notAuth = !selectAll
-  //       ? items.filter(el => el[1].authenticated === 0)
-  //       : []
+  //   useEffect(() => {
+  //     allChecks()
+  //   }, [selectAll])
 
-  //     this.setState({
-  //       selectedToAuthenticated: notAuth
-  //       // selectAll: !selectAll
-  //     })
-  //   }
+  const allChecks = () => {
+    const checks = document.querySelectorAll('#checked_option')
+    if (selectAll) checks.forEach(el => el.setAttribute('checked', true))
+    else checks.forEach(el => el.removeAttribute('checked'))
+    // console.log(checks)
+  }
+
+  const selectAllNotAuths = () => {
+    const notAuth = !selectAll
+      ? itemsFilter.filter(el => el[1].authenticated === 0 && !el[1].inactive)
+      : []
+    setSelectedToAuthenticated(notAuth)
+    setSelectAll(!selectAll)
+  }
+
+  //   console.log(selectedToAuthenticated.length)
 
   /** ==================== BUSCADOR =======================*/
 
@@ -584,18 +598,18 @@ export default function Users () {
                       </button>
                       {/* SELECT ALL BUTTON */}
                       {/* <button
-                      style={{
-                        backgroundColor: '#feae00',
-                        padding: '5px 20px',
-                        marginBottom: '10px',
-                        color: 'black',
-                        fontWeight: 'bold',
-                        marginLeft: '10px'
-                      }}
-                      onClick={selectAll}
-                    >
-                      {selectAll ? 'Uncheck All' : 'Check All'}
-                    </button> */}
+                        style={{
+                          backgroundColor: '#feae00',
+                          padding: '5px 20px',
+                          marginBottom: '10px',
+                          color: 'black',
+                          fontWeight: 'bold',
+                          marginLeft: '10px'
+                        }}
+                        onClick={selectAllNotAuths}
+                      >
+                        {selectAll ? 'Uncheck All' : 'Check All'}
+                      </button> */}
                     </div>
                     <table
                       className='table table-striped'
@@ -669,6 +683,7 @@ export default function Users () {
                             (user[1].inactive && showDeleted) ||
                             !user[1].inactive ? (
                               <tr
+                                id='list_users'
                                 key={user[0]}
                                 style={{
                                   backgroundColor: user[1].inactive
@@ -749,6 +764,7 @@ export default function Users () {
                                 <td>
                                   {user[1].authenticated === 0 && (
                                     <input
+                                      id='checked_option'
                                       type='checkbox'
                                       data-key={user[0]}
                                       //   checked={this.state.selectAll && true}

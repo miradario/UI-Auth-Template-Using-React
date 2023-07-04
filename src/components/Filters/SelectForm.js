@@ -49,14 +49,19 @@ export const SelectForm = ({
       <label>{title}</label>
       <select
         onChange={handleChangeSelect}
-        style={{ backgroundColor: !notSelect ? '#feae00' : 'white' }}
+        style={{
+          backgroundColor:
+            filtersActive.filters[identify] !== 'Not selected'
+              ? '#feae00'
+              : 'white'
+        }}
         ref={refSelect}
       >
         <option>Not selected</option>
         {options.map((el, index) => (
           <option
             key={index}
-            selected={filtersActive.filters[identify] !== 'Not selected'}
+            selected={filtersActive.filters[identify] == el.toLowerCase()}
           >
             {el}
           </option>
