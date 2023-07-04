@@ -244,6 +244,7 @@ const AddUserPage = props => {
           console.log(error)
           console.log('NOT EXISTS SOMEONE PROPERTY')
           console.log('error ', error)
+          alert('ERROR: ', JSON.stringify(error))
         })
     } else {
       console.log(email + ' ||| ' + data.email)

@@ -569,7 +569,7 @@ export default function Users () {
                     )}
                     {/* PAGINATION CLOSE */}
 
-                    <div
+                    {/* <div
                       style={{
                         textAlign: 'left'
                       }}
@@ -595,7 +595,7 @@ export default function Users () {
                         }
                       >
                         Send Selected
-                      </button>
+                      </button> */}
                       {/* SELECT ALL BUTTON */}
                       {/* <button
                         style={{
