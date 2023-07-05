@@ -596,8 +596,8 @@ export default function Users () {
                       >
                         Send Selected
                       </button> */}
-                      {/* SELECT ALL BUTTON */}
-                      {/* <button
+                    {/* SELECT ALL BUTTON */}
+                    {/* <button
                         style={{
                           backgroundColor: '#feae00',
                           padding: '5px 20px',
@@ -610,7 +610,7 @@ export default function Users () {
                       >
                         {selectAll ? 'Uncheck All' : 'Check All'}
                       </button> */}
-                    </div>
+                    {/* </div> */}
                     <table
                       className='table table-striped'
                       style={{
