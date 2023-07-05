@@ -16,6 +16,7 @@ import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 import { ModalFilters } from './Filters/ModalFilters'
 import { filterUsers } from '../helpers/filterUsers'
 import { Loader } from './commons/Loader'
+// import xlsx from 'xlsx'
 
 const initialFiltersActive = {
   searchValue: '',
@@ -247,24 +248,52 @@ export default function Users () {
       .catch(error => {
         // setIsLoading(false)
         console.log(error)
-        // alert(error.message)
+        console.log(error.message)
         return null
       })
     return userNew
   }
 
   const handleAuthenticateUser = async (user, actualizar = true) => {
-    const keyUserAuth = await createAuthUser(user[1].email)
+    try {
+      const keyUserAuth = await createAuthUser(user[1].email)
+      let res
+      if (keyUserAuth) {
+        res = await updateKeyUser(user[0], keyUserAuth)
+        if (!res)
+          throw new Error('Error en updateKeyUser, usuario: ' + user[1].email)
+      } else {
+        res = await editUserAuthenticate(user[0])
+        if (!res)
+          throw new Error(
+            'Error en editUserAuthenticate, usuario: ' + user[1].email
+          )
+      }
 
-    if (keyUserAuth) {
-      //   console.log('USER DATA VIEJA: ', user)
-      await updateKeyUser(user[0], keyUserAuth)
-    } else {
-      await editUserAuthenticate(user[0])
+      if (res) auth.sendPasswordResetEmail(user[1].email)
+      if (actualizar && res) window.location.reload()
+    } catch (error) {
+      alert('Error en handleAuthenticateUser para usuario: ' + error)
+      //   throw error
     }
-    // console.log(keyUserAuth)
-    auth.sendPasswordResetEmail(user[1].email)
-    if (actualizar) window.location.reload()
+  }
+
+  async function sendSelected (funcion, n) {
+    if (n > 0) {
+      try {
+        await funcion(selectedToAuthenticated[n - 1], false)
+      } catch (error) {
+        // Manejar el error de la función aquí si es necesario
+        console.error('Error en la función asíncrona:', error)
+        throw error // Propagar el error para detener la recursión
+      }
+      await sendSelected(funcion, n - 1)
+    } else {
+      alert(
+        'Todo salio bien :), por favor avisele a soporte que usuarios autentico si es posible, para verificar'
+      )
+      window.location.reload()
+    }
   }
 
   const handleCheckbox = e => {
@@ -282,19 +311,19 @@ export default function Users () {
     }
   }
 
-  const sendSelected = () => {
-    const promises = selectedToAuthenticated.map(
-      async el => await handleAuthenticateUser(el, false)
-    )
+  //   const sendSelected = () => {
+  //     const promises = selectedToAuthenticated.map(
+  //       async el => await handleAuthenticateUser(el, false)
+  //     )
 
-    Promise.all(promises)
-      .then(() => {
-        window.location.reload()
-      })
-      .catch(error => {
-        console.log(error)
-      })
-  }
+  //     Promise.all(promises)
+  //       .then(() => {
+  //         window.location.reload()
+  //       })
+  //       .catch(error => {
+  //         console.log(error)
+  //       })
+  //   }
 
   const deleteOneUser = async (key, email) => {
     try {
@@ -355,6 +384,24 @@ export default function Users () {
     })
     return coursesString
   }
+
+  //   const exportDataEXCEL = () => {
+  //     const workbook = xlsx.utils.book_new()
+
+  //     // Crear una hoja de cálculo
+  //     const worksheet = xlsx.utils.json_to_sheet(itemsFilter)
+
+  //     // Agregar la hoja de cálculo al libro de Excel
+  //     xlsx.utils.book_append_sheet(workbook, worksheet, 'Datos')
+
+  //     // Especificar el nombre del archivo de salida
+  //     const filename = 'data_users_AOL_Sky.xlsx'
+
+  //     // Guardar el libro de Excel como archivo
+  //     xlsx.writeFile(workbook, filename)
+
+  //     console.log(`Los datos se han exportado exitosamente a '${filename}'.`)
+  //   }
 
   return (
     <div className='App'>
@@ -569,6 +616,8 @@ export default function Users () {
                     )}
                     {/* PAGINATION CLOSE */}
 
+                    {/* <button onClikc={exportDataEXCEL}>Exportar todo</button> */}
+
                     {/* <div
                       style={{
                         textAlign: 'left'
@@ -577,25 +626,36 @@ export default function Users () {
                       <button
                         style={{
                           backgroundColor:
-                            selectedToAuthenticated?.length > 0
+                            selectedToAuthenticated?.length > 0 &&
+                            selectedToAuthenticated.length < 25
                               ? '#feae00'
                               : '#bbb',
                           padding: '5px 20px',
                           marginBottom: '10px',
                           color:
-                            selectedToAuthenticated?.length > 0
+                            selectedToAuthenticated?.length > 0 &&
+                            selectedToAuthenticated.length < 25
                               ? 'white'
                               : 'black',
                           fontWeight: 'bold'
                         }}
                         onClick={() =>
-                          selectedToAuthenticated.length !== 0
-                            ? sendSelected()
-                            : console.log('Deshabilitado')
+                          selectedToAuthenticated?.length > 0 &&
+                          selectedToAuthenticated.length < 25
+                            ? sendSelected(
+                                handleAuthenticateUser,
+                                selectedToAuthenticated.length
+                              )
+                            : console.log(
+                                'El boton se encuentra deshabilitado o excedio la cantidad para enviar (25 usuarios)'
+                              )
                         }
                       >
                         Send Selected
-                      </button> */}
+                      </button>
+                      
+                    </div> */}
+
                     {/* SELECT ALL BUTTON */}
                     {/* <button
                         style={{
@@ -609,8 +669,7 @@ export default function Users () {
                         onClick={selectAllNotAuths}
                       >
                         {selectAll ? 'Uncheck All' : 'Check All'}
-                      </button> */}
-                    {/* </div> */}
+                      </button>  */}
                     <table
                       className='table table-striped'
                       style={{

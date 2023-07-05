@@ -38,9 +38,11 @@ export const updateKeyUser = async (keyRDB, keyUserAuth) => {
     const oldUserRef = db.ref('users/' + keyRDB)
     await oldUserRef.remove()
 
+    return true
     // console.log('DELETE')
   } catch (e) {
-    console.log('ERROR ' + e)
+    console.log('ERROR updateKeyUser' + e)
+    return false
   }
 }
 
@@ -49,7 +51,7 @@ export const deleteUser = async key => {
     const oldUserRef = db.ref('users/' + key)
     await oldUserRef.remove()
   } catch (e) {
-    console.log(e)
+    alert('ERROR AL ELIMINAR, AVISAR A SOPORTE, KEY: ' + key)
   }
 }
 
@@ -61,7 +63,10 @@ export const editUserAuthenticate = async keyUser => {
 
     const userRef = db.ref('users/' + keyUser)
     await userRef.update(newData)
+
+    return true
   } catch (e) {
-    console.log(e)
+    alert('Error en editUserAuthenticate, avisar a soporte! ' + e)
+    return false
   }
 }
