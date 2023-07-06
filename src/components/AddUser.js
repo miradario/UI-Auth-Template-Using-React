@@ -298,6 +298,8 @@ const AddUserPage = props => {
   }
   // TODO: handle form submission
 
+  console.log(HP, Prision, SSY)
+
   return (
     <div className='div-flex' style={{ marginTop: '110px' }}>
       <Navigation />
@@ -522,108 +524,120 @@ const AddUserPage = props => {
             <InputGroup style={{ width: '100%' }}>
               <Form.Label className='inputlabel'>Courses</Form.Label>
               <br />
+              <label htmlFor='HP'>HP</label>
               <Form.Check
                 className='inputradio'
-                label={'HP'}
                 type='checkbox'
                 name='HP'
                 defaultChecked={HP}
                 value={HP}
+                id='HP'
                 onChange={() => handleHP(HP)}
               />
+              <label htmlFor='SSY'>SSY</label>
               <Form.Check
+                id='SSY'
                 className='inputradio'
-                label='SSY'
                 type='checkbox'
                 name='SSY'
                 defaultChecked={SSY}
                 value={SSY}
                 onChange={() => setSSY(!SSY)}
               />
+              <label htmlFor='YesPlus'>Yes Plus</label>
               <Form.Check
+                id='YesPlus'
                 className='inputradio'
-                label={'Yes Plus'}
                 type='checkbox'
                 name='YesPlus'
                 defaultChecked={YesPlus}
                 value={YesPlus}
                 onChange={() => setYesPlus(!YesPlus)}
               />
+              <label htmlFor='YES'>YES</label>
               <Form.Check
+                id='YES'
                 className='inputradio'
-                label='YES'
                 type='checkbox'
                 name='YES'
                 defaultChecked={YES}
                 value={YES}
                 onChange={() => setYES(!YES)}
               />
+              <label htmlFor='AE'>AE</label>
               <Form.Check
                 className='inputradio'
-                label='AE'
+                id='AE'
                 type='checkbox'
                 name='AE'
                 defaultChecked={AE}
                 value={AE}
                 onChange={() => setAE(!AE)}
               />
+              <label htmlFor='Sahaj'>Sahaj</label>
               <Form.Check
                 className='inputradio'
-                label='Sahaj'
+                id='Sahaj'
                 type='checkbox'
                 name='Sahaj'
                 defaultChecked={Sahaj}
                 value={Sahaj}
                 onChange={() => setSahaj(!Sahaj)}
               />
+              <label htmlFor='Parte 2'>Parte 2</label>
               <Form.Check
                 className='inputradio'
-                label='Parte 2'
+                id='Parte 2'
                 type='checkbox'
                 name='Parte2'
                 defaultChecked={Parte2}
                 value={Parte2}
                 onChange={() => setParte2(!Parte2)}
               />
+              <label htmlFor='Parte2 SSY'>Parte2 SSY</label>
               <Form.Check
                 className='inputradio'
-                label='Parte2 SSY'
+                id='Parte2 SSY'
                 type='checkbox'
                 name='Parte2SSY'
                 defaultChecked={Parte2SSY}
                 value={Parte2SSY}
                 onChange={() => setParte2SSY(!Parte2SSY)}
               />
+              <label htmlFor='Prision'>Prision</label>
               <Form.Check
                 className='inputradio'
-                label='Prision'
+                id='Prision'
                 type='checkbox'
                 name='Prision'
                 defaultChecked={Prision}
                 value={Prision}
                 onChange={() => setPrision(!Prision)}
               />
+              <label htmlFor='DSN'>DSN</label>
               <Form.Check
                 className='inputradio'
-                label='DSN'
+                id='DSN'
                 type='checkbox'
                 name='DSN'
                 defaultChecked={DSN}
                 value={DSN}
                 onChange={() => setDSN(!DSN)}
               />
+              <label htmlFor='VTP'>VTP</label>
               <Form.Check
                 className='inputradio'
-                label='VTP'
+                id='VTP'
                 type='checkbox'
                 name='VTP'
                 defaultChecked={VTP}
                 value={VTP}
                 onChange={() => setVTP(!VTP)}
               />
+              <label htmlFor='TTC'>TTC</label>
               <Form.Check
                 className='inputradio'
-                label='TTC'
+                id='TTC'
                 type='checkbox'
                 name='TTC'
                 defaultChecked={TTC}
