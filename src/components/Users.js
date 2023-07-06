@@ -16,7 +16,8 @@ import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 import { ModalFilters } from './Filters/ModalFilters'
 import { filterUsers } from '../helpers/filterUsers'
 import { Loader } from './commons/Loader'
-// import xlsx from 'xlsx'
+
+import * as XLSX from 'xlsx'
 
 const initialFiltersActive = {
   searchValue: '',
@@ -385,22 +386,100 @@ export default function Users () {
     return coursesString
   }
 
-  //   const exportDataEXCEL = () => {
-  //     const workbook = xlsx.utils.book_new()
+  const exportDataToExcel = () => {
+    const dataWithoutId = itemsFilter.map(el => {
+      const newArray = {
+        authenticate: 1,
+        ...el[1],
+        ...el[1].SKY,
+        ...el[1].course
+      }
+      delete newArray.SKY
+      delete newArray.course
+      return newArray
+    })
 
-  //     // Crear una hoja de cálculo
-  //     const worksheet = xlsx.utils.json_to_sheet(itemsFilter)
+    // const tabla = [
+    //   {
+    //     A: 'AUTH',
+    //     B: 'Name',
+    //     C: 'Last Name',
+    //     D: 'Email',
+    //     E: 'Phone',
+    //     F: 'Country Origin',
+    //     G: 'Country Residence',
+    //     H: 'Long',
+    //     I: 'Short',
+    //     J: 'Status',
+    //     K: 'First TTCDate',
+    //     L: 'Sign',
+    //     M: 'Comment',
+    //     N: 'HP',
+    //     O: 'SSY',
+    //     P: 'Yes+',
+    //     Q: 'TTC Place',
+    //     R: 'Yes',
+    //     S: 'AE',
+    //     T: 'Sahaj',
+    //     U: 'P2',
+    //     V: 'SSY2',
+    //     W: 'Prision',
+    //     X: 'DSN',
+    //     Y: 'VTP',
+    //     Z: 'TTC'
+    //   }
+    // ]
 
-  //     // Agregar la hoja de cálculo al libro de Excel
-  //     xlsx.utils.book_append_sheet(workbook, worksheet, 'Datos')
+    // dataWithoutId.forEach(el => {
+    //   tabla.push({
+    //     A: el.authenticated,
+    //     B: el.name,
+    //     C: el.lastName,
+    //     D: el.email,
+    //     E: el.phone,
+    //     F: el.country,
+    //     G: el.teach_country,
+    //     H: el.long,
+    //     I: el.short,
+    //     J: el.inactive,
+    //     K: el.TTCDate,
+    //     L: el.sign,
+    //     M: el.comment,
+    //     N: el.HP,
+    //     O: el.SSY,
+    //     P: el.YesPlus,
+    //     Q: el.placeTTC,
+    //     R: el.YES,
+    //     S: el.AE,
+    //     T: el.Sahaj,
+    //     U: el.Parte2,
+    //     V: el.Parte2SSY,
+    //     W: el.Prision,
+    //     X: el.DSN,
+    //     Y: el.VTP,
+    //     Z: el.TTC
+    //   })
+    // })
 
-  //     // Especificar el nombre del archivo de salida
-  //     const filename = 'data_users_AOL_Sky.xlsx'
+    const libro = XLSX.utils.book_new()
+    const hoja = XLSX.utils.json_to_sheet(dataWithoutId)
+    XLSX.utils.book_append_sheet(libro, hoja, 'Users')
 
-  //     // Guardar el libro de Excel como archivo
-  //     xlsx.writeFile(workbook, filename)
+    setTimeout(() => {
+      // creandoArchivo(tabla);
+      XLSX.writeFile(libro, 'Users_TeachersAOL.xlsx')
+    }, 1000)
+  }
 
-  //     console.log(`Los datos se han exportado exitosamente a '${filename}'.`)
+  //   const creandoArchivo = (dataFinal) => {
+  //     const libro = XLSX.utils.book_new()
+  //     const hoja = XLSX.utils.json_to_sheet(dataFinal, {skipHeader:true})
+
+  //     hoja["!merges"] = [
+  //         XLSX.utils.decode_range();
+
+  //     ]
+
   //   }
 
   return (
@@ -416,9 +495,26 @@ export default function Users () {
           email === 'sistemas@elartedevivir.org' ? (
             <>
               <div style={{ width: '100%' }}>
+                <div style={{ textAlign: 'right' }}>
+                  <button
+                    onClick={exportDataToExcel}
+                    style={{
+                      backgroundColor: '#d39e00',
+                      color: 'white',
+                      borderRadius: '5px',
+                      border: 'none',
+                      outline: '2px solid black',
+                      marginTop: '15px',
+                      marginRight: '15px',
+                      padding: '5px 15px'
+                    }}
+                  >
+                    EXPORTAR EXCEL
+                  </button>
+                </div>
                 <div style={{ width: '90%', margin: '0 auto' }}>
                   <div style={{ width: '100%' }}>
-                    <h1 style={{ margin: '20px 0' }}>Teachers</h1>
+                    <h1 style={{ marginBottom: '20px' }}>Teachers</h1>
                     <form className='formSearch' onSubmit={handleSearch}>
                       <input
                         type='text'
