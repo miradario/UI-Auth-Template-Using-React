@@ -57,6 +57,8 @@ export default function Users () {
   const [valueSearchAux, setValueSearchAux] = useState('')
   const [showFilters, setShowFilters] = useState(false)
 
+  const [loadingExcel, setLoadingExcel] = useState(false)
+
   const [filtersActive, setFiltersActive] = useState(initialFiltersActive)
 
   useEffect(() => {
@@ -386,6 +388,7 @@ export default function Users () {
   }
 
   const exportDataToExcel = () => {
+    setLoadingExcel(true)
     const dataWithoutId = itemsFilter.map(el => {
       const newArray = {
         authenticate: 1,
@@ -467,7 +470,8 @@ export default function Users () {
     setTimeout(() => {
       // creandoArchivo(tabla);
       XLSX.writeFile(libro, 'Users_TeachersAOL.xlsx')
-    }, 1000)
+      setLoadingExcel(false)
+    }, 1500)
   }
 
   //   const creandoArchivo = (dataFinal) => {
@@ -508,7 +512,7 @@ export default function Users () {
                       padding: '5px 15px'
                     }}
                   >
-                    EXPORTAR EXCEL
+                    {!loadingExcel ? 'EXPORT TO EXCEL' : 'Loading...'}
                   </button>
                 </div>
                 <div style={{ width: '90%', margin: '0 auto' }}>
