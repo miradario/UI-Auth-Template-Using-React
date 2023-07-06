@@ -311,7 +311,6 @@ export default function Users () {
       ])
     }
   }
-
   //   const sendSelected = () => {
   //     const promises = selectedToAuthenticated.map(
   //       async el => await handleAuthenticateUser(el, false)
