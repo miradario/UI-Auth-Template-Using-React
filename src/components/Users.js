@@ -296,7 +296,7 @@ export default function Users () {
       window.location.reload()
     }
   }
-
+  //MARCAR INPUTS CHECKBOX
   const handleCheckbox = e => {
     const key = e.target.dataset.key
 
