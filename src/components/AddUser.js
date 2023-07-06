@@ -584,20 +584,20 @@ const AddUserPage = props => {
                 value={Sahaj}
                 onChange={() => setSahaj(!Sahaj)}
               />
-              <label htmlFor='Parte 2'>Parte 2</label>
+              <label htmlFor='Parte_2'>Parte 2</label>
               <Form.Check
                 className='inputradio'
-                id='Parte 2'
+                id='Parte_2'
                 type='checkbox'
                 name='Parte2'
                 defaultChecked={Parte2}
                 value={Parte2}
                 onChange={() => setParte2(!Parte2)}
               />
-              <label htmlFor='Parte2 SSY'>Parte2 SSY</label>
+              <label htmlFor='Parte2_SSY'>Parte2 SSY</label>
               <Form.Check
                 className='inputradio'
-                id='Parte2 SSY'
+                id='Parte2_SSY'
                 type='checkbox'
                 name='Parte2SSY'
                 defaultChecked={Parte2SSY}
