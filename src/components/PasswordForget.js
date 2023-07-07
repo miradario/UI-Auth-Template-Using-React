@@ -111,28 +111,55 @@ class PasswordForgetForm extends Component {
             <div
               style={{
                 display: 'flex',
-                justifyContent: 'center',
+                justifyContent: 'flex-end',
                 margin: '20px 0'
               }}
             >
-              <img
-                src='https://3.bp.blogspot.com/-wjynDks70rs/Wrz-wYUCbKI/AAAAAAAAC9M/JwJXBUEGQ4MCfeupW1LcaHZvVDapvcTQwCLcBGAs/s1600/la-bandera-inglesa.png'
-                alt='English'
-                className='img-lang'
-                onClick={() => this.setState({ lang: 'EN' })}
-              />
-              <img
-                src='http://sooluciona.com/wp-content/uploads/2019/03/bandera-de-brasil.jpg'
-                alt='Portugueis'
-                className='img-lang'
-                onClick={() => this.setState({ lang: 'PR' })}
-              />
-              <img
-                src='http://1.bp.blogspot.com/-iRWQIO19zgQ/T5_35WMscfI/AAAAAAAAAN8/xL0Hm3gy2U0/s1600/ESPA%C3%83%E2%80%98A.jpg'
-                alt='Español'
-                className='img-lang'
-                onClick={() => this.setState({ lang: 'ES' })}
-              />
+              <div
+                style={{
+                  cursor: 'pointer',
+                  padding: 5,
+                  border:
+                    this.state.lang === 'EN' ? '2px solid #d39e00' : 'none'
+                }}
+              >
+                <img
+                  src='https://3.bp.blogspot.com/-wjynDks70rs/Wrz-wYUCbKI/AAAAAAAAC9M/JwJXBUEGQ4MCfeupW1LcaHZvVDapvcTQwCLcBGAs/s1600/la-bandera-inglesa.png'
+                  alt='English'
+                  className='img-lang'
+                  onClick={() => this.setState({ lang: 'EN' })}
+                />
+              </div>
+              <div
+                style={{
+                  cursor: 'pointer',
+                  padding: 5,
+                  border:
+                    this.state.lang === 'PR' ? '2px solid #d39e00' : 'none'
+                }}
+              >
+                <img
+                  src='http://sooluciona.com/wp-content/uploads/2019/03/bandera-de-brasil.jpg'
+                  alt='Portugueis'
+                  className='img-lang'
+                  onClick={() => this.setState({ lang: 'PR' })}
+                />
+              </div>
+              <div
+                style={{
+                  cursor: 'pointer',
+                  padding: 5,
+                  border:
+                    this.state.lang === 'ES' ? '2px solid #d39e00' : 'none'
+                }}
+              >
+                <img
+                  src='http://1.bp.blogspot.com/-iRWQIO19zgQ/T5_35WMscfI/AAAAAAAAAN8/xL0Hm3gy2U0/s1600/ESPA%C3%83%E2%80%98A.jpg'
+                  alt='Español'
+                  className='img-lang'
+                  onClick={() => this.setState({ lang: 'ES' })}
+                />
+              </div>
             </div>
             {this.state.expiro ? (
               <div>
