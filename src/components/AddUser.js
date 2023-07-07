@@ -96,6 +96,7 @@ const AddUserPage = props => {
             setCountry(snapshot.val()?.country)
             setComment(snapshot.val()?.comment)
             setPlaceTTC(snapshot.val()?.placeTTC)
+            setInactive(snapshot.val()?.inactive || false)
             //   setCode(snapshot.val()?.code);
             setLastname(snapshot.val()?.lastName)
             setTTCDate(snapshot.val()?.TTCDate)
@@ -191,6 +192,7 @@ const AddUserPage = props => {
       phone: phone,
       country: country,
       //   code: code,
+      inactive: inactive,
       teach_country: teachCountry || '',
       lastName: lastName,
       TTCDate: TTCDate,

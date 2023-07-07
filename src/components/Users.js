@@ -400,89 +400,22 @@ export default function Users () {
       return newArray
     })
 
-    // const tabla = [
-    //   {
-    //     A: 'AUTH',
-    //     B: 'Name',
-    //     C: 'Last Name',
-    //     D: 'Email',
-    //     E: 'Phone',
-    //     F: 'Country Origin',
-    //     G: 'Country Residence',
-    //     H: 'Long',
-    //     I: 'Short',
-    //     J: 'Status',
-    //     K: 'First TTCDate',
-    //     L: 'Sign',
-    //     M: 'Comment',
-    //     N: 'HP',
-    //     O: 'SSY',
-    //     P: 'Yes+',
-    //     Q: 'TTC Place',
-    //     R: 'Yes',
-    //     S: 'AE',
-    //     T: 'Sahaj',
-    //     U: 'P2',
-    //     V: 'SSY2',
-    //     W: 'Prision',
-    //     X: 'DSN',
-    //     Y: 'VTP',
-    //     Z: 'TTC'
-    //   }
-    // ]
-
-    // dataWithoutId.forEach(el => {
-    //   tabla.push({
-    //     A: el.authenticated,
-    //     B: el.name,
-    //     C: el.lastName,
-    //     D: el.email,
-    //     E: el.phone,
-    //     F: el.country,
-    //     G: el.teach_country,
-    //     H: el.long,
-    //     I: el.short,
-    //     J: el.inactive,
-    //     K: el.TTCDate,
-    //     L: el.sign,
-    //     M: el.comment,
-    //     N: el.HP,
-    //     O: el.SSY,
-    //     P: el.YesPlus,
-    //     Q: el.placeTTC,
-    //     R: el.YES,
-    //     S: el.AE,
-    //     T: el.Sahaj,
-    //     U: el.Parte2,
-    //     V: el.Parte2SSY,
-    //     W: el.Prision,
-    //     X: el.DSN,
-    //     Y: el.VTP,
-    //     Z: el.TTC
-    //   })
-    // })
-
     const libro = XLSX.utils.book_new()
     const hoja = XLSX.utils.json_to_sheet(dataWithoutId)
     XLSX.utils.book_append_sheet(libro, hoja, 'Users')
 
     setTimeout(() => {
-      // creandoArchivo(tabla);
       XLSX.writeFile(libro, 'Users_TeachersAOL.xlsx')
       setLoadingExcel(false)
     }, 1500)
   }
 
-  //   const creandoArchivo = (dataFinal) => {
-  //     const libro = XLSX.utils.book_new()
-  //     const hoja = XLSX.utils.json_to_sheet(dataFinal, {skipHeader:true})
-
-  //     hoja["!merges"] = [
-  //         XLSX.utils.decode_range();
-
-  //     ]
-
-  //   }
+  console.log(
+    itemsFilter.slice(
+      pagination.page * pagination.perPage,
+      (pagination.page + 1) * pagination.perPage
+    )
+  )
 
   return (
     <div className='App'>
