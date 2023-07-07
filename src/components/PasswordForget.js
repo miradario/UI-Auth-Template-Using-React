@@ -117,6 +117,8 @@ class PasswordForgetForm extends Component {
             >
               <div
                 style={{
+                  borderRadius: '2.5px',
+                  marginRight: '20px',
                   cursor: 'pointer',
                   padding: 5,
                   border:
@@ -132,6 +134,8 @@ class PasswordForgetForm extends Component {
               </div>
               <div
                 style={{
+                  borderRadius: '2.5px',
+                  marginRight: '20px',
                   cursor: 'pointer',
                   padding: 5,
                   border:
@@ -147,6 +151,8 @@ class PasswordForgetForm extends Component {
               </div>
               <div
                 style={{
+                  borderRadius: '2.5px',
+                  marginRight: '20px',
                   cursor: 'pointer',
                   padding: 5,
                   border:
