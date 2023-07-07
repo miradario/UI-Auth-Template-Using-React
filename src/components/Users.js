@@ -389,6 +389,7 @@ export default function Users () {
     setLoadingExcel(true)
     const dataWithoutId = itemsFilter.map(el => {
       const newArray = {
+        id: el[0],
         authenticate: 1,
         ...el[1],
         ...el[1].SKY,
