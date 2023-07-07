@@ -392,12 +392,6 @@ export default function Users () {
         id: el[0],
         authenticated: 1,
         ...el[1],
-        name: el[1].name,
-        lastName: el[1].lastName,
-        email: el[1].email,
-        phone: el[1].phone,
-        country: el[1].country,
-        teach_country: el[1].teach_country,
         ...el[1].SKY,
         ...el[1].course
       }

@@ -89,8 +89,6 @@ class PasswordForgetForm extends Component {
         // alert('expiro?', error)
         //window.location.href = "http://cursos.elartedevivir.org/app";
       })
-
-    this.setState({ lang: localStorage.getItem('lang') || 'ES' })
   }
 
   render () {
