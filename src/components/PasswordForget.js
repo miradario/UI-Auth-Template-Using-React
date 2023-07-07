@@ -111,7 +111,7 @@ class PasswordForgetForm extends Component {
             <div
               style={{
                 display: 'flex',
-                justifyContent: 'flex-end',
+                justifyContent: 'center',
                 margin: '20px 0'
               }}
             >
@@ -120,7 +120,7 @@ class PasswordForgetForm extends Component {
                   borderRadius: '2.5px',
                   marginRight: '20px',
                   cursor: 'pointer',
-                  padding: 5,
+                  padding: 2.5,
                   border:
                     this.state.lang === 'EN' ? '2px solid #d39e00' : 'none'
                 }}
@@ -137,7 +137,7 @@ class PasswordForgetForm extends Component {
                   borderRadius: '2.5px',
                   marginRight: '20px',
                   cursor: 'pointer',
-                  padding: 5,
+                  padding: 2.5,
                   border:
                     this.state.lang === 'PR' ? '2px solid #d39e00' : 'none'
                 }}
@@ -154,7 +154,7 @@ class PasswordForgetForm extends Component {
                   borderRadius: '2.5px',
                   marginRight: '20px',
                   cursor: 'pointer',
-                  padding: 5,
+                  padding: 2.5,
                   border:
                     this.state.lang === 'ES' ? '2px solid #d39e00' : 'none'
                 }}
