@@ -107,98 +107,128 @@ class PasswordForgetForm extends Component {
     return (
       <div className='inputclass'>
         <Container style={{ marginBottom: '150px' }}>
-          {this.state.expiro ? (
-            <div>
-              <p
-                style={{
-                  fontSize: '30px',
-                  fontWeight: 'bold',
-                  letterSpacing: '2px'
-                }}
-              >
-                {languaje.expired[this.state.lang].title}
-              </p>
-              <br />
-              <p id='mytextp' style={{ fontSize: '20px' }}>
-                {languaje.notExpired[this.state.lang].msg}
-              </p>
-              {!this.state.sendMailExpiro ? (
-                <form className='newPassword'>
-                  <input
-                    type='email'
-                    placeholder={languaje.expired[this.state.lang].placeholder}
-                    onChange={e => this.setState({ email: e.target.value })}
-                    style={{
-                      width: '200px',
-                      marginRight: '15px',
-                      padding: '8px'
-                    }}
-                  />
-                  <input
-                    type='submit'
-                    value={languaje.expired[this.state.lang].btn}
-                    onClick={handleSubmit}
-                    style={{
-                      border: 'none',
-                      backgroundColor: '#d39e00',
-                      color: 'white',
-                      fontWeight: 'bold',
-                      fontSize: '16px',
-                      padding: '8px'
-                    }}
-                  />{' '}
-                </form>
-              ) : (
+          <>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                margin: '20px 0'
+              }}
+            >
+              <img
+                src='https://3.bp.blogspot.com/-wjynDks70rs/Wrz-wYUCbKI/AAAAAAAAC9M/JwJXBUEGQ4MCfeupW1LcaHZvVDapvcTQwCLcBGAs/s1600/la-bandera-inglesa.png'
+                alt='English'
+                style={{ width: '300px', height: '200px' }}
+                onClick={() => this.setState({ lang: 'EN' })}
+              />
+              <img
+                src='http://sooluciona.com/wp-content/uploads/2019/03/bandera-de-brasil.jpg'
+                alt='Portugueis'
+                style={{ width: '300px', height: '200px' }}
+                onClick={() => this.setState({ lang: 'PR' })}
+              />
+              <img
+                src='http://1.bp.blogspot.com/-iRWQIO19zgQ/T5_35WMscfI/AAAAAAAAAN8/xL0Hm3gy2U0/s1600/ESPA%C3%83%E2%80%98A.jpg'
+                alt='Español'
+                style={{ width: '300px', height: '200px' }}
+                onClick={() => this.setState({ lang: 'ES' })}
+              />
+            </div>
+            {this.state.expiro ? (
+              <div>
                 <p
                   style={{
-                    fontSize: '17px',
-                    textAlign: 'center',
-                    marginTop: '10px'
+                    fontSize: '30px',
+                    fontWeight: 'bold',
+                    letterSpacing: '2px'
                   }}
                 >
-                  {languaje.expired[this.state.lang].correct}
+                  {languaje.expired[this.state.lang].title}
                 </p>
-              )}
-
-              <br />
-            </div>
-          ) : (
-            <>
-              <h2 id='mytexth2'>
-                {languaje.notExpired[this.state.lang].title}
-              </h2>
-              <Form onSubmit={this.onSubmit}>
-                <InputGroup>
-                  <InputGroup.Prepend className='inputlabel'>
-                    {languaje.notExpired[this.state.lang].subtitle}
-                  </InputGroup.Prepend>
-                  <Form.Control
-                    type='password'
-                    name='password'
-                    id='inputtext'
-                    placeholder={
-                      languaje.notExpired[this.state.lang].placeholder
-                    }
-                    value={password}
-                    required
-                    onChange={event =>
-                      this.setState(byPropKey('password', event.target.value))
-                    }
-                  />
-                </InputGroup>
                 <br />
-                <div className='text-center'>
-                  <Button type='submit' id='mybutton'>
-                    {languaje.notExpired[this.state.lang].btn}
-                  </Button>
-                </div>
-                <br />
-                {this.state.loading && (
-                  <p>{languaje.notExpired[this.state.lang].loading}...</p>
+                <p id='mytextp' style={{ fontSize: '20px' }}>
+                  {languaje.expired[this.state.lang].msg}
+                </p>
+                {!this.state.sendMailExpiro ? (
+                  <form className='newPassword'>
+                    <input
+                      type='email'
+                      placeholder={
+                        languaje.expired[this.state.lang].placeholder
+                      }
+                      onChange={e => this.setState({ email: e.target.value })}
+                      style={{
+                        width: '200px',
+                        marginRight: '15px',
+                        padding: '8px'
+                      }}
+                    />
+                    <input
+                      type='submit'
+                      value={languaje.expired[this.state.lang].btn}
+                      onClick={handleSubmit}
+                      style={{
+                        border: 'none',
+                        backgroundColor: '#d39e00',
+                        color: 'white',
+                        fontWeight: 'bold',
+                        fontSize: '16px',
+                        padding: '8px'
+                      }}
+                    />{' '}
+                  </form>
+                ) : (
+                  <p
+                    style={{
+                      fontSize: '17px',
+                      textAlign: 'center',
+                      marginTop: '10px'
+                    }}
+                  >
+                    {languaje.expired[this.state.lang].correct}
+                  </p>
                 )}
-              </Form>
-            </>
-          )}
+
+                <br />
+              </div>
+            ) : (
+              <>
+                <h2 id='mytexth2'>
+                  {languaje.notExpired[this.state.lang].title}
+                </h2>
+                <Form onSubmit={this.onSubmit}>
+                  <InputGroup>
+                    <InputGroup.Prepend className='inputlabel'>
+                      {languaje.notExpired[this.state.lang].subtitle}
+                    </InputGroup.Prepend>
+                    <Form.Control
+                      type='password'
+                      name='password'
+                      id='inputtext'
+                      placeholder={
+                        languaje.notExpired[this.state.lang].placeholder
+                      }
+                      value={password}
+                      required
+                      onChange={event =>
+                        this.setState(byPropKey('password', event.target.value))
+                      }
+                    />
+                  </InputGroup>
+                  <br />
+                  <div className='text-center'>
+                    <Button type='submit' id='mybutton'>
+                      {languaje.notExpired[this.state.lang].btn}
+                    </Button>
+                  </div>
+                  <br />
+                  {this.state.loading && (
+                    <p>{languaje.notExpired[this.state.lang].loading}...</p>
+                  )}
+                </Form>
+              </>
+            )}
+          </>
         </Container>
       </div>
     )
