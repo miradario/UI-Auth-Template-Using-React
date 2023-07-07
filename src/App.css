@@ -653,4 +653,9 @@ body{
   .img-lang{
     width: 100px;
     height: 50px;
+    margin-right: 20px;
+  }
+
+  .img-lang:last-child{
+    margin-right: 0;
   }
