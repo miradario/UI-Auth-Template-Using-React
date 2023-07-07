@@ -647,3 +647,10 @@ body{
     letter-spacing: 2px;
     text-transform: uppercase;
   }
+
+  /**IMAGE LANGUAJE**/
+
+  .img-lang{
+    width: 100px;
+    height: 50px;
+  }

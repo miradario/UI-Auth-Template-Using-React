@@ -118,19 +118,19 @@ class PasswordForgetForm extends Component {
               <img
                 src='https://3.bp.blogspot.com/-wjynDks70rs/Wrz-wYUCbKI/AAAAAAAAC9M/JwJXBUEGQ4MCfeupW1LcaHZvVDapvcTQwCLcBGAs/s1600/la-bandera-inglesa.png'
                 alt='English'
-                style={{ width: '300px', height: '200px' }}
+                className='img-lang'
                 onClick={() => this.setState({ lang: 'EN' })}
               />
               <img
                 src='http://sooluciona.com/wp-content/uploads/2019/03/bandera-de-brasil.jpg'
                 alt='Portugueis'
-                style={{ width: '300px', height: '200px' }}
+                className='img-lang'
                 onClick={() => this.setState({ lang: 'PR' })}
               />
               <img
                 src='http://1.bp.blogspot.com/-iRWQIO19zgQ/T5_35WMscfI/AAAAAAAAAN8/xL0Hm3gy2U0/s1600/ESPA%C3%83%E2%80%98A.jpg'
                 alt='Español'
-                style={{ width: '300px', height: '200px' }}
+                className='img-lang'
                 onClick={() => this.setState({ lang: 'ES' })}
               />
             </div>
