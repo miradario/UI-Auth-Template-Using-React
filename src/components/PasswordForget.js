@@ -4,6 +4,7 @@ import { Button, Form, InputGroup, Container } from 'react-bootstrap'
 import Footer from './Footer'
 import NavigationEmpty from './NavigationEmpty'
 import { auth } from '../firebase'
+import { languaje } from './languaje/languaje'
 
 //it resets your password. It doesn’t matter if you are authenticated or not
 const PasswordForgetPage = () => {
@@ -28,7 +29,8 @@ const INITIAL_STATE = {
   password: '',
   email: '',
   sendMailExpiro: false,
-  loading: false
+  loading: false,
+  lang: 'ES'
 }
 
 class PasswordForgetForm extends Component {
@@ -87,6 +89,8 @@ class PasswordForgetForm extends Component {
         // alert('expiro?', error)
         //window.location.href = "http://cursos.elartedevivir.org/app";
       })
+
+    this.setState({ lang: localStorage.getItem('lang') || 'ES' })
   }
 
   render () {
@@ -112,18 +116,17 @@ class PasswordForgetForm extends Component {
                   letterSpacing: '2px'
                 }}
               >
-                El link expiro!
+                {languaje.expired[this.state.lang].title}
               </p>
               <br />
               <p id='mytextp' style={{ fontSize: '20px' }}>
-                Por favor ingrese el email y va recibir un nuevo mail con un
-                link tiene una hora para ingresar.
+                {languaje.notExpired[this.state.lang].msg}
               </p>
               {!this.state.sendMailExpiro ? (
                 <form className='newPassword'>
                   <input
                     type='email'
-                    placeholder='Ingrese su mail'
+                    placeholder={languaje.expired[this.state.lang].placeholder}
                     onChange={e => this.setState({ email: e.target.value })}
                     style={{
                       width: '200px',
@@ -133,7 +136,7 @@ class PasswordForgetForm extends Component {
                   />
                   <input
                     type='submit'
-                    value='Enviar'
+                    value={languaje.expired[this.state.lang].btn}
                     onClick={handleSubmit}
                     style={{
                       border: 'none',
@@ -153,7 +156,7 @@ class PasswordForgetForm extends Component {
                     marginTop: '10px'
                   }}
                 >
-                  Email enviado, por favor revise su casilla o spam!
+                  {languaje.expired[this.state.lang].correct}
                 </p>
               )}
 
@@ -161,17 +164,21 @@ class PasswordForgetForm extends Component {
             </div>
           ) : (
             <>
-              <h2 id='mytexth2'>Establecer contraseña</h2>
+              <h2 id='mytexth2'>
+                {languaje.notExpired[this.state.lang].title}
+              </h2>
               <Form onSubmit={this.onSubmit}>
                 <InputGroup>
                   <InputGroup.Prepend className='inputlabel'>
-                    Nueva Contraseña
+                    {languaje.notExpired[this.state.lang].subtitle}
                   </InputGroup.Prepend>
                   <Form.Control
                     type='password'
                     name='password'
                     id='inputtext'
-                    placeholder='Ingrese la contraseña nueva, por favor recuerdela'
+                    placeholder={
+                      languaje.notExpired[this.state.lang].placeholder
+                    }
                     value={password}
                     required
                     onChange={event =>
@@ -182,11 +189,13 @@ class PasswordForgetForm extends Component {
                 <br />
                 <div className='text-center'>
                   <Button type='submit' id='mybutton'>
-                    Establecer Contraseña
+                    {languaje.notExpired[this.state.lang].btn}
                   </Button>
                 </div>
                 <br />
-                {this.state.loading && <p>Loading...</p>}
+                {this.state.loading && (
+                  <p>{languaje.notExpired[this.state.lang].loading}...</p>
+                )}
               </Form>
             </>
           )}

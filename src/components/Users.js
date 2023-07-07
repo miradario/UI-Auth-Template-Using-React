@@ -1,23 +1,21 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Navigation from './Navigation'
+import * as XLSX from 'xlsx'
 import { db, auth } from '../firebase/firebase'
 import Footer from './Footer'
 import { BsChevronRight, BsChevronLeft } from 'react-icons/bs'
 import { MdDelete } from 'react-icons/md'
 import {
-  deleteUser,
+  //   deleteUser,
   editUserAuthenticate,
   updateKeyUser
 } from '../helpers/updateKeyUser'
-import { useState } from 'react'
-import { useEffect } from 'react'
+
 import { AiOutlineSearch } from 'react-icons/ai'
-import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 import { ModalFilters } from './Filters/ModalFilters'
 import { filterUsers } from '../helpers/filterUsers'
 import { Loader } from './commons/Loader'
-
-import * as XLSX from 'xlsx'
+import { useHistory } from 'react-router-dom/cjs/react-router-dom'
 
 const initialFiltersActive = {
   searchValue: '',
@@ -41,7 +39,7 @@ const initialFiltersActive = {
 
 export default function Users () {
   const history = useHistory()
-  const [error, setError] = useState(null)
+  //   const [error, setError] = useState(null)
   const [isLoaded, setIsLoaded] = useState(false)
   const email = localStorage.getItem('email')
 
