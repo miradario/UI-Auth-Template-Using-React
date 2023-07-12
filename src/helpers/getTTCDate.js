@@ -4,5 +4,8 @@ export const getTTCDate = array => {
     if (el[1]?.TTCDate) ttc.add(el[1]?.TTCDate?.toLowerCase().trim())
   })
   const arrayTTC = [...ttc]
-  return arrayTTC
+  const finalArray = arrayTTC.map(el => {
+    return { option: el, select: false }
+  })
+  return finalArray
 }

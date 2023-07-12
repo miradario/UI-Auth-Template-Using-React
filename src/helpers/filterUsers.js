@@ -30,18 +30,11 @@ export const filterUsers = (array, filtros) => {
 
   //FILTRO PAIS DE ORIGEN
   if (filtros.country !== 'Not selected')
-    filterArray = filterByValue(
-      [...filterArray],
-      'country',
-      filtros.country === 'vacio' ? '' : filtros.country
-    )
+    filterArray = multiFilters([...filterArray], 'country', filtros.country)
+
   //FILTRO TTCDATE
   if (filtros.TTCDate !== 'Not selected')
-    filterArray = filterByValue(
-      [...filterArray],
-      'TTCDate',
-      filtros.TTCDate === 'vacio' ? '' : filtros.TTCDate
-    )
+    filterArray = multiFilters([...filterArray], 'TTCDate', filtros.TTCDate)
 
   //FILTRO ESTADO (AUTENTICADO/NO)
   if (filtros.state !== 'Not selected')
@@ -61,18 +54,18 @@ export const filterUsers = (array, filtros) => {
     )
 
   //FILTRO PAIS DE RESIDENCIA
-  if (filtros.teach_country !== 'Not selected') {
-    filterArray = filterByValue(
+  if (filtros.teach_country !== 'Not selected')
+    filterArray = multiFilters(
       [...filterArray],
       'teach_country',
-      filtros.teach_country === 'vacio' ? '' : filtros.teach_country
+      filtros.teach_country
     )
-  }
 
   return filterArray
 }
 
 const filterByValue = (array, attribute, value, equal = true) => {
+  //   console.log('COUNTRIES: ', array)
   const filter = array.filter(el => {
     let valueAux =
       attribute === 'authenticated' &&
@@ -84,6 +77,19 @@ const filterByValue = (array, attribute, value, equal = true) => {
     return equal
       ? el[1][attribute]?.toString().toLowerCase() == valueAux
       : el[1][attribute]?.toString().toLowerCase() != valueAux
+  })
+  return filter
+}
+
+const multiFilters = (array, attribute, values) => {
+  //   console.log({ array, attribute, values })
+  console.log(values)
+  const filter = array.filter(el => {
+    console.log(el[1][attribute])
+    return (
+      typeof el[1][attribute] == 'string' &&
+      values.includes(el[1][attribute]?.toLowerCase())
+    )
   })
   return filter
 }

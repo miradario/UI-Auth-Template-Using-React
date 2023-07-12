@@ -1,9 +1,8 @@
 import { useState } from 'react'
-import { getCountries } from '../../helpers/getCountries'
 import { useEffect } from 'react'
 import { SelectForm } from './SelectForm'
-import { getTTCDate } from '../../helpers/getTTCDate'
-import { getCountriesTeach } from '../../helpers/getCountriesTeach'
+import { SelectMultipleOption } from './SelectMultipleOption'
+import { getDataSet } from '../../helpers/getDataSet'
 
 export const ModalFilters = ({
   data,
@@ -17,9 +16,34 @@ export const ModalFilters = ({
   const [teachCountries, setTeachCountries] = useState([])
 
   useEffect(() => {
-    const ct = getCountries(data)
-    const ttc = getTTCDate(data)
-    const teachC = getCountriesTeach(data)
+    let ct = getDataSet(data, 'country')
+    // console.log(ct)
+    if (filtersActive.filters.country !== 'Not selected') {
+      const ctFilter = filtersActive.filters.country
+      ct = ct.map(el =>
+        ctFilter.includes(el.option.toLowerCase())
+          ? { ...el, select: true }
+          : el
+      )
+    }
+    let ttc = getDataSet(data, 'TTCDate')
+    if (filtersActive.filters.TTCDate !== 'Not selected') {
+      const ttcFilter = filtersActive.filters.TTCDate
+      ttc = ttc.map(el =>
+        ttcFilter.includes(el.option.toLowerCase())
+          ? { ...el, select: true }
+          : el
+      )
+    }
+    let teachC = getDataSet(data, 'teach_country')
+    if (filtersActive.filters.teach_country !== 'Not selected') {
+      const teachCFilter = filtersActive.filters.teach_country
+      teachC = teachC.map(el =>
+        teachCFilter.includes(el.option.toLowerCase())
+          ? { ...el, select: true }
+          : el
+      )
+    }
     setCountries(ct)
     setTTCDate(ttc)
     setTeachCountries(teachC)
@@ -79,15 +103,22 @@ export const ModalFilters = ({
             setFiltersActive={setFiltersActive}
             filtersActive={filtersActive}
           />
-          <SelectForm
+          {/* <SelectForm
             options={['Vacio', ...countries]}
             title='Country Origin'
             identify='country'
             setFiltersActive={setFiltersActive}
             filtersActive={filtersActive}
+          /> */}
+          <SelectMultipleOption
+            options={[...countries]}
+            title='Country Origin'
+            identify='country'
+            setFiltersActive={setFiltersActive}
+            filtersActive={filtersActive}
           />
-          <SelectForm
-            options={['Vacio', ...teachCountries]}
+          <SelectMultipleOption
+            options={[...teachCountries]}
             title='Country Residence'
             identify='teach_country'
             setFiltersActive={setFiltersActive}
@@ -114,8 +145,8 @@ export const ModalFilters = ({
             setFiltersActive={setFiltersActive}
             filtersActive={filtersActive}
           />
-          <SelectForm
-            options={['Vacio', 'No Vacio', ...TTCDate]}
+          <SelectMultipleOption
+            options={[...TTCDate]}
             title='TTC Date'
             identify='TTCDate'
             setFiltersActive={setFiltersActive}

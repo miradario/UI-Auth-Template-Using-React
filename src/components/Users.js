@@ -75,9 +75,9 @@ export default function Users () {
   }, [perPage, itemsFilter])
 
   useEffect(() => {
+    // console.log(filtersActive.filters)
     if (items.length > 0) {
       let array = [...items]
-      //   console.log(filtersActive.filters)
       if (filtersActive.searchValue)
         array = filterDataSearch([...array], filtersActive.searchValue)
 
@@ -409,13 +409,6 @@ export default function Users () {
       setLoadingExcel(false)
     }, 1500)
   }
-
-  console.log(
-    itemsFilter.slice(
-      pagination.page * pagination.perPage,
-      (pagination.page + 1) * pagination.perPage
-    )
-  )
 
   return (
     <div className='App'>

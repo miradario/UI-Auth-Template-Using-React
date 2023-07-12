@@ -4,6 +4,9 @@ export const getCountriesTeach = array => {
     if (el[1]?.teach_country)
       countries.add(el[1]?.teach_country?.toLowerCase().trim())
   })
-  const arrayCountry = [...countries]
-  return arrayCountry
+  const arrayTeachCountry = [...countries]
+  const finalArray = arrayTeachCountry.map(el => {
+    return { option: el, select: false }
+  })
+  return finalArray
 }
