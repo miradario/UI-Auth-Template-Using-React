@@ -83,9 +83,7 @@ const filterByValue = (array, attribute, value, equal = true) => {
 
 const multiFilters = (array, attribute, values) => {
   //   console.log({ array, attribute, values })
-  console.log(values)
   const filter = array.filter(el => {
-    console.log(el[1][attribute])
     return (
       typeof el[1][attribute] == 'string' &&
       values.includes(el[1][attribute]?.toLowerCase())

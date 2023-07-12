@@ -47,6 +47,7 @@ export const ModalFilters = ({
     setCountries(ct)
     setTTCDate(ttc)
     setTeachCountries(teachC)
+    console.log(filtersActive.filters)
   }, [data])
 
   return (

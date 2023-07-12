@@ -20,15 +20,21 @@ export const SelectMultipleOption = ({
       setOptionsSelected([...filtersActive.filters[identify]])
   }, [])
 
+  useEffect(() => {
+    if (!filtersActive.filters.active) {
+      setOptionsSelected([])
+    }
+  }, [filtersActive.filters.active])
+
   const selectOption = optionSelect => {
-    console.log(filtersActive.filters)
+    // console.log(filtersActive.filters)
     const value = optionSelect.toLowerCase()
     const option = options.find(el => el.option.toLowerCase() == value)
     const index = optionsSelected.findIndex(el => el.toLowerCase() == value)
-    console.log({ optionsSelected, value })
+    // console.log({ optionsSelected, value })
     if (index != -1) {
       const deleted = optionsSelected.filter((el, i) => index != i)
-      console.log({ deleted })
+      //   console.log({ deleted })
       setOptionsSelected(deleted)
     } else {
       setOptionsSelected([...optionsSelected, value])
@@ -37,7 +43,7 @@ export const SelectMultipleOption = ({
   }
 
   useEffect(() => {
-    console.log(optionsSelected)
+    // console.log(optionsSelected)
     // console.log(filtersActive.filters)
     const active = verifyFiltersActive({
       ...filtersActive.filters,

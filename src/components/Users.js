@@ -591,6 +591,25 @@ export default function Users () {
                       </div>
                     </div>
 
+                    <button
+                      onClick={() =>
+                        filtersActive.filters.active
+                          ? setFiltersActive(initialFiltersActive)
+                          : null
+                      }
+                      style={{
+                        cursor: 'pointer',
+                        padding: '5px 20px',
+                        backgroundColor: filtersActive.filters.active
+                          ? '#feae00'
+                          : 'grey',
+                        fontWeight: 'bold',
+                        color: filtersActive.filters.active ? 'white' : 'black'
+                      }}
+                    >
+                      Clear Filters
+                    </button>
+
                     {/* BOTON PARA ELIMINAR DUPLICADOS */}
                     {/* <button onClick={deleteDuplicate}>DELETE DUPLICATES</button> */}
 
