@@ -248,7 +248,7 @@ export default function Users () {
       })
       .catch(error => {
         // setIsLoading(false)
-        console.log(error)
+        console.log('error: 251', error)
         console.log(error.message)
         return null
       })
@@ -257,7 +257,7 @@ export default function Users () {
 
   const handleAuthenticateUser = async (user, actualizar = true) => {
     try {
-      const keyUserAuth = await createAuthUser(user[1].email)
+      const keyUserAuth = await createAuthUser(user[1]?.email.trim())
       let res
       if (keyUserAuth) {
         res = await updateKeyUser(user[0], keyUserAuth)
@@ -271,9 +271,10 @@ export default function Users () {
           )
       }
 
-      if (res) auth.sendPasswordResetEmail(user[1].email)
+      if (res) auth.sendPasswordResetEmail(user[1].email?.trim())
       if (actualizar && res) window.location.reload()
     } catch (error) {
+      console.log(error)
       alert('Error en handleAuthenticateUser para usuario: ' + error)
       //   throw error
     }

@@ -291,9 +291,9 @@ const AddUserPage = props => {
       handleAddUser(id)
     } else {
       if (mail) {
-        await createAuthUser(email, password)
+        await createAuthUser(email.trim(), password)
       } else {
-        await createAuthUser(email, password)
+        await createAuthUser(email.trim(), password)
         //handleAddUser(undefined) ---> FUNCION PARA QUE PUEDA CREAR UN USUARIO SIN TENER QUE AUTENTICARLO, FIJARSE QUE NOS DE PERMISOS PARA PONER ID RANDOM FIREBASE
       }
     }
