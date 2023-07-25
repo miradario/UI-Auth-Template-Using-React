@@ -362,6 +362,10 @@ export default function Users () {
     setSelectAll(!selectAll)
   }
 
+  itemsFilter.forEach(el => {
+    if (!el[1].SKY) console.log(el[0])
+  })
+
   //   console.log(selectedToAuthenticated.length)
 
   /** ==================== BUSCADOR =======================*/
@@ -894,9 +898,11 @@ export default function Users () {
                                 <td>{user[1].country}</td>
                                 <td>{user[1].teach_country}</td>
                                 <td>{user[1].code}</td>
-                                <td>{user[1].SKY.long === 1 ? 'On' : 'Off'}</td>
                                 <td>
-                                  {user[1].SKY.short === 1 ? 'On' : 'Off'}
+                                  {user[1]?.SKY?.long === 1 ? 'On' : 'Off'}
+                                </td>
+                                <td>
+                                  {user[1]?.SKY?.short === 1 ? 'On' : 'Off'}
                                 </td>
                                 <td>
                                   {user[1].inactive ? 'Disable' : 'Enable'}
@@ -906,18 +912,18 @@ export default function Users () {
                                 <td>{user[1].sign === 1 ? 'Yes' : 'No'}</td>
                                 <td>{user[1].comment}</td>
                                 {/* CURSOS */}
-                                <td>{user[1].course?.HP}</td>
-                                <td>{user[1].course?.SSY}</td>
-                                <td>{user[1].course?.YesPlus}</td>
-                                <td>{user[1].course?.Yes}</td>
-                                <td>{user[1].course?.AE}</td>
-                                <td>{user[1].course?.Sahaj}</td>
-                                <td>{user[1].course?.Parte2}</td>
-                                <td>{user[1].course?.Parte2SSY}</td>
-                                <td>{user[1].course?.Prision}</td>
-                                <td>{user[1].course?.DSN}</td>
-                                <td>{user[1].course?.VTP}</td>
-                                <td>{user[1].course?.TTC}</td>
+                                <td>{user[1]?.course?.HP}</td>
+                                <td>{user[1]?.course?.SSY}</td>
+                                <td>{user[1]?.course?.YesPlus}</td>
+                                <td>{user[1]?.course?.Yes}</td>
+                                <td>{user[1]?.course?.AE}</td>
+                                <td>{user[1]?.course?.Sahaj}</td>
+                                <td>{user[1]?.course?.Parte2}</td>
+                                <td>{user[1]?.course?.Parte2SSY}</td>
+                                <td>{user[1]?.course?.Prision}</td>
+                                <td>{user[1]?.course?.DSN}</td>
+                                <td>{user[1]?.course?.VTP}</td>
+                                <td>{user[1]?.course?.TTC}</td>
                               </tr>
                             ) : null
                           )}
