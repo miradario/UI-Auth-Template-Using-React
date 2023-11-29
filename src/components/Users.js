@@ -236,7 +236,7 @@ export default function Users () {
     }
   }
 
-  //   console.log(itemsFilter?.filter(el => !el[1]?.course))
+  console.log(itemsFilter?.filter(el => !el[1]?.course))
 
   const createAuthUser = async email => {
     setIsLoaded(true)

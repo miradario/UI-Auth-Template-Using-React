@@ -186,8 +186,6 @@ const AddUserPage = props => {
       auth.sendPasswordResetEmail(email)
     }
 
-    console.log({ id, userNew })
-
     const updateData = {
       name: name,
       email: email,
@@ -238,7 +236,6 @@ const AddUserPage = props => {
             alert('User added successfully')
           }
           setIsLoading(false)
-          console.log(data)
           props.history.push({
             pathname: '/users'
           })
@@ -251,7 +248,6 @@ const AddUserPage = props => {
           alert('ERROR: ', JSON.stringify(error))
         })
     } else {
-      console.log(email + ' ||| ' + data.email)
       try {
         const newId = await createAuthUser(email, 'a1b2c3e4d5', true)
         console.log(newId)
@@ -288,7 +284,6 @@ const AddUserPage = props => {
   const handleSubmit = async event => {
     event.preventDefault()
     // console.log('email', email)
-    console.log(id)
     if (id) {
       handleAddUser(id)
     } else {
@@ -320,7 +315,7 @@ const AddUserPage = props => {
           <form onSubmit={handleSubmit}>
             <InputGroup>
               <InputGroup.Prepend className='inputlabel'>
-                Email
+                Email* :
               </InputGroup.Prepend>
               <Form.Control
                 id='inputtext'
@@ -339,14 +334,13 @@ const AddUserPage = props => {
             {!id ? (
               <InputGroup>
                 <InputGroup.Prepend className='inputlabel'>
-                  Password
+                  Password* :
                 </InputGroup.Prepend>
                 <Form.Control
                   id='inputtext'
                   type='password'
                   placeholder='********'
                   value={password}
-                  required
                   autoFocus
                   // change widht of input
                   style={{ width: '300px' }}
@@ -357,7 +351,7 @@ const AddUserPage = props => {
             <br />
             <InputGroup>
               <InputGroup.Prepend className='inputlabel'>
-                Name:
+                Name* :
               </InputGroup.Prepend>
               <Form.Control
                 type='text'
@@ -373,7 +367,7 @@ const AddUserPage = props => {
             <br />
             <InputGroup>
               <InputGroup.Prepend className='inputlabel'>
-                Last Name:
+                Last Name* :
               </InputGroup.Prepend>
               <Form.Control
                 type='text'
@@ -389,7 +383,7 @@ const AddUserPage = props => {
             <br />
             <InputGroup>
               <InputGroup.Prepend className='inputlabel'>
-                Origin Country:
+                Origin Country* :
               </InputGroup.Prepend>
               <Form.Control
                 type='text'
