@@ -17,7 +17,7 @@ const AddUserPage = props => {
   const [lastName, setLastname] = useState('')
   const [country, setCountry] = useState('')
   const [placeTTC, setPlaceTTC] = useState('')
-  //   const [code, setCode] = useState("");
+  const [code, setCode] = useState('')
   const [long, setLong] = useState(false)
   const [short, setShort] = useState(false)
   const [ae, setAe] = useState(false)
@@ -97,7 +97,7 @@ const AddUserPage = props => {
             setComment(snapshot.val()?.comment)
             setPlaceTTC(snapshot.val()?.placeTTC)
             setInactive(snapshot.val()?.inactive || false)
-            //   setCode(snapshot.val()?.code);
+            setCode(snapshot.val()?.code)
             setLastname(snapshot.val()?.lastName)
             setTTCDate(snapshot.val()?.TTCDate)
             const long = snapshot.val()?.SKY?.long === 1 ? true : false
@@ -186,12 +186,14 @@ const AddUserPage = props => {
       auth.sendPasswordResetEmail(email)
     }
 
+    // console.log({id, userNew})
+
     const updateData = {
       name: name,
       email: email,
       phone: phone,
       country: country,
-      //   code: code,
+      code: code,
       inactive: inactive,
       teach_country: teachCountry || '',
       lastName: lastName,
@@ -414,6 +416,22 @@ const AddUserPage = props => {
                 value={phone}
                 autoFocus
                 onChange={event => setPhone(event.target.value)}
+              />
+            </InputGroup>
+            <br />
+            <InputGroup>
+              <InputGroup.Prepend className='inputlabel'>
+                Code:
+              </InputGroup.Prepend>
+              <Form.Control
+                type='text'
+                name='code'
+                id='inputtextCode'
+                placeholder='Insert Code'
+                value={code}
+                autoFocus
+                required
+                onChange={event => setCode(event.target.value)}
               />
             </InputGroup>
             <br />
