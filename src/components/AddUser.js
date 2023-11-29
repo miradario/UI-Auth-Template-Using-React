@@ -186,7 +186,7 @@ const AddUserPage = props => {
       auth.sendPasswordResetEmail(email)
     }
 
-    // console.log({id, userNew})
+    console.log({ id, userNew })
 
     const updateData = {
       name: name,
@@ -430,7 +430,6 @@ const AddUserPage = props => {
                 placeholder='Insert Code'
                 value={code}
                 autoFocus
-                required
                 onChange={event => setCode(event.target.value)}
               />
             </InputGroup>
