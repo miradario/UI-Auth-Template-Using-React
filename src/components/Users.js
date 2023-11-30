@@ -97,12 +97,17 @@ export default function Users () {
   //     if (selectAll) allChecks()
   //   })
 
+  const quitarTildes = cadena => {
+    return cadena?.normalize('NFD')?.replace(/[\u0300-\u036f]/g, '')
+  }
+
   const filterDataSearch = (array, value) => {
+    const real_value = quitarTildes(value)
     return array?.filter(
       el =>
-        el[1].name?.toLowerCase().includes(value) ||
-        el[1].email?.toLowerCase().includes(value) ||
-        el[1].lastName?.toLowerCase().includes(value)
+        quitarTildes(el[1].name)?.toLowerCase().includes(real_value) ||
+        quitarTildes(el[1].email)?.toLowerCase().includes(real_value) ||
+        quitarTildes(el[1].lastName)?.toLowerCase().includes(real_value)
     )
   }
 
