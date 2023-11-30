@@ -45,7 +45,12 @@ export default function Users () {
 
   const [items, setItems] = useState([])
   const [itemsFilter, setItemsFilter] = useState([])
-  const [showDeleted, setShowDeleted] = useState(false)
+  const [showDeleted, setShowDeleted] = useState(
+    localStorage.getItem('showDeleted') == 'false' ||
+      !localStorage.getItem('showDeleted')
+      ? false
+      : true
+  )
   const [showOrder, setShowOrder] = useState(false)
   const [pagination, setPagination] = useState({})
   const [perPage, setPerPage] = useState(25)
@@ -144,6 +149,7 @@ export default function Users () {
 
   const handleFilterDeleted = () => {
     setShowDeleted(!showDeleted)
+    localStorage.setItem('showDeleted', !showDeleted)
   }
 
   useEffect(() => {
@@ -241,7 +247,7 @@ export default function Users () {
     }
   }
 
-  console.log(itemsFilter?.filter(el => !el[1]?.course))
+  //   console.log(itemsFilter?.filter(el => !el[1]?.course))
 
   const createAuthUser = async email => {
     setIsLoaded(true)
@@ -495,6 +501,9 @@ export default function Users () {
                       <button
                         className='btn btn-secondary'
                         onClick={() => handleFilterDeleted()}
+                        style={{
+                          backgroundColor: showDeleted ? 'red' : 'grey'
+                        }}
                       >
                         {!showDeleted
                           ? 'Show inactive users'
