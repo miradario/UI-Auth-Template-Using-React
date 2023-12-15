@@ -250,6 +250,7 @@ const AddUserPage = props => {
         })
         .catch(error => {
           //error callback
+          window.alert('ERROR OCURRED!!')
           console.log(error)
           console.log('NOT EXISTS SOMEONE PROPERTY')
           console.log('error ', error)
@@ -285,6 +286,7 @@ const AddUserPage = props => {
         console.log(error)
         console.log('NOT EXISTS SOMEONE PROPERTY')
         console.log('error ', error)
+        window.alert('ERROR OCURRED!')
       }
     }
   }
