@@ -44,6 +44,14 @@
     transform: translateY(20px);
   }
 }
+.form_add_user input{
+    color:rgb(0, 0, 114) !important;
+    font-weight: bold !important;
+}
+.form_add_user input::placeholder{
+    color:rgb(178, 178, 178);
+    font-weight: lighter !important;
+}
 
 .Jumbotron {
   margin: auto;

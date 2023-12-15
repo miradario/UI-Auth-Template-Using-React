@@ -312,7 +312,7 @@ const AddUserPage = props => {
         {isloading ? ( // if loading show 'loading...'
           <div id='preloader'></div>
         ) : (
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className='form_add_user'>
             <InputGroup>
               <InputGroup.Prepend className='inputlabel'>
                 Email* :
