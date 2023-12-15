@@ -781,7 +781,7 @@ export default function Users () {
                           <th scope='col'>TTC Place</th>
                           <th scope='col'>Sign Contract</th>
                           <th scope='col'>Comment</th>
-                          <th scope='col'>HP</th>
+                          <th scope='col'>P1</th>
                           <th scope='col'>SSY</th>
                           <th scope='col'>Yes+</th>
                           <th scope='col'>Yes</th>
@@ -793,6 +793,7 @@ export default function Users () {
                           <th scope='col'>DSN</th>
                           <th scope='col'>VTP</th>
                           <th scope='col'>TTC</th>
+                          <th scope='col'>Premium</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -940,6 +941,7 @@ export default function Users () {
                                 <td>{user[1]?.course?.DSN}</td>
                                 <td>{user[1]?.course?.VTP}</td>
                                 <td>{user[1]?.course?.TTC}</td>
+                                <td>{user[1]?.course?.premium}</td>
                               </tr>
                             ) : null
                           )}

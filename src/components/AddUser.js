@@ -38,6 +38,7 @@ const AddUserPage = props => {
   const [VTP, setVTP] = useState(false)
   const [YesPlus, setYesPlus] = useState(false)
   const [YES, setYES] = useState(false)
+  const [PREMIUM, setPremium] = useState(false)
 
   const [comment, setComment] = useState('')
 
@@ -107,6 +108,7 @@ const AddUserPage = props => {
             setAe(snapshot.val()?.SKY.ae === 1 ? true : false)
             setHP(snapshot.val()?.course?.HP === 'si' ? true : false)
             setAE(snapshot.val()?.course?.AE === 'si' ? true : false)
+            setPremium(snapshot.val()?.course?.premium === 'si' ? true : false)
             setTTC(snapshot.val()?.course?.TTC === 'si' ? true : false)
             setDSN(snapshot.val()?.course?.DSN === 'si' ? true : false)
             setParte2(snapshot.val()?.course?.Parte2 === 'si' ? true : false)
@@ -142,6 +144,10 @@ const AddUserPage = props => {
     setHP(!hp)
   }
 
+  const handlePremium = premium => {
+    setPremium(!premium)
+  }
+
   const handleSign = sign => {
     setSign(!sign)
   }
@@ -165,6 +171,7 @@ const AddUserPage = props => {
     const vtp_1 = VTP ? 'si' : 'no'
     const yesPlus_1 = YesPlus ? 'si' : 'no'
     const yes = YES ? 'si' : 'no'
+    const premium_1 = PREMIUM ? 'si' : 'no'
 
     const data = await getDataUser(userNew)
     let authent
@@ -187,23 +194,23 @@ const AddUserPage = props => {
     }
 
     const updateData = {
-      name: name,
-      email: email,
-      phone: phone,
-      country: country,
-      code: code,
+      name: name || '',
+      email: email || '',
+      phone: phone || '',
+      country: country || '',
+      code: code || '',
       inactive: inactive,
       teach_country: teachCountry || '',
-      lastName: lastName,
-      TTCDate: TTCDate,
+      lastName: lastName || '',
+      TTCDate: TTCDate || '',
       sign: sign_1,
       authenticated: authent,
       comment: comment || '',
       placeTTC: placeTTC || '',
       SKY: {
-        long: long_1,
-        short: short_1,
-        ae: ae_1
+        long: long_1 || 0,
+        short: short_1 || 0,
+        ae: ae_1 || 0
       },
       course: {
         HP: hp_1,
@@ -217,7 +224,8 @@ const AddUserPage = props => {
         Sahaj: sahaj_1,
         VTP: vtp_1,
         YesPlus: yesPlus_1,
-        Yes: yes
+        Yes: yes,
+        premium: premium_1
       }
     }
     console.log(userNew)
@@ -538,7 +546,7 @@ const AddUserPage = props => {
             <InputGroup style={{ width: '100%' }}>
               <Form.Label className='inputlabel'>Courses</Form.Label>
               <br />
-              <label htmlFor='HP'>HP</label>
+              <label htmlFor='HP'>Parte 1</label>
               <Form.Check
                 className='inputradio'
                 type='checkbox'
@@ -547,6 +555,16 @@ const AddUserPage = props => {
                 value={HP}
                 id='HP'
                 onChange={() => handleHP(HP)}
+              />
+              <label htmlFor='HP'>Premium</label>
+              <Form.Check
+                className='inputradio'
+                type='checkbox'
+                name='PREMIUM'
+                defaultChecked={PREMIUM}
+                value={PREMIUM}
+                id='PREMIUM'
+                onChange={() => handlePremium(PREMIUM)}
               />
               <label htmlFor='SSY'>SSY</label>
               <Form.Check
