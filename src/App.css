@@ -156,7 +156,20 @@
 
 .inputradio {
   margin: auto;
+  cursor: pointer;
   font-size: 16px;
+}
+
+.form_add_user input[type="checkbox"]{
+    width:18px;
+    height: 18px;
+}
+
+.form_add_user input, .form_add_user label{
+    cursor: pointer;
+}
+.form_add_user label{
+    user-select: none;
 }
 
 #inputtext {

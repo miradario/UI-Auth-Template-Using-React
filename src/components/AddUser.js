@@ -516,33 +516,37 @@ const AddUserPage = props => {
               label='Sign the contract'
               type='checkbox'
               name='Sing'
+              id='Sing'
               defaultChecked={sign}
               value={sign}
               onChange={() => handleSign(sign)}
             />
             <br />
-            <InputGroup style={{ width: '80%' }}>
-              <Form.Label className='inputlabel'>Kriya Available</Form.Label>
-              <br />
-              <Form.Check
-                className='inputradio'
-                label={'Long'}
-                type='checkbox'
-                name='Long'
-                defaultChecked={long}
-                value={long}
-                onChange={() => handleLong(long)}
-              />
-              <Form.Check
-                className='inputradio'
-                label='Short'
-                type='checkbox'
-                name='Short'
-                defaultChecked={short}
-                value={short}
-                onChange={() => handleShort(short)}
-              />
-            </InputGroup>
+            <div style={{ display: 'flex' }}>
+              <h3>Kriya Available</h3>
+              <InputGroup style={{ width: '80%' }}>
+                <Form.Check
+                  className='inputradio'
+                  label={'Long'}
+                  type='checkbox'
+                  name='Long'
+                  defaultChecked={long}
+                  value={long}
+                  id='Long'
+                  onChange={() => handleLong(long)}
+                />
+                <Form.Check
+                  className='inputradio'
+                  label='Short'
+                  type='checkbox'
+                  name='Short'
+                  id='Short'
+                  defaultChecked={short}
+                  value={short}
+                  onChange={() => handleShort(short)}
+                />
+              </InputGroup>
+            </div>
             <br />
             {/* COURSES */}
             <InputGroup style={{ width: '100%' }}>
@@ -558,7 +562,7 @@ const AddUserPage = props => {
                 id='HP'
                 onChange={() => handleHP(HP)}
               />
-              <label htmlFor='HP'>Premium</label>
+              //<label htmlFor='PREMIUM'>Premium</label>
               <Form.Check
                 className='inputradio'
                 type='checkbox'
@@ -568,7 +572,7 @@ const AddUserPage = props => {
                 id='PREMIUM'
                 onChange={() => handlePremium(PREMIUM)}
               />
-              <label htmlFor='SSY'>SSY</label>
+              //<label htmlFor='SSY'>SSY</label>
               <Form.Check
                 id='SSY'
                 className='inputradio'
@@ -578,7 +582,7 @@ const AddUserPage = props => {
                 value={SSY}
                 onChange={() => setSSY(!SSY)}
               />
-              <label htmlFor='YesPlus'>Yes Plus</label>
+              //<label htmlFor='YesPlus'>Yes Plus</label>
               <Form.Check
                 id='YesPlus'
                 className='inputradio'
@@ -588,7 +592,7 @@ const AddUserPage = props => {
                 value={YesPlus}
                 onChange={() => setYesPlus(!YesPlus)}
               />
-              <label htmlFor='YES'>YES</label>
+              //<label htmlFor='YES'>YES</label>
               <Form.Check
                 id='YES'
                 className='inputradio'
@@ -598,7 +602,7 @@ const AddUserPage = props => {
                 value={YES}
                 onChange={() => setYES(!YES)}
               />
-              <label htmlFor='AE'>AE</label>
+              //<label htmlFor='AE'>AE</label>
               <Form.Check
                 className='inputradio'
                 id='AE'
@@ -608,7 +612,7 @@ const AddUserPage = props => {
                 value={AE}
                 onChange={() => setAE(!AE)}
               />
-              <label htmlFor='Sahaj'>Sahaj</label>
+              //<label htmlFor='Sahaj'>Sahaj</label>
               <Form.Check
                 className='inputradio'
                 id='Sahaj'
@@ -618,7 +622,7 @@ const AddUserPage = props => {
                 value={Sahaj}
                 onChange={() => setSahaj(!Sahaj)}
               />
-              <label htmlFor='Parte_2'>Parte 2</label>
+              //<label htmlFor='Parte_2'>Parte 2</label>
               <Form.Check
                 className='inputradio'
                 id='Parte_2'
@@ -628,7 +632,7 @@ const AddUserPage = props => {
                 value={Parte2}
                 onChange={() => setParte2(!Parte2)}
               />
-              <label htmlFor='Parte2_SSY'>Parte2 SSY</label>
+              //<label htmlFor='Parte2_SSY'>Parte2 SSY</label>
               <Form.Check
                 className='inputradio'
                 id='Parte2_SSY'
@@ -638,7 +642,7 @@ const AddUserPage = props => {
                 value={Parte2SSY}
                 onChange={() => setParte2SSY(!Parte2SSY)}
               />
-              <label htmlFor='Prision'>Prision</label>
+              //<label htmlFor='Prision'>Prision</label>
               <Form.Check
                 className='inputradio'
                 id='Prision'
@@ -648,7 +652,7 @@ const AddUserPage = props => {
                 value={Prision}
                 onChange={() => setPrision(!Prision)}
               />
-              <label htmlFor='DSN'>DSN</label>
+              //<label htmlFor='DSN'>DSN</label>
               <Form.Check
                 className='inputradio'
                 id='DSN'
@@ -658,7 +662,7 @@ const AddUserPage = props => {
                 value={DSN}
                 onChange={() => setDSN(!DSN)}
               />
-              <label htmlFor='VTP'>VTP</label>
+              //<label htmlFor='VTP'>VTP</label>
               <Form.Check
                 className='inputradio'
                 id='VTP'
@@ -668,7 +672,7 @@ const AddUserPage = props => {
                 value={VTP}
                 onChange={() => setVTP(!VTP)}
               />
-              <label htmlFor='TTC'>TTC</label>
+              //<label htmlFor='TTC'>TTC</label>
               <Form.Check
                 className='inputradio'
                 id='TTC'
