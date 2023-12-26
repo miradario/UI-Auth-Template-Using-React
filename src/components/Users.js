@@ -112,7 +112,10 @@ export default function Users () {
       el =>
         quitarTildes(el[1].name)?.toLowerCase().includes(real_value) ||
         quitarTildes(el[1].email)?.toLowerCase().includes(real_value) ||
-        quitarTildes(el[1].lastName)?.toLowerCase().includes(real_value)
+        quitarTildes(el[1].lastName)?.toLowerCase().includes(real_value) ||
+        quitarTildes(el[1].name + ' ' + el[1].lastName)
+          ?.toLowerCase()
+          .includes(real_value)
     )
   }
 
