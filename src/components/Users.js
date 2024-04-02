@@ -64,8 +64,6 @@ export default function Users () {
 
   const [filtersActive, setFiltersActive] = useState(initialFiltersActive)
 
-  console.log({ country: filtersActive?.active?.country })
-
   useEffect(() => {
     let totalPages =
       Math.floor(itemsFilter.length / perPage) != itemsFilter.length / perPage
