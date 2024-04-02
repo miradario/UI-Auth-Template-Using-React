@@ -1,6 +1,8 @@
 export const filterUsers = (array, filtros) => {
   let filterArray = [...array]
 
+  console.log('FILTROS: ', filtros, array)
+
   //FILTRO EXISTENCIA DE NOMBRE
   if (filtros.name !== 'Not selected')
     filterArray = filterByValue(
@@ -82,11 +84,12 @@ const filterByValue = (array, attribute, value, equal = true) => {
 }
 
 const multiFilters = (array, attribute, values) => {
-  //   console.log({ array, attribute, values })
+  console.log({ array, attribute, values })
+
   const filter = array.filter(el => {
     return (
       typeof el[1][attribute] == 'string' &&
-      values.includes(el[1][attribute]?.toLowerCase())
+      values.includes(el[1][attribute]?.toLowerCase()?.trim())
     )
   })
   return filter
