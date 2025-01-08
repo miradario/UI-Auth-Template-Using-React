@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { useEffect } from "react";
-import { SelectForm } from "./SelectForm";
-import { SelectMultipleOption } from "./SelectMultipleOption";
 import { getDataSet } from "../../helpers/getDataSet";
 import { MultipleSelector } from "../commons/MultipleSelector";
 import { Selector } from "../commons/Selector";
@@ -16,12 +14,22 @@ export const ModalFilters = ({
   const [countries, setCountries] = useState([]);
   const [TTCDate, setTTCDate] = useState([]);
   const [teachCountries, setTeachCountries] = useState([]);
+  const [courses, setCourses] = useState([]);
 
   useEffect(() => {
     const ct = getDataSet(data, "country");
     const ttc = getDataSet(data, "TTCDate");
     const teachC = getDataSet(data, "teach_country");
 
+    const crsSet = new Set();
+    data.forEach((el) => {
+      if (el[1].course) {
+        const keys = Object.keys(el[1].course);
+        keys.forEach((el2) => crsSet.add(el2));
+      }
+    });
+
+    setCourses(Array.from(crsSet));
     setCountries(ct);
     setTTCDate(ttc);
     setTeachCountries(teachC);
@@ -76,17 +84,33 @@ export const ModalFilters = ({
     });
   };
 
-  const handleSelectOption = (field, value) => {
+  const handleSelectCourses = (course) => {
+    let coursesSelected = filtersActive.filters.courses;
+    const exist = coursesSelected.includes(course);
+    let newCourse = [];
+    if (exist) newCourse = coursesSelected.filter((el) => el !== course);
+    else newCourse = [...coursesSelected, course];
+
     setFiltersActive({
       ...filtersActive,
       filters: {
         ...filtersActive.filters,
-        [field]: value,
+        courses: newCourse,
       },
     });
   };
 
-  console.log(filtersActive.filters);
+  const handleSelectOption = (field, value) => {
+    const realValue =
+      value === "true" ? true : value === "false" ? false : value;
+    setFiltersActive({
+      ...filtersActive,
+      filters: {
+        ...filtersActive.filters,
+        [field]: realValue,
+      },
+    });
+  };
 
   return (
     <div className={`modalFilter ${visible && "visible"}`}>
@@ -134,7 +158,10 @@ export const ModalFilters = ({
         >
           Filtros
         </h2>
-        <form className="formFilters">
+        <form
+          className="formFilters"
+          style={{ overflow: "auto", height: "90%" }}
+        >
           <MultipleSelector
             options={countries}
             optionsSelected={filtersActive.filters.country}
@@ -155,6 +182,13 @@ export const ModalFilters = ({
             handleSelectOption={handleSelectTTCDate}
             title="TTC Date"
             placeholder="Search TTC Date..."
+          />
+          <MultipleSelector
+            options={courses}
+            optionsSelected={filtersActive.filters.courses}
+            handleSelectOption={handleSelectCourses}
+            title="Courses"
+            placeholder="Search courses..."
           />
 
           <Selector
@@ -205,8 +239,8 @@ export const ModalFilters = ({
             title="State"
             options={[
               { title: "Not selected", value: "-" },
-              { title: "Vacio", value: false },
-              { title: "No vacio", value: true },
+              { title: "Autenticados", value: true },
+              { title: "No autenticados", value: false },
             ]}
             handleSelectOption={handleSelectOption}
             field="state"
@@ -217,12 +251,3 @@ export const ModalFilters = ({
     </div>
   );
 };
-
-// name: null,
-// lastName: null,
-// email: null,
-// country: [],
-// state: null,
-// TTCDate: [],
-// phone: null,
-// teach_country: [],

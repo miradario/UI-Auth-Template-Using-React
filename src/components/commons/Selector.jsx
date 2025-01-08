@@ -24,7 +24,11 @@ export const Selector = ({
         }}
       >
         {options.map((el) => (
-          <option key={el.title} value={el.value}>
+          <option
+            key={el.title}
+            value={el.value}
+            selected={optionSelected === el.value}
+          >
             {el.title}
           </option>
         ))}

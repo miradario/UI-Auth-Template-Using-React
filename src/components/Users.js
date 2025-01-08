@@ -30,9 +30,19 @@ const initialFiltersActive = {
     country: [],
     state: null,
     TTCDate: [],
+    courses: [],
     phone: null,
     teach_country: [],
   },
+  showInactive: "false",
+};
+
+const existFilters = (filters) => {
+  const entries = Object.entries(filters);
+  const exist = entries.some((el) => {
+    return typeof el[1] === "boolean" || el[1]?.length > 0;
+  });
+  return exist;
 };
 
 export default function Users() {
@@ -43,18 +53,12 @@ export default function Users() {
 
   const [items, setItems] = useState([]);
   const [itemsFilter, setItemsFilter] = useState([]);
-  const [showDeleted, setShowDeleted] = useState(
-    localStorage.getItem("showDeleted") == "false" ||
-      !localStorage.getItem("showDeleted")
-      ? false
-      : true
-  );
   const [showOrder, setShowOrder] = useState(false);
   const [pagination, setPagination] = useState({});
   const [perPage, setPerPage] = useState(25);
   const [showPagination, setShowPagination] = useState(false);
   const [selectedToAuthenticated, setSelectedToAuthenticated] = useState([]);
-  const [selectAll, setSelectAll] = useState(false);
+  // const [selectAll, setSelectAll] = useState(false);
   const [valueSearchAux, setValueSearchAux] = useState("");
   const [showFilters, setShowFilters] = useState(false);
 
@@ -86,8 +90,14 @@ export default function Users() {
       if (filtersActive.orderActive.active)
         array = orderArray([...array], filtersActive.orderActive.value);
 
-      if (filtersActive.filters.active)
-        array = filterUsers([...array], filtersActive.filters);
+      array = filterUsers([...array], filtersActive.filters);
+
+      const showInactive = filtersActive.showInactive === "true";
+
+      array = [...array].filter((el) => {
+        if (!showInactive) return !!el[1].inactive === false;
+        return true;
+      });
 
       localStorage.setItem("filtersActive", JSON.stringify(filtersActive));
 
@@ -143,11 +153,6 @@ export default function Users() {
   //   });
   // };
 
-  const handleFilterDeleted = () => {
-    setShowDeleted(!showDeleted);
-    localStorage.setItem("showDeleted", !showDeleted);
-  };
-
   useEffect(() => {
     const filters = JSON.parse(localStorage.getItem("filtersActive"));
     setIsLoaded(true);
@@ -156,6 +161,7 @@ export default function Users() {
       .then((snapshot) => {
         if (snapshot) {
           const entries = Object.entries(snapshot.val());
+
           setItems(entries);
           setItemsFilter(entries);
           setPagination({
@@ -172,13 +178,29 @@ export default function Users() {
         console.error("Error get users: ", e);
       })
       .finally(() => {
-        setFiltersActive(filters || initialFiltersActive);
+        const realFilters = parseJson(filters?.filters);
+        setFiltersActive(
+          filters ? { ...filters, filters: realFilters } : initialFiltersActive
+        );
         setValueSearchAux(
           filters?.searchValue || initialFiltersActive.searchValue
         );
         setIsLoaded(false);
       });
   }, []);
+
+  const parseJson = (data) => {
+    if (!data) return null;
+
+    const entries = Object.entries(data);
+    const obj = {};
+
+    entries.forEach((el) => {
+      obj[el[0]] = el[1] === "true" ? true : el[1] === "false" ? false : el[1];
+    });
+
+    return obj;
+  };
 
   const orderArray = (array, param) => {
     let min, aux;
@@ -353,20 +375,20 @@ export default function Users() {
   //     allChecks()
   //   }, [selectAll])
 
-  const allChecks = () => {
-    const checks = document.querySelectorAll("#checked_option");
-    if (selectAll) checks.forEach((el) => el.setAttribute("checked", true));
-    else checks.forEach((el) => el.removeAttribute("checked"));
-    // console.log(checks)
-  };
+  // const allChecks = () => {
+  //   const checks = document.querySelectorAll("#checked_option");
+  //   if (selectAll) checks.forEach((el) => el.setAttribute("checked", true));
+  //   else checks.forEach((el) => el.removeAttribute("checked"));
+  //   // console.log(checks)
+  // };
 
-  const selectAllNotAuths = () => {
-    const notAuth = !selectAll
-      ? itemsFilter.filter((el) => el[1].authenticated === 0 && !el[1].inactive)
-      : [];
-    setSelectedToAuthenticated(notAuth);
-    setSelectAll(!selectAll);
-  };
+  // const selectAllNotAuths = () => {
+  //   const notAuth = !selectAll
+  //     ? itemsFilter.filter((el) => el[1].authenticated === 0 && !el[1].inactive)
+  //     : [];
+  //   setSelectedToAuthenticated(notAuth);
+  //   setSelectAll(!selectAll);
+  // };
 
   //   console.log(selectedToAuthenticated.length)
 
@@ -378,19 +400,19 @@ export default function Users() {
     setFiltersActive({ ...filtersActive, searchValue: value });
   };
 
-  const coursesConcatenate = (courses) => {
-    let coursesString = "";
-    courses.forEach((el, i) => {
-      if (i == courses.length - 1) {
-        alert(el);
-        // if content = 'si' then add key to string
-        if (el === "si") coursesString += "key: " + i + ", ";
-      } else {
-        coursesString += el + ", ";
-      }
-    });
-    return coursesString;
-  };
+  // const coursesConcatenate = (courses) => {
+  //   let coursesString = "";
+  //   courses.forEach((el, i) => {
+  //     if (i == courses.length - 1) {
+  //       alert(el);
+  //       // if content = 'si' then add key to string
+  //       if (el === "si") coursesString += "key: " + i + ", ";
+  //     } else {
+  //       coursesString += el + ", ";
+  //     }
+  //   });
+  //   return coursesString;
+  // };
 
   const exportDataToExcel = () => {
     setLoadingExcel(true);
@@ -449,7 +471,9 @@ export default function Users() {
                 </div>
                 <div style={{ width: "90%", margin: "0 auto" }}>
                   <div style={{ width: "100%" }}>
-                    <h1 style={{ marginBottom: "20px" }}>Teachers</h1>
+                    <h1 style={{ marginBottom: "20px" }}>
+                      Teachers ({itemsFilter.length})
+                    </h1>
                     <form className="formSearch" onSubmit={handleSearch}>
                       <input
                         type="text"
@@ -489,12 +513,22 @@ export default function Users() {
                     >
                       <button
                         className="btn btn-secondary"
-                        onClick={() => handleFilterDeleted()}
+                        onClick={() =>
+                          setFiltersActive({
+                            ...filtersActive,
+                            showInactive: (!(
+                              filtersActive.showInactive === "true"
+                            )).toString(),
+                          })
+                        }
                         style={{
-                          backgroundColor: showDeleted ? "red" : "grey",
+                          backgroundColor:
+                            filtersActive.showInactive === "true"
+                              ? "red"
+                              : "grey",
                         }}
                       >
-                        {!showDeleted
+                        {filtersActive.showInactive === "false"
                           ? "Show inactive users"
                           : "Hide inactive users"}
                       </button>
@@ -503,16 +537,19 @@ export default function Users() {
                         className="orderContainer"
                         onClick={() => setShowFilters(true)}
                         style={{
-                          backgroundColor: filtersActive.filters.active
+                          backgroundColor: existFilters(filtersActive.filters)
                             ? "#feae00"
                             : "white",
+                          color: existFilters(filtersActive.filters)
+                            ? "white"
+                            : "black",
                         }}
                       >
                         <p>
-                          Filtro{" "}
-                          {filtersActive.filters.active
-                            ? `: Activo`
-                            : ": Inactivo"}
+                          Filtro:{" "}
+                          {existFilters(filtersActive.filters)
+                            ? `Activo`
+                            : "Inactivo"}
                         </p>
                       </div>
 
@@ -533,7 +570,13 @@ export default function Users() {
                         }}
                         onClick={() => setShowOrder(!showOrder)}
                       >
-                        <p style={{ color: "black" }}>
+                        <p
+                          style={{
+                            color: filtersActive.orderActive.active
+                              ? "white"
+                              : "black",
+                          }}
+                        >
                           {"Order by " + filtersActive.orderActive.by ||
                             "Order by..."}
                         </p>
@@ -603,18 +646,20 @@ export default function Users() {
 
                     <button
                       onClick={() =>
-                        filtersActive.filters.active
+                        existFilters(filtersActive.filters)
                           ? setFiltersActive(initialFiltersActive)
                           : null
                       }
                       style={{
                         cursor: "pointer",
                         padding: "5px 20px",
-                        backgroundColor: filtersActive.filters.active
+                        backgroundColor: existFilters(filtersActive.filters)
                           ? "#feae00"
                           : "grey",
                         fontWeight: "bold",
-                        color: filtersActive.filters.active ? "white" : "black",
+                        color: existFilters(filtersActive.filters)
+                          ? "white"
+                          : "black",
                       }}
                     >
                       Clear Filters
@@ -642,7 +687,9 @@ export default function Users() {
                             <BsChevronLeft />
                           </div>
                         )}
-                        <p>{pagination.page + 1}</p>
+                        <p>
+                          {pagination.page + 1} / {pagination.totalPages + 1}
+                        </p>
                         {pagination.page !== pagination.totalPages ? (
                           <div
                             className="containerBtnPage__btn"
@@ -734,152 +781,139 @@ export default function Users() {
                             pagination.page * pagination.perPage,
                             (pagination.page + 1) * pagination.perPage
                           )
-                          .map((user) =>
-                            //check if inactive y si showDeleted es true
-                            (user[1].inactive && showDeleted) ||
-                            !user[1].inactive ? (
-                              <tr
-                                id="list_users"
-                                key={user[0]}
-                                style={{
-                                  backgroundColor: user[1].inactive
-                                    ? "orange"
-                                    : "",
-                                }}
-                              >
-                                <td>
-                                  <button
-                                    className="btn btn-primary"
-                                    style={{
-                                      fontSize: "11px",
-                                    }}
-                                    onClick={() => {
-                                      history.push({
-                                        pathname: "/add-users",
-                                        state: { key: user[0] },
+                          .map((user) => (
+                            <tr
+                              id="list_users"
+                              key={user[0]}
+                              style={{
+                                backgroundColor: user[1].inactive
+                                  ? "orange"
+                                  : "",
+                              }}
+                            >
+                              <td>
+                                <button
+                                  className="btn btn-primary"
+                                  style={{
+                                    fontSize: "11px",
+                                  }}
+                                  onClick={() => {
+                                    history.push({
+                                      pathname: "/add-users",
+                                      state: { key: user[0] },
+                                    });
+                                  }}
+                                >
+                                  Edit
+                                </button>
+                              </td>
+                              <td>
+                                <button
+                                  style={{
+                                    backgroundColor: user[1].inactive
+                                      ? ""
+                                      : "orange",
+                                    fontSize: "11px",
+                                  }}
+                                  className={
+                                    user[1].inactive
+                                      ? "btn btn-danger"
+                                      : "btn btn-success"
+                                  }
+                                  onClick={() => {
+                                    deleteAuthUser(user[0], !user[1].inactive);
+                                  }}
+                                >
+                                  {user[1].inactive ? "Activate" : "Inactive"}
+                                </button>
+                              </td>
+                              <td>
+                                {/* send a forgot password */}
+                                <button
+                                  className="btn btn-info"
+                                  style={{ fontSize: 8 }}
+                                  onClick={() => {
+                                    auth
+                                      .sendPasswordResetEmail(user[1].email, {
+                                        url: "https://cursos.elartedevivir.org/app",
+                                      })
+                                      .then(function () {
+                                        alert("Password reset email sent");
+                                      })
+                                      .catch(function (error) {
+                                        alert(error.message);
                                       });
-                                    }}
-                                  >
-                                    Edit
-                                  </button>
-                                </td>
+                                  }}
+                                >
+                                  Reset Password
+                                </button>
+                              </td>
+                              {user[1].authenticated === 0 ? (
                                 <td>
                                   <button
-                                    style={{
-                                      backgroundColor: user[1].inactive
-                                        ? ""
-                                        : "orange",
-                                      fontSize: "11px",
-                                    }}
-                                    className={
-                                      user[1].inactive
-                                        ? "btn btn-danger"
-                                        : "btn btn-success"
-                                    }
-                                    onClick={() => {
-                                      deleteAuthUser(
-                                        user[0],
-                                        !user[1].inactive
-                                      );
-                                    }}
+                                    onClick={() => handleAuthenticateUser(user)}
                                   >
-                                    {user[1].inactive ? "Activate" : "Inactive"}
+                                    Send first mail
                                   </button>
                                 </td>
-                                <td>
-                                  {/* send a forgot password */}
-                                  <button
-                                    className="btn btn-info"
-                                    style={{ fontSize: 8 }}
-                                    onClick={() => {
-                                      auth
-                                        .sendPasswordResetEmail(user[1].email, {
-                                          url: "https://cursos.elartedevivir.org/app",
-                                        })
-                                        .then(function () {
-                                          alert("Password reset email sent");
-                                        })
-                                        .catch(function (error) {
-                                          alert(error.message);
-                                        });
-                                    }}
-                                  >
-                                    Reset Password
-                                  </button>
-                                </td>
-                                {user[1].authenticated === 0 ? (
-                                  <td>
-                                    <button
-                                      onClick={() =>
-                                        handleAuthenticateUser(user)
-                                      }
-                                    >
-                                      Send first mail
-                                    </button>
-                                  </td>
-                                ) : (
-                                  <td>Ya autenticado</td>
-                                )}
-                                <td>
-                                  {user[1].authenticated === 0 && (
-                                    <input
-                                      id="checked_option"
-                                      type="checkbox"
-                                      data-key={user[0]}
-                                      //   checked={this.state.selectAll && true}
-                                      onClick={handleCheckbox}
-                                    />
-                                  )}
-                                </td>
-                                <td>
-                                  <MdDelete
-                                    style={{
-                                      fontSize: "22px",
-                                      color: "rgb(167, 0, 0)",
-                                      cursor: "pointer",
-                                    }}
-                                    onClick={() =>
-                                      deleteOneUser(user[0], user[1].email)
-                                    }
+                              ) : (
+                                <td>Ya autenticado</td>
+                              )}
+                              <td>
+                                {user[1].authenticated === 0 && (
+                                  <input
+                                    id="checked_option"
+                                    type="checkbox"
+                                    data-key={user[0]}
+                                    //   checked={this.state.selectAll && true}
+                                    onClick={handleCheckbox}
                                   />
-                                </td>
-                                <td>{user[1].name}</td>
-                                <td>{user[1].lastName}</td>
-                                <td>{user[1].email}</td>
-                                <td>{user[1].phone}</td>
-                                <td>{user[1].country}</td>
-                                <td>{user[1].teach_country}</td>
-                                <td>{user[1].code}</td>
-                                <td>
-                                  {user[1]?.SKY?.long === 1 ? "On" : "Off"}
-                                </td>
-                                <td>
-                                  {user[1]?.SKY?.short === 1 ? "On" : "Off"}
-                                </td>
-                                <td>
-                                  {user[1].inactive ? "Disable" : "Enable"}
-                                </td>
-                                <td>{user[1].TTCDate}</td>
-                                <td>{user[1].placeTTC}</td>
-                                <td>{user[1].sign === 1 ? "Yes" : "No"}</td>
-                                <td>{user[1].comment}</td>
-                                {/* CURSOS */}
-                                <td>{user[1]?.course?.HP}</td>
-                                <td>{user[1]?.course?.SSY}</td>
-                                <td>{user[1]?.course?.YesPlus}</td>
-                                <td>{user[1]?.course?.Yes}</td>
-                                <td>{user[1]?.course?.AE}</td>
-                                <td>{user[1]?.course?.Sahaj}</td>
-                                <td>{user[1]?.course?.Parte2}</td>
-                                <td>{user[1]?.course?.Parte2SSY}</td>
-                                <td>{user[1]?.course?.Prision}</td>
-                                <td>{user[1]?.course?.DSN}</td>
-                                <td>{user[1]?.course?.VTP}</td>
-                                <td>{user[1]?.course?.TTC}</td>
-                                <td>{user[1]?.course?.premium}</td>
-                              </tr>
-                            ) : null
-                          )}
+                                )}
+                              </td>
+                              <td>
+                                <MdDelete
+                                  style={{
+                                    fontSize: "22px",
+                                    color: "rgb(167, 0, 0)",
+                                    cursor: "pointer",
+                                  }}
+                                  onClick={() =>
+                                    deleteOneUser(user[0], user[1].email)
+                                  }
+                                />
+                              </td>
+                              <td>{user[1].name}</td>
+                              <td>{user[1].lastName}</td>
+                              <td>{user[1].email}</td>
+                              <td>{user[1].phone}</td>
+                              <td>{user[1].country}</td>
+                              <td>{user[1].teach_country}</td>
+                              <td>{user[1].code}</td>
+                              <td>{user[1]?.SKY?.long === 1 ? "On" : "Off"}</td>
+                              <td>
+                                {user[1]?.SKY?.short === 1 ? "On" : "Off"}
+                              </td>
+                              <td>{user[1].inactive ? "Disable" : "Enable"}</td>
+                              <td>{user[1].TTCDate}</td>
+                              <td>{user[1].placeTTC}</td>
+                              <td>{user[1].sign === 1 ? "Yes" : "No"}</td>
+                              <td>{user[1].comment}</td>
+                              {/* CURSOS */}
+                              <td>{user[1]?.course?.HP}</td>
+                              <td>{user[1]?.course?.SSY}</td>
+                              <td>{user[1]?.course?.YesPlus}</td>
+                              <td>{user[1]?.course?.Yes}</td>
+                              <td>{user[1]?.course?.AE}</td>
+                              <td>{user[1]?.course?.Sahaj}</td>
+                              <td>{user[1]?.course?.Parte2}</td>
+                              <td>{user[1]?.course?.Parte2SSY}</td>
+                              <td>{user[1]?.course?.Prision}</td>
+                              <td>{user[1]?.course?.DSN}</td>
+                              <td>{user[1]?.course?.VTP}</td>
+                              <td>{user[1]?.course?.TTC}</td>
+                              <td>{user[1]?.course?.premium}</td>
+                            </tr>
+                          ))}
                       </tbody>
                     </table>
                   </div>
@@ -908,7 +942,9 @@ export default function Users() {
                       <BsChevronLeft />
                     </div>
                   )}
-                  <p>{pagination.page + 1}</p>
+                  <p>
+                    {pagination.page + 1} / {pagination.totalPages + 1}
+                  </p>
                   {pagination.page !== pagination.totalPages ? (
                     <div
                       className="containerBtnPage__btn"
