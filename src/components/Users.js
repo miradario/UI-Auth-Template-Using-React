@@ -713,209 +713,222 @@ export default function Users() {
                     )}
                     {/* PAGINATION CLOSE */}
 
-                    <table
-                      className="table table-striped"
-                      style={{
-                        fontSize: "12px",
-                      }}
-                    >
-                      <thead>
-                        <tr>
-                          <th scope="col">Action</th>
-                          <th scope="col">Delete</th>
-                          <th scope="col">Forgot Password</th>
-                          <th scope="col">Authenticate</th>
-                          <th scope="col"></th>
-                          <th scope="col">Delete</th>
-                          <th scope="col" data-id="name">
-                            Name
-                          </th>
-                          <th scope="col" data-id="lastName">
-                            Last Name
-                          </th>
-                          <th scope="col" data-id="email">
-                            Email
-                          </th>
-                          <th
-                            scope="col"
-                            //
-                            data-id="phone"
-                          >
-                            Phone
-                          </th>
-                          <th scope="col" data-id="country">
-                            Country Origin
-                          </th>
-                          <th scope="col" data-id="teach_country">
-                            Country Residence
-                          </th>
-                          <th scope="col">Code</th>
-                          <th scope="col">Long</th>
-                          <th scope="col">Short</th>
-
-                          <th scope="col">Status</th>
-                          <th scope="col" data-id="ttcdate">
-                            First TTC Date
-                          </th>
-                          <th scope="col">TTC Place</th>
-                          <th scope="col">Sign Contract</th>
-                          <th scope="col">Comment</th>
-                          <th scope="col">P1</th>
-                          <th scope="col">SSY</th>
-                          <th scope="col">Yes+</th>
-                          <th scope="col">Yes</th>
-                          <th scope="col">AE</th>
-                          <th scope="col">Sahaj</th>
-                          <th scope="col">P2</th>
-                          <th scope="col">SSY2</th>
-                          <th scope="col">Prision</th>
-                          <th scope="col">DSN</th>
-                          <th scope="col">VTP</th>
-                          <th scope="col">TTC</th>
-                          <th scope="col">Premium</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {itemsFilter
-                          .slice(
-                            pagination.page * pagination.perPage,
-                            (pagination.page + 1) * pagination.perPage
-                          )
-                          .map((user) => (
-                            <tr
-                              id="list_users"
-                              key={user[0]}
-                              style={{
-                                backgroundColor: user[1].inactive
-                                  ? "orange"
-                                  : "",
-                              }}
+                    <div style={{ overflow: "auto" }}>
+                      <table
+                        className="table table-striped"
+                        style={{
+                          fontSize: 12,
+                          width: "100%",
+                          overflow: "auto",
+                        }}
+                      >
+                        <thead>
+                          <tr>
+                            <th scope="col">Action</th>
+                            <th scope="col">Delete</th>
+                            <th scope="col">Forgot Password</th>
+                            <th scope="col">Authenticate</th>
+                            <th scope="col"></th>
+                            <th scope="col">Delete</th>
+                            <th scope="col" data-id="name">
+                              Name
+                            </th>
+                            <th scope="col" data-id="lastName">
+                              Last Name
+                            </th>
+                            <th scope="col" data-id="email">
+                              Email
+                            </th>
+                            <th
+                              scope="col"
+                              //
+                              data-id="phone"
                             >
-                              <td>
-                                <button
-                                  className="btn btn-primary"
-                                  style={{
-                                    fontSize: "11px",
-                                  }}
-                                  onClick={() => {
-                                    history.push({
-                                      pathname: "/add-users",
-                                      state: { key: user[0] },
-                                    });
-                                  }}
-                                >
-                                  Edit
-                                </button>
-                              </td>
-                              <td>
-                                <button
-                                  style={{
-                                    backgroundColor: user[1].inactive
-                                      ? ""
-                                      : "orange",
-                                    fontSize: "11px",
-                                  }}
-                                  className={
-                                    user[1].inactive
-                                      ? "btn btn-danger"
-                                      : "btn btn-success"
-                                  }
-                                  onClick={() => {
-                                    deleteAuthUser(user[0], !user[1].inactive);
-                                  }}
-                                >
-                                  {user[1].inactive ? "Activate" : "Inactive"}
-                                </button>
-                              </td>
-                              <td>
-                                {/* send a forgot password */}
-                                <button
-                                  className="btn btn-info"
-                                  style={{ fontSize: 8 }}
-                                  onClick={() => {
-                                    auth
-                                      .sendPasswordResetEmail(user[1].email, {
-                                        url: "https://cursos.elartedevivir.org/app",
-                                      })
-                                      .then(function () {
-                                        alert("Password reset email sent");
-                                      })
-                                      .catch(function (error) {
-                                        alert(error.message);
-                                      });
-                                  }}
-                                >
-                                  Reset Password
-                                </button>
-                              </td>
-                              {user[1].authenticated === 0 ? (
+                              Phone
+                            </th>
+                            <th scope="col" data-id="country">
+                              Country Origin
+                            </th>
+                            <th scope="col" data-id="teach_country">
+                              Country Residence
+                            </th>
+                            <th scope="col">Code</th>
+                            <th scope="col">Long</th>
+                            <th scope="col">Short</th>
+
+                            <th scope="col">Status</th>
+                            <th scope="col" data-id="ttcdate">
+                              First TTC Date
+                            </th>
+                            <th scope="col">TTC Place</th>
+                            <th scope="col">Sign Contract</th>
+                            <th scope="col">Comment</th>
+                            <th scope="col">P1</th>
+                            <th scope="col">SSY</th>
+                            <th scope="col">Yes+</th>
+                            <th scope="col">Yes</th>
+                            <th scope="col">AE</th>
+                            <th scope="col">Sahaj</th>
+                            <th scope="col">P2</th>
+                            <th scope="col">SSY2</th>
+                            <th scope="col">Prision</th>
+                            <th scope="col">DSN</th>
+                            <th scope="col">VTP</th>
+                            <th scope="col">TTC</th>
+                            <th scope="col">Premium</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {itemsFilter
+                            .slice(
+                              pagination.page * pagination.perPage,
+                              (pagination.page + 1) * pagination.perPage
+                            )
+                            .map((user) => (
+                              <tr
+                                id="list_users"
+                                key={user[0]}
+                                style={{
+                                  backgroundColor: user[1].inactive
+                                    ? "orange"
+                                    : "",
+                                }}
+                              >
                                 <td>
                                   <button
-                                    onClick={() => handleAuthenticateUser(user)}
+                                    className="btn btn-primary"
+                                    style={{
+                                      fontSize: "11px",
+                                    }}
+                                    onClick={() => {
+                                      history.push({
+                                        pathname: "/add-users",
+                                        state: { key: user[0] },
+                                      });
+                                    }}
                                   >
-                                    Send first mail
+                                    Edit
                                   </button>
                                 </td>
-                              ) : (
-                                <td>Ya autenticado</td>
-                              )}
-                              <td>
-                                {user[1].authenticated === 0 && (
-                                  <input
-                                    id="checked_option"
-                                    type="checkbox"
-                                    data-key={user[0]}
-                                    //   checked={this.state.selectAll && true}
-                                    onClick={handleCheckbox}
-                                  />
+                                <td>
+                                  <button
+                                    style={{
+                                      backgroundColor: user[1].inactive
+                                        ? ""
+                                        : "orange",
+                                      fontSize: "11px",
+                                    }}
+                                    className={
+                                      user[1].inactive
+                                        ? "btn btn-danger"
+                                        : "btn btn-success"
+                                    }
+                                    onClick={() => {
+                                      deleteAuthUser(
+                                        user[0],
+                                        !user[1].inactive
+                                      );
+                                    }}
+                                  >
+                                    {user[1].inactive ? "Activate" : "Inactive"}
+                                  </button>
+                                </td>
+                                <td>
+                                  {/* send a forgot password */}
+                                  <button
+                                    className="btn btn-info"
+                                    style={{ fontSize: 8 }}
+                                    onClick={() => {
+                                      auth
+                                        .sendPasswordResetEmail(user[1].email, {
+                                          url: "https://cursos.elartedevivir.org/app",
+                                        })
+                                        .then(function () {
+                                          alert("Password reset email sent");
+                                        })
+                                        .catch(function (error) {
+                                          alert(error.message);
+                                        });
+                                    }}
+                                  >
+                                    Reset Password
+                                  </button>
+                                </td>
+                                {user[1].authenticated === 0 ? (
+                                  <td>
+                                    <button
+                                      onClick={() =>
+                                        handleAuthenticateUser(user)
+                                      }
+                                    >
+                                      Send first mail
+                                    </button>
+                                  </td>
+                                ) : (
+                                  <td>Ya autenticado</td>
                                 )}
-                              </td>
-                              <td>
-                                <MdDelete
-                                  style={{
-                                    fontSize: "22px",
-                                    color: "rgb(167, 0, 0)",
-                                    cursor: "pointer",
-                                  }}
-                                  onClick={() =>
-                                    deleteOneUser(user[0], user[1].email)
-                                  }
-                                />
-                              </td>
-                              <td>{user[1].name}</td>
-                              <td>{user[1].lastName}</td>
-                              <td>{user[1].email}</td>
-                              <td>{user[1].phone}</td>
-                              <td>{user[1].country}</td>
-                              <td>{user[1].teach_country}</td>
-                              <td>{user[1].code}</td>
-                              <td>{user[1]?.SKY?.long === 1 ? "On" : "Off"}</td>
-                              <td>
-                                {user[1]?.SKY?.short === 1 ? "On" : "Off"}
-                              </td>
-                              <td>{user[1].inactive ? "Disable" : "Enable"}</td>
-                              <td>{user[1].TTCDate}</td>
-                              <td>{user[1].placeTTC}</td>
-                              <td>{user[1].sign === 1 ? "Yes" : "No"}</td>
-                              <td>{user[1].comment}</td>
-                              {/* CURSOS */}
-                              <td>{user[1]?.course?.HP}</td>
-                              <td>{user[1]?.course?.SSY}</td>
-                              <td>{user[1]?.course?.YesPlus}</td>
-                              <td>{user[1]?.course?.Yes}</td>
-                              <td>{user[1]?.course?.AE}</td>
-                              <td>{user[1]?.course?.Sahaj}</td>
-                              <td>{user[1]?.course?.Parte2}</td>
-                              <td>{user[1]?.course?.Parte2SSY}</td>
-                              <td>{user[1]?.course?.Prision}</td>
-                              <td>{user[1]?.course?.DSN}</td>
-                              <td>{user[1]?.course?.VTP}</td>
-                              <td>{user[1]?.course?.TTC}</td>
-                              <td>{user[1]?.course?.premium}</td>
-                            </tr>
-                          ))}
-                      </tbody>
-                    </table>
+                                <td>
+                                  {user[1].authenticated === 0 && (
+                                    <input
+                                      id="checked_option"
+                                      type="checkbox"
+                                      data-key={user[0]}
+                                      //   checked={this.state.selectAll && true}
+                                      onClick={handleCheckbox}
+                                    />
+                                  )}
+                                </td>
+                                <td>
+                                  <MdDelete
+                                    style={{
+                                      fontSize: "22px",
+                                      color: "rgb(167, 0, 0)",
+                                      cursor: "pointer",
+                                    }}
+                                    onClick={() =>
+                                      deleteOneUser(user[0], user[1].email)
+                                    }
+                                  />
+                                </td>
+                                <td>{user[1].name}</td>
+                                <td>{user[1].lastName}</td>
+                                <td>{user[1].email}</td>
+                                <td>{user[1].phone}</td>
+                                <td>{user[1].country}</td>
+                                <td>{user[1].teach_country}</td>
+                                <td>{user[1].code}</td>
+                                <td>
+                                  {user[1]?.SKY?.long === 1 ? "On" : "Off"}
+                                </td>
+                                <td>
+                                  {user[1]?.SKY?.short === 1 ? "On" : "Off"}
+                                </td>
+                                <td>
+                                  {user[1].inactive ? "Disable" : "Enable"}
+                                </td>
+                                <td>{user[1].TTCDate}</td>
+                                <td>{user[1].placeTTC}</td>
+                                <td>{user[1].sign === 1 ? "Yes" : "No"}</td>
+                                <td>{user[1].comment}</td>
+                                {/* CURSOS */}
+                                <td>{user[1]?.course?.HP}</td>
+                                <td>{user[1]?.course?.SSY}</td>
+                                <td>{user[1]?.course?.YesPlus}</td>
+                                <td>{user[1]?.course?.Yes}</td>
+                                <td>{user[1]?.course?.AE}</td>
+                                <td>{user[1]?.course?.Sahaj}</td>
+                                <td>{user[1]?.course?.Parte2}</td>
+                                <td>{user[1]?.course?.Parte2SSY}</td>
+                                <td>{user[1]?.course?.Prision}</td>
+                                <td>{user[1]?.course?.DSN}</td>
+                                <td>{user[1]?.course?.VTP}</td>
+                                <td>{user[1]?.course?.TTC}</td>
+                                <td>{user[1]?.course?.premium}</td>
+                              </tr>
+                            ))}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </div>
