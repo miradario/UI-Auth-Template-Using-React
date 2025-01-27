@@ -159,7 +159,7 @@
   font-size: 16px;
 }
 
-.form_add_user input[type="checkbox"] {
+.form_add_user input[type='checkbox'] {
   width: 18px;
   height: 18px;
 }
@@ -175,14 +175,6 @@
 #inputtext {
   box-shadow: none;
   font-size: 16px;
-  border-right: white;
-  border-left: white;
-  border-top: white;
-  border-bottom-width: 1px;
-}
-
-#inputtext:hover {
-  border-bottom: #404040;
 }
 
 #mybutton {
@@ -316,7 +308,7 @@ footer a:hover {
 }
 .ft-title {
   color: #fff;
-  font-family: "Merriweather", serif;
+  font-family: 'Merriweather', serif;
   font-size: 1.375rem;
   padding-bottom: 0.625rem;
 }
@@ -574,7 +566,7 @@ body {
 
 .formFilters option {
   text-transform: capitalize;
-  color: "black";
+  color: 'black';
 }
 
 .formFilters label {
