@@ -154,8 +154,6 @@ export default function Users () {
   //   });
   // };
 
-  console.log({ itemsFilter })
-
   useEffect(() => {
     const filters = JSON.parse(localStorage.getItem('filtersActive'))
     setIsLoaded(true)
@@ -206,26 +204,33 @@ export default function Users () {
   }
 
   const orderArray = (array, param) => {
-    console.log({ param, array })
+    const filterArray =
+      param === 'updatedAt' ? array.filter(el => !!el[1].updatedAt) : array
+    const notUpdated = array.filter(el => !el[1].updatedAt)
 
     let min, aux
     // console.log(param, array.length)
-    for (let i = 0; i < array.length - 1; i++) {
+    for (let i = 0; i < filterArray.length - 1; i++) {
       min = i
-      for (let j = i + 1; j < array.length; j++) {
+      for (let j = i + 1; j < filterArray.length; j++) {
         if (param === 'email') {
           if (
-            array[j][1][param]?.toLowerCase() <
-            array[min][1][param]?.toLowerCase()
+            filterArray[j][1][param]?.toLowerCase() <
+            filterArray[min][1][param]?.toLowerCase()
           )
             min = j
         } else {
           if (param === 'updatedAt') {
-            if (array[j][1][param] || 0 < array[min][1][param] || 0) min = j
+            if (
+              filterArray[j][1][param] ||
+              0 <= filterArray[min][1][param] ||
+              0
+            )
+              min = j
           } else {
             if (
-              array[j][1][param]?.toLowerCase().trim() <
-              array[min][1][param]?.toLowerCase().trim()
+              filterArray[j][1][param]?.toLowerCase().trim() <
+              filterArray[min][1][param]?.toLowerCase().trim()
             )
               min = j
           }
@@ -233,12 +238,13 @@ export default function Users () {
       }
 
       if (min !== i) {
-        aux = array[i]
-        array[i] = array[min]
-        array[min] = aux
+        aux = filterArray[i]
+        filterArray[i] = filterArray[min]
+        filterArray[min] = aux
       }
     }
-    return array
+
+    return param === 'updatedAt' ? [...filterArray, ...notUpdated] : filterArray
   }
 
   const orderDataByParam = e => {
@@ -804,6 +810,8 @@ export default function Users () {
                             <th scope='col'>Eternity</th>
                             <th scope='col'>Intuition</th>
                             <th scope='col'>Scanning</th>
+                            <th scope='col'>Angels</th>
+                            <th scope='col'>Ansiedad y sueño profundo</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -956,6 +964,8 @@ export default function Users () {
                                 <td>{user[1]?.course?.Eternity}</td>
                                 <td>{user[1]?.course?.Intuition}</td>
                                 <td>{user[1]?.course?.Scanning}</td>
+                                <td>{user[1]?.course?.Angels}</td>
+                                <td>{user[1]?.course?.AnxDeepSleep}</td>
                               </tr>
                             ))}
                         </tbody>

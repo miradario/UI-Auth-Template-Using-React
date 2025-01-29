@@ -44,11 +44,12 @@ const AddUserPage = props => {
   const [eternity, setEternity] = useState(false)
   const [intuition, setIntuition] = useState(false)
   const [scanning, setScanning] = useState(false)
+  const [anxDeepSleep, setAnxDeepSleep] = useState(false)
+  const [angels, setAngels] = useState(false)
 
   const [comment, setComment] = useState('')
 
   const [inactive, setInactive] = useState(false)
-  const [error, setError] = useState(null)
   const [isloading, setIsLoading] = useState(false)
 
   //   console.log(props)
@@ -87,55 +88,50 @@ const AddUserPage = props => {
     setId(key)
     //CHEKC IF THERE IS A PARMATER?
 
-    console.log('id', key)
+    // console.log('id', key)
     if (key) {
       setIsLoading(true)
       db.ref('users/' + key)
         .once('value')
         .then(snapshot => {
           //   console.log('snapshot:', snapshot)
+
           if (snapshot) {
-            setTeachCountry(snapshot.val()?.teach_country)
-            setPhone(snapshot.val()?.phone)
-            setName(snapshot.val()?.name)
-            setEmail(snapshot.val()?.email)
-            setCountry(snapshot.val()?.country)
-            setComment(snapshot.val()?.comment)
-            setPlaceTTC(snapshot.val()?.placeTTC)
-            setInactive(snapshot.val()?.inactive || false)
-            setCode(snapshot.val()?.code)
-            setLastname(snapshot.val()?.lastName)
-            setTTCDate(snapshot.val()?.TTCDate)
-            const long = snapshot.val()?.SKY?.long === 1 ? true : false
-            setLong(long)
-            setSign(snapshot.val()?.sign === 1 ? true : false)
-            setShort(snapshot.val()?.SKY?.short === 1 ? true : false)
-            setAe(snapshot.val()?.SKY.ae === 1 ? true : false)
-            setHP(snapshot.val()?.course?.HP === 'si' ? true : false)
-            setAE(snapshot.val()?.course?.AE === 'si' ? true : false)
-            setPremium(snapshot.val()?.course?.premium === 'si' ? true : false)
-            setTTC(snapshot.val()?.course?.TTC === 'si' ? true : false)
-            setDSN(snapshot.val()?.course?.DSN === 'si' ? true : false)
-            setParte2(snapshot.val()?.course?.Parte2 === 'si' ? true : false)
-            setParte2SSY(
-              snapshot.val()?.course?.Parte2SSY === 'si' ? true : false
-            )
-            setPrision(snapshot.val()?.course?.Prision === 'si' ? true : false)
-            setSSY(snapshot.val()?.course?.SSY === 'si' ? true : false)
-            setSahaj(snapshot.val()?.course?.Sahaj === 'si' ? true : false)
-            setVTP(snapshot.val()?.course?.VTP === 'si' ? true : false)
-            setYesPlus(snapshot.val()?.course?.YesPlus === 'si' ? true : false)
-            setYES(snapshot.val()?.course?.Yes === 'si' ? true : false)
-            setRAS(snapshot.val()?.course?.RAS === 'si' ? true : false)
-            setEternity(
-              snapshot.val()?.course?.Eternity === 'si' ? true : false
-            )
-            setIntuition(
-              snapshot.val()?.course?.Intuition === 'si' ? true : false
-            )
-            setScanning(
-              snapshot.val()?.course?.Scanning === 'si' ? true : false
-            )
+            const val = snapshot.val()
+            setTeachCountry(val?.teach_country)
+            setPhone(val?.phone)
+            setName(val?.name)
+            setEmail(val?.email)
+            setCountry(val?.country)
+            setComment(val?.comment)
+            setPlaceTTC(val?.placeTTC)
+            setInactive(val?.inactive || false)
+            setCode(val?.code)
+            setLastname(val?.lastName)
+            setTTCDate(val?.TTCDate)
+            setLong(val?.SKY?.long === 1)
+            setSign(val?.sign === 1)
+            setShort(val?.SKY?.short === 1)
+            setAe(val?.SKY.ae === 1)
+            setHP(val?.course?.HP === 'si')
+            setAE(val?.course?.AE === 'si')
+            setPremium(val?.course?.premium === 'si')
+            setTTC(val?.course?.TTC === 'si')
+            setDSN(val?.course?.DSN === 'si')
+            setParte2(val?.course?.Parte2 === 'si')
+            setParte2SSY(val?.course?.Parte2SSY === 'si')
+            setPrision(val?.course?.Prision === 'si')
+            setSSY(val?.course?.SSY === 'si')
+            setSahaj(val?.course?.Sahaj === 'si')
+            setVTP(val?.course?.VTP === 'si')
+            setYesPlus(val?.course?.YesPlus === 'si')
+            setYES(val?.course?.Yes === 'si')
+            setRAS(val?.course?.RAS === 'si')
+            setEternity(val?.course?.Eternity === 'si')
+            setIntuition(val?.course?.Intuition === 'si')
+            setScanning(val?.course?.Scanning === 'si')
+            setAnxDeepSleep(val?.course?.AnxDeepSleep === 'si')
+            setAngels(val?.course?.Angels === 'si')
 
             setIsLoading(false)
           }
@@ -191,6 +187,8 @@ const AddUserPage = props => {
     const etern = eternity ? 'si' : 'no'
     const intuit = intuition ? 'si' : 'no'
     const scann = scanning ? 'si' : 'no'
+    const ads = anxDeepSleep ? 'si' : 'no'
+    const ang = angels ? 'si' : 'no'
 
     const data = await getDataUser(userNew)
     let authent
@@ -249,12 +247,12 @@ const AddUserPage = props => {
         RAS: ras,
         Eternity: etern,
         Intuition: intuit,
-        Scanning: scann
+        Scanning: scann,
+        AnxDeepSleep: ads,
+        Angels: ang
       }
     }
-    console.log(userNew)
     // alert(JSON.stringify(updateData))
-    console.log(data?.email, email, data)
     if (data?.email == email || !data) {
       db.ref('users/' + userNew)
         .update(updateData)
@@ -283,7 +281,6 @@ const AddUserPage = props => {
     } else {
       try {
         const newId = await createAuthUser(email, 'a1b2c3e4d5', true)
-        console.log(newId)
         const user = db.ref('users/' + newId)
         await user.update(updateData)
 
@@ -759,6 +756,30 @@ const AddUserPage = props => {
                   defaultChecked={scanning}
                   value={scanning}
                   onChange={() => setScanning(!scanning)}
+                />
+              </div>
+              <div>
+                <label htmlFor='angels'>Angels</label>
+                <Form.Check
+                  id='angels'
+                  type='checkbox'
+                  name='angels'
+                  defaultChecked={angels}
+                  value={angels}
+                  onChange={() => setAngels(!angels)}
+                />
+              </div>
+              <div>
+                <label htmlFor='anxDeepSleep' style={{ fontSize: 12 }}>
+                  Ansiedad y sueño profundo
+                </label>
+                <Form.Check
+                  id='anxDeepSleep'
+                  type='checkbox'
+                  name='anxDeepSleep'
+                  defaultChecked={anxDeepSleep}
+                  value={anxDeepSleep}
+                  onChange={() => setAnxDeepSleep(!anxDeepSleep)}
                 />
               </div>
             </InputGroup>
