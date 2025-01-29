@@ -1,167 +1,253 @@
-import { useState } from 'react'
-import { useEffect } from 'react'
-import { SelectForm } from './SelectForm'
-import { SelectMultipleOption } from './SelectMultipleOption'
-import { getDataSet } from '../../helpers/getDataSet'
+import { useState } from "react";
+import { useEffect } from "react";
+import { getDataSet } from "../../helpers/getDataSet";
+import { MultipleSelector } from "../commons/MultipleSelector";
+import { Selector } from "../commons/Selector";
 
 export const ModalFilters = ({
   data,
   setShowFilters,
   setFiltersActive,
   filtersActive,
-  visible
+  visible,
 }) => {
-  const [countries, setCountries] = useState([])
-  const [TTCDate, setTTCDate] = useState([])
-  const [teachCountries, setTeachCountries] = useState([])
+  const [countries, setCountries] = useState([]);
+  const [TTCDate, setTTCDate] = useState([]);
+  const [teachCountries, setTeachCountries] = useState([]);
+  const [courses, setCourses] = useState([]);
 
   useEffect(() => {
-    let ct = getDataSet(data, 'country')
-    // console.log(ct)
-    if (filtersActive.filters.country !== 'Not selected') {
-      const ctFilter = filtersActive.filters.country
-      ct = ct.map(el =>
-        ctFilter.includes(el.option.toLowerCase())
-          ? { ...el, select: true }
-          : el
-      )
-    }
-    let ttc = getDataSet(data, 'TTCDate')
-    if (filtersActive.filters.TTCDate !== 'Not selected') {
-      const ttcFilter = filtersActive.filters.TTCDate
-      ttc = ttc.map(el =>
-        ttcFilter.includes(el.option.toLowerCase())
-          ? { ...el, select: true }
-          : el
-      )
-    }
-    let teachC = getDataSet(data, 'teach_country')
-    if (filtersActive.filters.teach_country !== 'Not selected') {
-      const teachCFilter = filtersActive.filters.teach_country
-      teachC = teachC.map(el =>
-        teachCFilter.includes(el.option.toLowerCase())
-          ? { ...el, select: true }
-          : el
-      )
-    }
-    setCountries(ct)
-    setTTCDate(ttc)
-    setTeachCountries(teachC)
-    console.log(filtersActive.filters)
-  }, [data])
+    const ct = getDataSet(data, "country");
+    const ttc = getDataSet(data, "TTCDate");
+    const teachC = getDataSet(data, "teach_country");
+
+    const crsSet = new Set();
+    data.forEach((el) => {
+      if (el[1].course) {
+        const keys = Object.keys(el[1].course);
+        keys.forEach((el2) => crsSet.add(el2));
+      }
+    });
+
+    setCourses(Array.from(crsSet));
+    setCountries(ct);
+    setTTCDate(ttc);
+    setTeachCountries(teachC);
+  }, [data]);
+
+  const handleSelectCountry = (country) => {
+    let countrySelecteds = filtersActive.filters.country;
+    const exist = countrySelecteds.includes(country);
+    let newCountries = [];
+    if (exist) newCountries = countrySelecteds.filter((el) => el !== country);
+    else newCountries = [...countrySelecteds, country];
+
+    setFiltersActive({
+      ...filtersActive,
+      filters: {
+        ...filtersActive.filters,
+        country: newCountries,
+      },
+    });
+  };
+
+  const handleSelectTeachCountry = (teach_country) => {
+    let countrySelecteds = filtersActive.filters.teach_country;
+    const exist = countrySelecteds.includes(teach_country);
+    let newCountries = [];
+    if (exist)
+      newCountries = countrySelecteds.filter((el) => el !== teach_country);
+    else newCountries = [...countrySelecteds, teach_country];
+
+    setFiltersActive({
+      ...filtersActive,
+      filters: {
+        ...filtersActive.filters,
+        teach_country: newCountries,
+      },
+    });
+  };
+
+  const handleSelectTTCDate = (TTCDate) => {
+    let ttcSelecteds = filtersActive.filters.TTCDate;
+    const exist = ttcSelecteds.includes(TTCDate);
+    let newTTC = [];
+    if (exist) newTTC = ttcSelecteds.filter((el) => el !== TTCDate);
+    else newTTC = [...ttcSelecteds, TTCDate];
+
+    setFiltersActive({
+      ...filtersActive,
+      filters: {
+        ...filtersActive.filters,
+        TTCDate: newTTC,
+      },
+    });
+  };
+
+  const handleSelectCourses = (course) => {
+    let coursesSelected = filtersActive.filters.courses;
+    const exist = coursesSelected.includes(course);
+    let newCourse = [];
+    if (exist) newCourse = coursesSelected.filter((el) => el !== course);
+    else newCourse = [...coursesSelected, course];
+
+    setFiltersActive({
+      ...filtersActive,
+      filters: {
+        ...filtersActive.filters,
+        courses: newCourse,
+      },
+    });
+  };
+
+  const handleSelectOption = (field, value) => {
+    const realValue =
+      value === "true" ? true : value === "false" ? false : value;
+    setFiltersActive({
+      ...filtersActive,
+      filters: {
+        ...filtersActive.filters,
+        [field]: realValue,
+      },
+    });
+  };
 
   return (
-    <div className={`modalFilter ${visible && 'visible'}`}>
+    <div className={`modalFilter ${visible && "visible"}`}>
       <div
         style={{
-          width: '60%',
-          height: '80%',
-          backgroundColor: 'white',
-          padding: '20px',
-          borderRadius: '20px',
-          position: 'relative'
+          width: "60%",
+          height: "80%",
+          backgroundColor: "white",
+          padding: "20px",
+          borderRadius: "20px",
+          position: "relative",
           //   overflowY: 'scroll'
         }}
       >
         <p
           onClick={() => setShowFilters(false)}
           style={{
-            color: 'black',
-            cursor: 'pointer',
-            padding: '20px',
-            borderRadius: '100%',
-            position: 'absolute',
+            color: "black",
+            cursor: "pointer",
+            padding: "20px",
+            borderRadius: "100%",
+            position: "absolute",
             right: 0,
             top: 0,
-            backgroundColor: '#feae00',
-            height: '40px',
-            width: '40px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginRight: '20px',
-            marginTop: '20px',
-            fontWeight: 'bold'
+            backgroundColor: "#feae00",
+            height: "40px",
+            width: "40px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            marginRight: "20px",
+            marginTop: "20px",
+            fontWeight: "bold",
           }}
         >
           X
         </p>
         <h2
           style={{
-            color: 'black',
-            fontSize: '40px',
-            textTransform: 'uppercase',
-            letterSpacing: '2px'
+            color: "black",
+            fontSize: "40px",
+            textTransform: "uppercase",
+            letterSpacing: "2px",
           }}
         >
           Filtros
         </h2>
-        <form className='formFilters'>
-          <SelectForm
-            options={['Vacio', 'No Vacio']}
-            title='Name'
-            identify='name'
-            setFiltersActive={setFiltersActive}
-            filtersActive={filtersActive}
+        <form
+          className="formFilters"
+          style={{ overflow: "auto", height: "90%" }}
+        >
+          <MultipleSelector
+            options={countries}
+            optionsSelected={filtersActive.filters.country}
+            handleSelectOption={handleSelectCountry}
+            title="Country"
+            placeholder="Search country..."
           />
-          {/* <SelectForm
-            options={['Vacio', ...countries]}
-            title='Country Origin'
-            identify='country'
-            setFiltersActive={setFiltersActive}
-            filtersActive={filtersActive}
-          /> */}
-          <SelectMultipleOption
-            options={[...countries]}
-            title='Country Origin'
-            identify='country'
-            setFiltersActive={setFiltersActive}
-            filtersActive={filtersActive}
+          <MultipleSelector
+            options={teachCountries}
+            optionsSelected={filtersActive.filters.teach_country}
+            handleSelectOption={handleSelectTeachCountry}
+            title="Teacher Country"
+            placeholder="Search teacher country..."
           />
-          <SelectMultipleOption
-            options={[...teachCountries]}
-            title='Country Residence'
-            identify='teach_country'
-            setFiltersActive={setFiltersActive}
-            filtersActive={filtersActive}
+          <MultipleSelector
+            options={TTCDate}
+            optionsSelected={filtersActive.filters.TTCDate}
+            handleSelectOption={handleSelectTTCDate}
+            title="TTC Date"
+            placeholder="Search TTC Date..."
           />
-          <SelectForm
-            options={['Vacio', 'No Vacio']}
-            title='Last Name'
-            identify='lastName'
-            setFiltersActive={setFiltersActive}
-            filtersActive={filtersActive}
+          <MultipleSelector
+            options={courses}
+            optionsSelected={filtersActive.filters.courses}
+            handleSelectOption={handleSelectCourses}
+            title="Courses"
+            placeholder="Search courses..."
           />
-          <SelectForm
-            options={['Vacio', 'No Vacio']}
-            title='Email'
-            identify='email'
-            setFiltersActive={setFiltersActive}
-            filtersActive={filtersActive}
+
+          <Selector
+            title="Name"
+            options={[
+              { title: "Not selected", value: "-" },
+              { title: "Vacio", value: false },
+              { title: "No vacio", value: true },
+            ]}
+            handleSelectOption={handleSelectOption}
+            field="name"
+            optionSelected={filtersActive.filters.name}
           />
-          <SelectForm
-            options={['Autenticados', 'No Autenticados']}
-            title='Estado'
-            identify='state'
-            setFiltersActive={setFiltersActive}
-            filtersActive={filtersActive}
+          <Selector
+            title="Last Name"
+            options={[
+              { title: "Not selected", value: "-" },
+              { title: "Vacio", value: false },
+              { title: "No vacio", value: true },
+            ]}
+            handleSelectOption={handleSelectOption}
+            field="lastName"
+            optionSelected={filtersActive.filters.lastName}
           />
-          <SelectMultipleOption
-            options={[...TTCDate]}
-            title='TTC Date'
-            identify='TTCDate'
-            setFiltersActive={setFiltersActive}
-            filtersActive={filtersActive}
+          <Selector
+            title="Email"
+            options={[
+              { title: "Not selected", value: "-" },
+              { title: "Vacio", value: false },
+              { title: "No vacio", value: true },
+            ]}
+            handleSelectOption={handleSelectOption}
+            field="email"
+            optionSelected={filtersActive.filters.email}
           />
-          <SelectForm
-            options={['Vacio', 'No Vacio']}
-            title='Phone'
-            identify='phone'
-            setFiltersActive={setFiltersActive}
-            filtersActive={filtersActive}
+          <Selector
+            title="Phone"
+            options={[
+              { title: "Not selected", value: "-" },
+              { title: "Vacio", value: false },
+              { title: "No vacio", value: true },
+            ]}
+            handleSelectOption={handleSelectOption}
+            field="phone"
+            optionSelected={filtersActive.filters.phone}
+          />
+          <Selector
+            title="State"
+            options={[
+              { title: "Not selected", value: "-" },
+              { title: "Autenticados", value: true },
+              { title: "No autenticados", value: false },
+            ]}
+            handleSelectOption={handleSelectOption}
+            field="state"
+            optionSelected={filtersActive.filters.state}
           />
         </form>
       </div>
     </div>
-  )
-}
+  );
+};

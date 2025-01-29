@@ -1,0 +1,26 @@
+.container {
+  margin: 20px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.container label {
+  font-size: 20px;
+  flex-basis: calc(30% - 20px);
+}
+
+.container select {
+  flex-basis: calc(70% - 20px);
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  border: 2px solid black;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+.container select option {
+  background-color: white !important;
+  color: black !important;
+}

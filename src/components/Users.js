@@ -16,25 +16,34 @@ import { ModalFilters } from './Filters/ModalFilters'
 import { filterUsers } from '../helpers/filterUsers'
 import { Loader } from './commons/Loader'
 import { useHistory } from 'react-router-dom/cjs/react-router-dom'
+import { formatDateDMA } from '../helpers/formatDateDMA'
 
 const initialFiltersActive = {
   searchValue: '',
   orderActive: {
-    active: false,
     by: '',
     value: ''
   },
   filters: {
-    active: false,
-    name: 'Not selected',
-    lastName: 'Not selected',
-    email: 'Not selected',
-    country: 'Not selected',
-    state: 'Not selected',
-    TTCDate: 'Not selected',
-    phone: 'Not selected',
-    teach_country: 'Not selected'
-  }
+    name: null,
+    lastName: null,
+    email: null,
+    country: [],
+    state: null,
+    TTCDate: [],
+    courses: [],
+    phone: null,
+    teach_country: []
+  },
+  showInactive: 'false'
+}
+
+const existFilters = filters => {
+  const entries = Object.entries(filters)
+  const exist = entries.some(el => {
+    return typeof el[1] === 'boolean' || el[1]?.length > 0
+  })
+  return exist
 }
 
 export default function Users () {
@@ -45,18 +54,12 @@ export default function Users () {
 
   const [items, setItems] = useState([])
   const [itemsFilter, setItemsFilter] = useState([])
-  const [showDeleted, setShowDeleted] = useState(
-    localStorage.getItem('showDeleted') == 'false' ||
-      !localStorage.getItem('showDeleted')
-      ? false
-      : true
-  )
   const [showOrder, setShowOrder] = useState(false)
   const [pagination, setPagination] = useState({})
   const [perPage, setPerPage] = useState(25)
   const [showPagination, setShowPagination] = useState(false)
   const [selectedToAuthenticated, setSelectedToAuthenticated] = useState([])
-  const [selectAll, setSelectAll] = useState(false)
+  // const [selectAll, setSelectAll] = useState(false);
   const [valueSearchAux, setValueSearchAux] = useState('')
   const [showFilters, setShowFilters] = useState(false)
 
@@ -80,7 +83,6 @@ export default function Users () {
   }, [perPage, itemsFilter])
 
   useEffect(() => {
-    // console.log(filtersActive.filters)
     if (items.length > 0) {
       let array = [...items]
       if (filtersActive.searchValue)
@@ -89,18 +91,20 @@ export default function Users () {
       if (filtersActive.orderActive.active)
         array = orderArray([...array], filtersActive.orderActive.value)
 
-      if (filtersActive.filters.active)
-        array = filterUsers([...array], filtersActive.filters)
+      array = filterUsers([...array], filtersActive.filters)
+
+      const showInactive = filtersActive.showInactive === 'true'
+
+      array = [...array].filter(el => {
+        if (!showInactive) return !!el[1].inactive === false
+        return true
+      })
 
       localStorage.setItem('filtersActive', JSON.stringify(filtersActive))
 
       setItemsFilter(array)
     }
   }, [filtersActive])
-
-  //   useEffect(() => {
-  //     if (selectAll) allChecks()
-  //   })
 
   const quitarTildes = cadena => {
     return cadena?.normalize('NFD')?.replace(/[\u0300-\u036f]/g, '')
@@ -127,33 +131,28 @@ export default function Users () {
     window.location.reload(false)
   }
 
-  const getData = () => {
-    db.ref('users/').on('value', snapshot => {
-      let items = snapshot.val()
-      let newState = []
-      for (let item in items) {
-        newState.push({
-          id: item,
-          name: items[item].name,
-          lastName: items[item].lastName,
-          email: items[item].email,
-          phone: items[item].phone,
-          country: items[item].country,
-          code: items[item].code,
-          TTCDate: items[item].TTCDate,
-          sign: items[item].sign,
-          address: items[item].address,
-          inactive: items[item].inactive
-        })
-      }
-      setItems(newState)
-    })
-  }
-
-  const handleFilterDeleted = () => {
-    setShowDeleted(!showDeleted)
-    localStorage.setItem('showDeleted', !showDeleted)
-  }
+  // const getData = () => {
+  //   db.ref("users/").on("value", (snapshot) => {
+  //     let items = snapshot.val();
+  //     let newState = [];
+  //     for (let item in items) {
+  //       newState.push({
+  //         id: item,
+  //         name: items[item].name,
+  //         lastName: items[item].lastName,
+  //         email: items[item].email,
+  //         phone: items[item].phone,
+  //         country: items[item].country,
+  //         code: items[item].code,
+  //         TTCDate: items[item].TTCDate,
+  //         sign: items[item].sign,
+  //         address: items[item].address,
+  //         inactive: items[item].inactive,
+  //       });
+  //     }
+  //     setItems(newState);
+  //   });
+  // };
 
   useEffect(() => {
     const filters = JSON.parse(localStorage.getItem('filtersActive'))
@@ -162,62 +161,90 @@ export default function Users () {
       .once('value')
       .then(snapshot => {
         if (snapshot) {
-          setItems(Object.entries(snapshot.val()))
-          setItemsFilter(Object.entries(snapshot.val()))
+          const entries = Object.entries(snapshot.val())
+
+          setItems(entries)
+          setItemsFilter(entries)
           setPagination({
             page: 0,
             perPage: perPage,
             totalPages:
-              Math.floor(Object.entries(snapshot.val()).length / perPage) !=
-              Object.entries(snapshot.val()).length / perPage
-                ? Math.floor(Object.entries(snapshot.val()).length / perPage)
-                : Object.entries(snapshot.val()).length / perPage - 1
+              Math.floor(entries.length / perPage) != entries.length / perPage
+                ? Math.floor(entries.length / perPage)
+                : entries.length / perPage - 1
           })
         }
-        setFiltersActive(filters || initialFiltersActive)
-        setValueSearchAux(
-          filters?.searchValue || initialFiltersActive.searchValue
-        )
-        setIsLoaded(false)
       })
       .catch(e => {
-        setFiltersActive(filters || initialFiltersActive)
+        console.error('Error get users: ', e)
+      })
+      .finally(() => {
+        const realFilters = parseJson(filters?.filters)
+        setFiltersActive(
+          filters ? { ...filters, filters: realFilters } : initialFiltersActive
+        )
         setValueSearchAux(
           filters?.searchValue || initialFiltersActive.searchValue
         )
         setIsLoaded(false)
-        // alert(e.message)
       })
   }, [])
 
+  const parseJson = data => {
+    if (!data) return null
+
+    const entries = Object.entries(data)
+    const obj = {}
+
+    entries.forEach(el => {
+      obj[el[0]] = el[1] === 'true' ? true : el[1] === 'false' ? false : el[1]
+    })
+
+    return obj
+  }
+
   const orderArray = (array, param) => {
+    const filterArray =
+      param === 'updatedAt' ? array.filter(el => !!el[1].updatedAt) : array
+    const notUpdated = array.filter(el => !el[1].updatedAt)
+
     let min, aux
     // console.log(param, array.length)
-    for (let i = 0; i < array.length - 1; i++) {
+    for (let i = 0; i < filterArray.length - 1; i++) {
       min = i
-      for (let j = i + 1; j < array.length; j++) {
+      for (let j = i + 1; j < filterArray.length; j++) {
         if (param === 'email') {
           if (
-            array[j][1][param]?.toLowerCase() <
-            array[min][1][param]?.toLowerCase()
+            filterArray[j][1][param]?.toLowerCase() <
+            filterArray[min][1][param]?.toLowerCase()
           )
             min = j
         } else {
-          if (
-            array[j][1][param]?.toLowerCase().trim() <
-            array[min][1][param]?.toLowerCase().trim()
-          )
-            min = j
+          if (param === 'updatedAt') {
+            if (
+              filterArray[j][1][param] ||
+              0 <= filterArray[min][1][param] ||
+              0
+            )
+              min = j
+          } else {
+            if (
+              filterArray[j][1][param]?.toLowerCase().trim() <
+              filterArray[min][1][param]?.toLowerCase().trim()
+            )
+              min = j
+          }
         }
       }
 
       if (min !== i) {
-        aux = array[i]
-        array[i] = array[min]
-        array[min] = aux
+        aux = filterArray[i]
+        filterArray[i] = filterArray[min]
+        filterArray[min] = aux
       }
     }
-    return array
+
+    return param === 'updatedAt' ? [...filterArray, ...notUpdated] : filterArray
   }
 
   const orderDataByParam = e => {
@@ -363,24 +390,20 @@ export default function Users () {
   //     allChecks()
   //   }, [selectAll])
 
-  const allChecks = () => {
-    const checks = document.querySelectorAll('#checked_option')
-    if (selectAll) checks.forEach(el => el.setAttribute('checked', true))
-    else checks.forEach(el => el.removeAttribute('checked'))
-    // console.log(checks)
-  }
+  // const allChecks = () => {
+  //   const checks = document.querySelectorAll("#checked_option");
+  //   if (selectAll) checks.forEach((el) => el.setAttribute("checked", true));
+  //   else checks.forEach((el) => el.removeAttribute("checked"));
+  //   // console.log(checks)
+  // };
 
-  const selectAllNotAuths = () => {
-    const notAuth = !selectAll
-      ? itemsFilter.filter(el => el[1].authenticated === 0 && !el[1].inactive)
-      : []
-    setSelectedToAuthenticated(notAuth)
-    setSelectAll(!selectAll)
-  }
-
-  itemsFilter.forEach(el => {
-    if (!el[1].SKY) console.log(el[0])
-  })
+  // const selectAllNotAuths = () => {
+  //   const notAuth = !selectAll
+  //     ? itemsFilter.filter((el) => el[1].authenticated === 0 && !el[1].inactive)
+  //     : [];
+  //   setSelectedToAuthenticated(notAuth);
+  //   setSelectAll(!selectAll);
+  // };
 
   //   console.log(selectedToAuthenticated.length)
 
@@ -392,19 +415,24 @@ export default function Users () {
     setFiltersActive({ ...filtersActive, searchValue: value })
   }
 
-  const coursesConcatenate = courses => {
-    let coursesString = ''
-    courses.forEach((el, i) => {
-      if (i == courses.length - 1) {
-        alert(el)
-        // if content = 'si' then add key to string
-        if (el === 'si') coursesString += 'key: ' + i + ', '
-      } else {
-        coursesString += el + ', '
-      }
-    })
-    return coursesString
+  const handleSearchChange = e => {
+    const value = e.target.value.toLowerCase().trim()
+    setFiltersActive({ ...filtersActive, searchValue: value })
   }
+
+  // const coursesConcatenate = (courses) => {
+  //   let coursesString = "";
+  //   courses.forEach((el, i) => {
+  //     if (i == courses.length - 1) {
+  //       alert(el);
+  //       // if content = 'si' then add key to string
+  //       if (el === "si") coursesString += "key: " + i + ", ";
+  //     } else {
+  //       coursesString += el + ", ";
+  //     }
+  //   });
+  //   return coursesString;
+  // };
 
   const exportDataToExcel = () => {
     setLoadingExcel(true)
@@ -463,8 +491,14 @@ export default function Users () {
                 </div>
                 <div style={{ width: '90%', margin: '0 auto' }}>
                   <div style={{ width: '100%' }}>
-                    <h1 style={{ marginBottom: '20px' }}>Teachers</h1>
-                    <form className='formSearch' onSubmit={handleSearch}>
+                    <h1 style={{ marginBottom: '20px' }}>
+                      Teachers ({itemsFilter.length})
+                    </h1>
+                    <form
+                      className='formSearch'
+                      onSubmit={e => e.preventDefault()}
+                    >
+                      {/* onSubmit={handleSearch} */}
                       <input
                         type='text'
                         placeholder='Nombre, apellido o email...'
@@ -474,8 +508,10 @@ export default function Users () {
                           width: '350px'
                         }}
                         name='search'
-                        value={valueSearchAux}
-                        onChange={e => setValueSearchAux(e.target.value)}
+                        // value={valueSearchAux}
+                        // onChange={e => setValueSearchAux(e.target.value)}
+                        value={filtersActive.searchValue}
+                        onChange={handleSearchChange}
                       />
                       <label htmlFor='search'>
                         <AiOutlineSearch />
@@ -503,12 +539,22 @@ export default function Users () {
                     >
                       <button
                         className='btn btn-secondary'
-                        onClick={() => handleFilterDeleted()}
+                        onClick={() =>
+                          setFiltersActive({
+                            ...filtersActive,
+                            showInactive: (!(
+                              filtersActive.showInactive === 'true'
+                            )).toString()
+                          })
+                        }
                         style={{
-                          backgroundColor: showDeleted ? 'red' : 'grey'
+                          backgroundColor:
+                            filtersActive.showInactive === 'true'
+                              ? 'red'
+                              : 'grey'
                         }}
                       >
-                        {!showDeleted
+                        {filtersActive.showInactive === 'false'
                           ? 'Show inactive users'
                           : 'Hide inactive users'}
                       </button>
@@ -517,16 +563,19 @@ export default function Users () {
                         className='orderContainer'
                         onClick={() => setShowFilters(true)}
                         style={{
-                          backgroundColor: filtersActive.filters.active
+                          backgroundColor: existFilters(filtersActive.filters)
                             ? '#feae00'
-                            : 'white'
+                            : 'white',
+                          color: existFilters(filtersActive.filters)
+                            ? 'white'
+                            : 'black'
                         }}
                       >
                         <p>
-                          Filtro{' '}
-                          {filtersActive.filters.active
-                            ? `: Activo`
-                            : ': Inactivo'}
+                          Filtro:{' '}
+                          {existFilters(filtersActive.filters)
+                            ? `Activo`
+                            : 'Inactivo'}
                         </p>
                       </div>
 
@@ -547,7 +596,13 @@ export default function Users () {
                         }}
                         onClick={() => setShowOrder(!showOrder)}
                       >
-                        <p style={{ color: 'black' }}>
+                        <p
+                          style={{
+                            color: filtersActive.orderActive.active
+                              ? 'white'
+                              : 'black'
+                          }}
+                        >
                           {'Order by ' + filtersActive.orderActive.by ||
                             'Order by...'}
                         </p>
@@ -572,6 +627,9 @@ export default function Users () {
                                 {filtersActive.orderActive.value}
                               </li>
                             )}
+                            <li data-id='updatedAt' onClick={orderDataByParam}>
+                              Last Update
+                            </li>
                             <li data-id='name' onClick={orderDataByParam}>
                               Name
                             </li>
@@ -617,25 +675,24 @@ export default function Users () {
 
                     <button
                       onClick={() =>
-                        filtersActive.filters.active
+                        existFilters(filtersActive.filters)
                           ? setFiltersActive(initialFiltersActive)
                           : null
                       }
                       style={{
                         cursor: 'pointer',
                         padding: '5px 20px',
-                        backgroundColor: filtersActive.filters.active
+                        backgroundColor: existFilters(filtersActive.filters)
                           ? '#feae00'
                           : 'grey',
                         fontWeight: 'bold',
-                        color: filtersActive.filters.active ? 'white' : 'black'
+                        color: existFilters(filtersActive.filters)
+                          ? 'white'
+                          : 'black'
                       }}
                     >
                       Clear Filters
                     </button>
-
-                    {/* BOTON PARA ELIMINAR DUPLICADOS */}
-                    {/* <button onClick={deleteDuplicate}>DELETE DUPLICATES</button> */}
 
                     {/* PAGINATION */}
                     {items.length > 0 && (
@@ -659,7 +716,9 @@ export default function Users () {
                             <BsChevronLeft />
                           </div>
                         )}
-                        <p>{pagination.page + 1}</p>
+                        <p>
+                          {pagination.page + 1} / {pagination.totalPages + 1}
+                        </p>
                         {pagination.page !== pagination.totalPages ? (
                           <div
                             className='containerBtnPage__btn'
@@ -683,132 +742,85 @@ export default function Users () {
                     )}
                     {/* PAGINATION CLOSE */}
 
-                    {/* <button onClikc={exportDataEXCEL}>Exportar todo</button> */}
-
-                    {/* <div
-                      style={{
-                        textAlign: 'left'
-                      }}
-                    >
-                      <button
+                    <div style={{ overflow: 'auto' }}>
+                      <table
+                        className='table table-striped'
                         style={{
-                          backgroundColor:
-                            selectedToAuthenticated?.length > 0 &&
-                            selectedToAuthenticated.length < 25
-                              ? '#feae00'
-                              : '#bbb',
-                          padding: '5px 20px',
-                          marginBottom: '10px',
-                          color:
-                            selectedToAuthenticated?.length > 0 &&
-                            selectedToAuthenticated.length < 25
-                              ? 'white'
-                              : 'black',
-                          fontWeight: 'bold'
+                          fontSize: 12,
+                          width: '100%',
+                          overflow: 'auto'
                         }}
-                        onClick={() =>
-                          selectedToAuthenticated?.length > 0 &&
-                          selectedToAuthenticated.length < 25
-                            ? sendSelected(
-                                handleAuthenticateUser,
-                                selectedToAuthenticated.length
-                              )
-                            : console.log(
-                                'El boton se encuentra deshabilitado o excedio la cantidad para enviar (25 usuarios)'
-                              )
-                        }
                       >
-                        Send Selected
-                      </button>
-                      
-                    </div> */}
+                        <thead>
+                          <tr>
+                            <th scope='col'>Action</th>
+                            <th scope='col'>Delete</th>
+                            <th scope='col'>Forgot Password</th>
+                            <th scope='col'>Authenticate</th>
+                            <th scope='col'></th>
+                            <th scope='col'>Delete</th>
+                            <th scope='col'>Last Update</th>
+                            <th scope='col' data-id='name'>
+                              Name
+                            </th>
+                            <th scope='col' data-id='lastName'>
+                              Last Name
+                            </th>
+                            <th scope='col' data-id='email'>
+                              Email
+                            </th>
+                            <th
+                              scope='col'
+                              //
+                              data-id='phone'
+                            >
+                              Phone
+                            </th>
+                            <th scope='col' data-id='country'>
+                              Country Origin
+                            </th>
+                            <th scope='col' data-id='teach_country'>
+                              Country Residence
+                            </th>
+                            <th scope='col'>Code</th>
+                            <th scope='col'>Long</th>
+                            <th scope='col'>Short</th>
 
-                    {/* SELECT ALL BUTTON */}
-                    {/* <button
-                        style={{
-                          backgroundColor: '#feae00',
-                          padding: '5px 20px',
-                          marginBottom: '10px',
-                          color: 'black',
-                          fontWeight: 'bold',
-                          marginLeft: '10px'
-                        }}
-                        onClick={selectAllNotAuths}
-                      >
-                        {selectAll ? 'Uncheck All' : 'Check All'}
-                      </button>  */}
-                    <table
-                      className='table table-striped'
-                      style={{
-                        fontSize: '12px'
-                      }}
-                    >
-                      <thead>
-                        <tr>
-                          <th scope='col'>Action</th>
-                          <th scope='col'>Delete</th>
-                          <th scope='col'>Forgot Password</th>
-                          <th scope='col'>Authenticate</th>
-                          <th scope='col'></th>
-                          <th scope='col'>Delete</th>
-                          <th scope='col' data-id='name'>
-                            Name
-                          </th>
-                          <th scope='col' data-id='lastName'>
-                            Last Name
-                          </th>
-                          <th scope='col' data-id='email'>
-                            Email
-                          </th>
-                          <th
-                            scope='col'
-                            //
-                            data-id='phone'
-                          >
-                            Phone
-                          </th>
-                          <th scope='col' data-id='country'>
-                            Country Origin
-                          </th>
-                          <th scope='col' data-id='teach_country'>
-                            Country Residence
-                          </th>
-                          <th scope='col'>Code</th>
-                          <th scope='col'>Long</th>
-                          <th scope='col'>Short</th>
-
-                          <th scope='col'>Status</th>
-                          <th scope='col' data-id='ttcdate'>
-                            First TTC Date
-                          </th>
-                          <th scope='col'>TTC Place</th>
-                          <th scope='col'>Sign Contract</th>
-                          <th scope='col'>Comment</th>
-                          <th scope='col'>P1</th>
-                          <th scope='col'>SSY</th>
-                          <th scope='col'>Yes+</th>
-                          <th scope='col'>Yes</th>
-                          <th scope='col'>AE</th>
-                          <th scope='col'>Sahaj</th>
-                          <th scope='col'>P2</th>
-                          <th scope='col'>SSY2</th>
-                          <th scope='col'>Prision</th>
-                          <th scope='col'>DSN</th>
-                          <th scope='col'>VTP</th>
-                          <th scope='col'>TTC</th>
-                          <th scope='col'>Premium</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {itemsFilter
-                          .slice(
-                            pagination.page * pagination.perPage,
-                            (pagination.page + 1) * pagination.perPage
-                          )
-                          .map(user =>
-                            //check if inactive y si showDeleted es true
-                            (user[1].inactive && showDeleted) ||
-                            !user[1].inactive ? (
+                            <th scope='col'>Status</th>
+                            <th scope='col' data-id='ttcdate'>
+                              First TTC Date
+                            </th>
+                            <th scope='col'>TTC Place</th>
+                            <th scope='col'>Sign Contract</th>
+                            <th scope='col'>Comment</th>
+                            <th scope='col'>P1</th>
+                            <th scope='col'>SSY</th>
+                            <th scope='col'>Yes+</th>
+                            <th scope='col'>Yes</th>
+                            <th scope='col'>AE</th>
+                            <th scope='col'>Sahaj</th>
+                            <th scope='col'>P2</th>
+                            <th scope='col'>SSY2</th>
+                            <th scope='col'>Prision</th>
+                            <th scope='col'>DSN</th>
+                            <th scope='col'>VTP</th>
+                            <th scope='col'>TTC</th>
+                            <th scope='col'>Premium</th>
+                            <th scope='col'>RAS</th>
+                            <th scope='col'>Eternity</th>
+                            <th scope='col'>Intuition</th>
+                            <th scope='col'>Scanning</th>
+                            <th scope='col'>Angels</th>
+                            <th scope='col'>Ansiedad y sueño profundo</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {itemsFilter
+                            .slice(
+                              pagination.page * pagination.perPage,
+                              (pagination.page + 1) * pagination.perPage
+                            )
+                            .map(user => (
                               <tr
                                 id='list_users'
                                 key={user[0]}
@@ -911,6 +923,9 @@ export default function Users () {
                                     }
                                   />
                                 </td>
+                                <td>
+                                  {formatDateDMA(user[1].updatedAt) || '-'}
+                                </td>
                                 <td>{user[1].name}</td>
                                 <td>{user[1].lastName}</td>
                                 <td>{user[1].email}</td>
@@ -945,11 +960,17 @@ export default function Users () {
                                 <td>{user[1]?.course?.VTP}</td>
                                 <td>{user[1]?.course?.TTC}</td>
                                 <td>{user[1]?.course?.premium}</td>
+                                <td>{user[1]?.course?.RAS}</td>
+                                <td>{user[1]?.course?.Eternity}</td>
+                                <td>{user[1]?.course?.Intuition}</td>
+                                <td>{user[1]?.course?.Scanning}</td>
+                                <td>{user[1]?.course?.Angels}</td>
+                                <td>{user[1]?.course?.AnxDeepSleep}</td>
                               </tr>
-                            ) : null
-                          )}
-                      </tbody>
-                    </table>
+                            ))}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -976,7 +997,9 @@ export default function Users () {
                       <BsChevronLeft />
                     </div>
                   )}
-                  <p>{pagination.page + 1}</p>
+                  <p>
+                    {pagination.page + 1} / {pagination.totalPages + 1}
+                  </p>
                   {pagination.page !== pagination.totalPages ? (
                     <div
                       className='containerBtnPage__btn'

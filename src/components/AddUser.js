@@ -1,11 +1,12 @@
 // add user component
 
 import React, { useEffect, useState } from 'react'
-import { Button, Form, InputGroup, Container, Alert } from 'react-bootstrap'
+import { Button, Form, InputGroup, Container } from 'react-bootstrap'
 import Navigation from './Navigation'
 import { db } from '../firebase/firebase'
 import { auth } from '../firebase/firebase'
 import { getDataUser } from '../helpers/updateKeyUser'
+import styles from '../styles/addUser.module.css'
 
 const AddUserPage = props => {
   const [id, setId] = useState(0)
@@ -39,11 +40,16 @@ const AddUserPage = props => {
   const [YesPlus, setYesPlus] = useState(false)
   const [YES, setYES] = useState(false)
   const [PREMIUM, setPremium] = useState(false)
+  const [RAS, setRAS] = useState(false)
+  const [eternity, setEternity] = useState(false)
+  const [intuition, setIntuition] = useState(false)
+  const [scanning, setScanning] = useState(false)
+  const [anxDeepSleep, setAnxDeepSleep] = useState(false)
+  const [angels, setAngels] = useState(false)
 
   const [comment, setComment] = useState('')
 
   const [inactive, setInactive] = useState(false)
-  const [error, setError] = useState(null)
   const [isloading, setIsLoading] = useState(false)
 
   //   console.log(props)
@@ -82,45 +88,50 @@ const AddUserPage = props => {
     setId(key)
     //CHEKC IF THERE IS A PARMATER?
 
-    console.log('id', key)
+    // console.log('id', key)
     if (key) {
       setIsLoading(true)
       db.ref('users/' + key)
         .once('value')
         .then(snapshot => {
           //   console.log('snapshot:', snapshot)
+
           if (snapshot) {
-            setTeachCountry(snapshot.val()?.teach_country)
-            setPhone(snapshot.val()?.phone)
-            setName(snapshot.val()?.name)
-            setEmail(snapshot.val()?.email)
-            setCountry(snapshot.val()?.country)
-            setComment(snapshot.val()?.comment)
-            setPlaceTTC(snapshot.val()?.placeTTC)
-            setInactive(snapshot.val()?.inactive || false)
-            setCode(snapshot.val()?.code)
-            setLastname(snapshot.val()?.lastName)
-            setTTCDate(snapshot.val()?.TTCDate)
-            const long = snapshot.val()?.SKY?.long === 1 ? true : false
-            setLong(long)
-            setSign(snapshot.val()?.sign === 1 ? true : false)
-            setShort(snapshot.val()?.SKY?.short === 1 ? true : false)
-            setAe(snapshot.val()?.SKY.ae === 1 ? true : false)
-            setHP(snapshot.val()?.course?.HP === 'si' ? true : false)
-            setAE(snapshot.val()?.course?.AE === 'si' ? true : false)
-            setPremium(snapshot.val()?.course?.premium === 'si' ? true : false)
-            setTTC(snapshot.val()?.course?.TTC === 'si' ? true : false)
-            setDSN(snapshot.val()?.course?.DSN === 'si' ? true : false)
-            setParte2(snapshot.val()?.course?.Parte2 === 'si' ? true : false)
-            setParte2SSY(
-              snapshot.val()?.course?.Parte2SSY === 'si' ? true : false
-            )
-            setPrision(snapshot.val()?.course?.Prision === 'si' ? true : false)
-            setSSY(snapshot.val()?.course?.SSY === 'si' ? true : false)
-            setSahaj(snapshot.val()?.course?.Sahaj === 'si' ? true : false)
-            setVTP(snapshot.val()?.course?.VTP === 'si' ? true : false)
-            setYesPlus(snapshot.val()?.course?.YesPlus === 'si' ? true : false)
-            setYES(snapshot.val()?.course?.Yes === 'si' ? true : false)
+            const val = snapshot.val()
+            setTeachCountry(val?.teach_country)
+            setPhone(val?.phone)
+            setName(val?.name)
+            setEmail(val?.email)
+            setCountry(val?.country)
+            setComment(val?.comment)
+            setPlaceTTC(val?.placeTTC)
+            setInactive(val?.inactive || false)
+            setCode(val?.code)
+            setLastname(val?.lastName)
+            setTTCDate(val?.TTCDate)
+            setLong(val?.SKY?.long === 1)
+            setSign(val?.sign === 1)
+            setShort(val?.SKY?.short === 1)
+            setAe(val?.SKY.ae === 1)
+            setHP(val?.course?.HP === 'si')
+            setAE(val?.course?.AE === 'si')
+            setPremium(val?.course?.premium === 'si')
+            setTTC(val?.course?.TTC === 'si')
+            setDSN(val?.course?.DSN === 'si')
+            setParte2(val?.course?.Parte2 === 'si')
+            setParte2SSY(val?.course?.Parte2SSY === 'si')
+            setPrision(val?.course?.Prision === 'si')
+            setSSY(val?.course?.SSY === 'si')
+            setSahaj(val?.course?.Sahaj === 'si')
+            setVTP(val?.course?.VTP === 'si')
+            setYesPlus(val?.course?.YesPlus === 'si')
+            setYES(val?.course?.Yes === 'si')
+            setRAS(val?.course?.RAS === 'si')
+            setEternity(val?.course?.Eternity === 'si')
+            setIntuition(val?.course?.Intuition === 'si')
+            setScanning(val?.course?.Scanning === 'si')
+            setAnxDeepSleep(val?.course?.AnxDeepSleep === 'si')
+            setAngels(val?.course?.Angels === 'si')
 
             setIsLoading(false)
           }
@@ -172,6 +183,12 @@ const AddUserPage = props => {
     const yesPlus_1 = YesPlus ? 'si' : 'no'
     const yes = YES ? 'si' : 'no'
     const premium_1 = PREMIUM ? 'si' : 'no'
+    const ras = RAS ? 'si' : 'no'
+    const etern = eternity ? 'si' : 'no'
+    const intuit = intuition ? 'si' : 'no'
+    const scann = scanning ? 'si' : 'no'
+    const ads = anxDeepSleep ? 'si' : 'no'
+    const ang = angels ? 'si' : 'no'
 
     const data = await getDataUser(userNew)
     let authent
@@ -207,6 +224,7 @@ const AddUserPage = props => {
       authenticated: authent,
       comment: comment || '',
       placeTTC: placeTTC || '',
+      updatedAt: new Date().getTime(),
       SKY: {
         long: long_1 || 0,
         short: short_1 || 0,
@@ -225,12 +243,16 @@ const AddUserPage = props => {
         VTP: vtp_1,
         YesPlus: yesPlus_1,
         Yes: yes,
-        premium: premium_1
+        premium: premium_1,
+        RAS: ras,
+        Eternity: etern,
+        Intuition: intuit,
+        Scanning: scann,
+        AnxDeepSleep: ads,
+        Angels: ang
       }
     }
-    console.log(userNew)
     // alert(JSON.stringify(updateData))
-    console.log(data?.email, email, data)
     if (data?.email == email || !data) {
       db.ref('users/' + userNew)
         .update(updateData)
@@ -259,7 +281,6 @@ const AddUserPage = props => {
     } else {
       try {
         const newId = await createAuthUser(email, 'a1b2c3e4d5', true)
-        console.log(newId)
         const user = db.ref('users/' + newId)
         await user.update(updateData)
 
@@ -323,7 +344,7 @@ const AddUserPage = props => {
           <div id='preloader'></div>
         ) : (
           <form onSubmit={handleSubmit} className='form_add_user'>
-            <InputGroup>
+            <InputGroup className={styles.container_input}>
               <InputGroup.Prepend className='inputlabel'>
                 Email* :
               </InputGroup.Prepend>
@@ -334,32 +355,31 @@ const AddUserPage = props => {
                 value={email}
                 required
                 autoFocus
-                // change widht of input
-                style={{ width: '300px' }}
                 onChange={event => setEmail(event.target.value)}
               />
             </InputGroup>
 
-            <br />
             {!id ? (
-              <InputGroup>
-                <InputGroup.Prepend className='inputlabel'>
-                  Password* :
-                </InputGroup.Prepend>
-                <Form.Control
-                  id='inputtext'
-                  type='password'
-                  placeholder='********'
-                  value={password}
-                  autoFocus
-                  // change widht of input
-                  style={{ width: '300px' }}
-                  onChange={event => setPassword(event.target.value)}
-                />
-              </InputGroup>
+              <>
+                <br />
+                <InputGroup className={styles.container_input}>
+                  <InputGroup.Prepend className='inputlabel'>
+                    Password* :
+                  </InputGroup.Prepend>
+                  <Form.Control
+                    id='inputtext'
+                    type='password'
+                    placeholder='********'
+                    value={password}
+                    autoFocus
+                    required
+                    onChange={event => setPassword(event.target.value)}
+                  />
+                </InputGroup>
+              </>
             ) : null}
             <br />
-            <InputGroup>
+            <InputGroup className={styles.container_input}>
               <InputGroup.Prepend className='inputlabel'>
                 Name* :
               </InputGroup.Prepend>
@@ -375,7 +395,7 @@ const AddUserPage = props => {
               />
             </InputGroup>
             <br />
-            <InputGroup>
+            <InputGroup className={styles.container_input}>
               <InputGroup.Prepend className='inputlabel'>
                 Last Name* :
               </InputGroup.Prepend>
@@ -391,7 +411,7 @@ const AddUserPage = props => {
               />
             </InputGroup>
             <br />
-            <InputGroup>
+            <InputGroup className={styles.container_input}>
               <InputGroup.Prepend className='inputlabel'>
                 Origin Country* :
               </InputGroup.Prepend>
@@ -408,7 +428,7 @@ const AddUserPage = props => {
             </InputGroup>
             <br />
 
-            <InputGroup>
+            <InputGroup className={styles.container_input}>
               <InputGroup.Prepend className='inputlabel'>
                 Phone:
               </InputGroup.Prepend>
@@ -423,7 +443,7 @@ const AddUserPage = props => {
               />
             </InputGroup>
             <br />
-            <InputGroup>
+            <InputGroup className={styles.container_input}>
               <InputGroup.Prepend className='inputlabel'>
                 Code:
               </InputGroup.Prepend>
@@ -438,7 +458,7 @@ const AddUserPage = props => {
               />
             </InputGroup>
             <br />
-            <InputGroup>
+            <InputGroup className={styles.container_input}>
               <InputGroup.Prepend className='inputlabel'>
                 Residence Country:
               </InputGroup.Prepend>
@@ -453,7 +473,7 @@ const AddUserPage = props => {
               />
             </InputGroup>
             <br />
-            <InputGroup>
+            <InputGroup className={styles.container_input}>
               <InputGroup.Prepend className='inputlabel'>
                 TTC Date:
               </InputGroup.Prepend>
@@ -468,7 +488,7 @@ const AddUserPage = props => {
               />
             </InputGroup>
             <br />
-            <InputGroup>
+            <InputGroup className={styles.container_input}>
               <InputGroup.Prepend className='inputlabel'>
                 Place TTC:
               </InputGroup.Prepend>
@@ -483,7 +503,7 @@ const AddUserPage = props => {
               />
             </InputGroup>
             <br />
-            <InputGroup>
+            <InputGroup className={styles.container_input}>
               <InputGroup.Prepend className='inputlabel'>
                 Comment:
               </InputGroup.Prepend>
@@ -549,139 +569,219 @@ const AddUserPage = props => {
             </div>
             <br />
             {/* COURSES */}
-            <InputGroup style={{ width: '100%' }}>
-              <Form.Label className='inputlabel'>Courses</Form.Label>
-              <br />
-              <label htmlFor='HP'>Parte 1</label>
-              <Form.Check
-                className='inputradio'
-                type='checkbox'
-                name='HP'
-                defaultChecked={HP}
-                value={HP}
-                id='HP'
-                onChange={() => handleHP(HP)}
-              />
-              //<label htmlFor='PREMIUM'>Premium</label>
-              <Form.Check
-                className='inputradio'
-                type='checkbox'
-                name='PREMIUM'
-                defaultChecked={PREMIUM}
-                value={PREMIUM}
-                id='PREMIUM'
-                onChange={() => handlePremium(PREMIUM)}
-              />
-              //<label htmlFor='SSY'>SSY</label>
-              <Form.Check
-                id='SSY'
-                className='inputradio'
-                type='checkbox'
-                name='SSY'
-                defaultChecked={SSY}
-                value={SSY}
-                onChange={() => setSSY(!SSY)}
-              />
-              //<label htmlFor='YesPlus'>Yes Plus</label>
-              <Form.Check
-                id='YesPlus'
-                className='inputradio'
-                type='checkbox'
-                name='YesPlus'
-                defaultChecked={YesPlus}
-                value={YesPlus}
-                onChange={() => setYesPlus(!YesPlus)}
-              />
-              //<label htmlFor='YES'>YES</label>
-              <Form.Check
-                id='YES'
-                className='inputradio'
-                type='checkbox'
-                name='YES'
-                defaultChecked={YES}
-                value={YES}
-                onChange={() => setYES(!YES)}
-              />
-              //<label htmlFor='AE'>AE</label>
-              <Form.Check
-                className='inputradio'
-                id='AE'
-                type='checkbox'
-                name='AE'
-                defaultChecked={AE}
-                value={AE}
-                onChange={() => setAE(!AE)}
-              />
-              //<label htmlFor='Sahaj'>Sahaj</label>
-              <Form.Check
-                className='inputradio'
-                id='Sahaj'
-                type='checkbox'
-                name='Sahaj'
-                defaultChecked={Sahaj}
-                value={Sahaj}
-                onChange={() => setSahaj(!Sahaj)}
-              />
-              //<label htmlFor='Parte_2'>Parte 2</label>
-              <Form.Check
-                className='inputradio'
-                id='Parte_2'
-                type='checkbox'
-                name='Parte2'
-                defaultChecked={Parte2}
-                value={Parte2}
-                onChange={() => setParte2(!Parte2)}
-              />
-              //<label htmlFor='Parte2_SSY'>Parte2 SSY</label>
-              <Form.Check
-                className='inputradio'
-                id='Parte2_SSY'
-                type='checkbox'
-                name='Parte2SSY'
-                defaultChecked={Parte2SSY}
-                value={Parte2SSY}
-                onChange={() => setParte2SSY(!Parte2SSY)}
-              />
-              //<label htmlFor='Prision'>Prision</label>
-              <Form.Check
-                className='inputradio'
-                id='Prision'
-                type='checkbox'
-                name='Prision'
-                defaultChecked={Prision}
-                value={Prision}
-                onChange={() => setPrision(!Prision)}
-              />
-              //<label htmlFor='DSN'>DSN</label>
-              <Form.Check
-                className='inputradio'
-                id='DSN'
-                type='checkbox'
-                name='DSN'
-                defaultChecked={DSN}
-                value={DSN}
-                onChange={() => setDSN(!DSN)}
-              />
-              //<label htmlFor='VTP'>VTP</label>
-              <Form.Check
-                className='inputradio'
-                id='VTP'
-                type='checkbox'
-                name='VTP'
-                defaultChecked={VTP}
-                value={VTP}
-                onChange={() => setVTP(!VTP)}
-              />
-              //<label htmlFor='TTC'>TTC</label>
-              <Form.Check
-                className='inputradio'
-                id='TTC'
-                type='checkbox'
-                name='TTC'
-                defaultChecked={TTC}
-                value={TTC}
-                onChange={() => setTTC(!TTC)}
-              />
+            <h5>Courses</h5>
+            <InputGroup className={styles.courses_container}>
+              <div>
+                <label htmlFor='HP'>Parte 1</label>
+                <Form.Check
+                  type='checkbox'
+                  name='HP'
+                  defaultChecked={HP}
+                  value={HP}
+                  id='HP'
+                  onChange={() => handleHP(HP)}
+                />
+              </div>
+              <div>
+                <label htmlFor='PREMIUM'>Premium</label>
+                <Form.Check
+                  type='checkbox'
+                  name='PREMIUM'
+                  defaultChecked={PREMIUM}
+                  value={PREMIUM}
+                  id='PREMIUM'
+                  onChange={() => handlePremium(PREMIUM)}
+                />
+              </div>
+              <div>
+                <label htmlFor='SSY'>SSY</label>
+                <Form.Check
+                  id='SSY'
+                  type='checkbox'
+                  name='SSY'
+                  defaultChecked={SSY}
+                  value={SSY}
+                  onChange={() => setSSY(!SSY)}
+                />
+              </div>
+              <div>
+                <label htmlFor='YesPlus'>Yes Plus</label>
+                <Form.Check
+                  id='YesPlus'
+                  type='checkbox'
+                  name='YesPlus'
+                  defaultChecked={YesPlus}
+                  value={YesPlus}
+                  onChange={() => setYesPlus(!YesPlus)}
+                />
+              </div>
+              <div>
+                <label htmlFor='YES'>YES</label>
+                <Form.Check
+                  id='YES'
+                  type='checkbox'
+                  name='YES'
+                  defaultChecked={YES}
+                  value={YES}
+                  onChange={() => setYES(!YES)}
+                />
+              </div>
+              <div>
+                <label htmlFor='AE'>AE</label>
+                <Form.Check
+                  id='AE'
+                  type='checkbox'
+                  name='AE'
+                  defaultChecked={AE}
+                  value={AE}
+                  onChange={() => setAE(!AE)}
+                />
+              </div>
+              <div>
+                <label htmlFor='Sahaj'>Sahaj</label>
+                <Form.Check
+                  id='Sahaj'
+                  type='checkbox'
+                  name='Sahaj'
+                  defaultChecked={Sahaj}
+                  value={Sahaj}
+                  onChange={() => setSahaj(!Sahaj)}
+                />
+              </div>
+              <div>
+                <label htmlFor='Parte_2'>Parte 2</label>
+                <Form.Check
+                  id='Parte_2'
+                  type='checkbox'
+                  name='Parte2'
+                  defaultChecked={Parte2}
+                  value={Parte2}
+                  onChange={() => setParte2(!Parte2)}
+                />
+              </div>
+              <div>
+                <label htmlFor='Parte2_SSY'>Parte2 SSY</label>
+                <Form.Check
+                  id='Parte2_SSY'
+                  type='checkbox'
+                  name='Parte2SSY'
+                  defaultChecked={Parte2SSY}
+                  value={Parte2SSY}
+                  onChange={() => setParte2SSY(!Parte2SSY)}
+                />
+              </div>
+              <div>
+                <label htmlFor='Prision'>Prision</label>
+                <Form.Check
+                  id='Prision'
+                  type='checkbox'
+                  name='Prision'
+                  defaultChecked={Prision}
+                  value={Prision}
+                  onChange={() => setPrision(!Prision)}
+                />
+              </div>
+              <div>
+                <label htmlFor='DSN'>DSN</label>
+                <Form.Check
+                  id='DSN'
+                  type='checkbox'
+                  name='DSN'
+                  defaultChecked={DSN}
+                  value={DSN}
+                  onChange={() => setDSN(!DSN)}
+                />
+              </div>
+              <div>
+                <label htmlFor='VTP'>VTP</label>
+                <Form.Check
+                  id='VTP'
+                  type='checkbox'
+                  name='VTP'
+                  defaultChecked={VTP}
+                  value={VTP}
+                  onChange={() => setVTP(!VTP)}
+                />
+              </div>
+              <div>
+                <label htmlFor='TTC'>TTC</label>
+                <Form.Check
+                  id='TTC'
+                  type='checkbox'
+                  name='TTC'
+                  defaultChecked={TTC}
+                  value={TTC}
+                  onChange={() => setTTC(!TTC)}
+                />
+              </div>
+              <div>
+                <label htmlFor='RAS'>RAS</label>
+                <Form.Check
+                  id='RAS'
+                  type='checkbox'
+                  name='RAS'
+                  defaultChecked={RAS}
+                  value={RAS}
+                  onChange={() => setRAS(!RAS)}
+                />
+              </div>
+              <div>
+                <label htmlFor='eternity'>Eternity</label>
+                <Form.Check
+                  id='eternity'
+                  type='checkbox'
+                  name='eternity'
+                  defaultChecked={eternity}
+                  value={eternity}
+                  onChange={() => setEternity(!eternity)}
+                />
+              </div>
+              <div>
+                <label htmlFor='intuition'>Intuition</label>
+                <Form.Check
+                  id='intuition'
+                  type='checkbox'
+                  name='intuition'
+                  defaultChecked={intuition}
+                  value={intuition}
+                  onChange={() => setIntuition(!intuition)}
+                />
+              </div>
+              <div>
+                <label htmlFor='scanning'>Scanning</label>
+                <Form.Check
+                  id='scanning'
+                  type='checkbox'
+                  name='scanning'
+                  defaultChecked={scanning}
+                  value={scanning}
+                  onChange={() => setScanning(!scanning)}
+                />
+              </div>
+              <div>
+                <label htmlFor='angels'>Angels</label>
+                <Form.Check
+                  id='angels'
+                  type='checkbox'
+                  name='angels'
+                  defaultChecked={angels}
+                  value={angels}
+                  onChange={() => setAngels(!angels)}
+                />
+              </div>
+              <div>
+                <label htmlFor='anxDeepSleep' style={{ fontSize: 12 }}>
+                  Ansiedad y sueño profundo
+                </label>
+                <Form.Check
+                  id='anxDeepSleep'
+                  type='checkbox'
+                  name='anxDeepSleep'
+                  defaultChecked={anxDeepSleep}
+                  value={anxDeepSleep}
+                  onChange={() => setAnxDeepSleep(!anxDeepSleep)}
+                />
+              </div>
             </InputGroup>
             <br />
             <div className='text-center'>

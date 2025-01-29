@@ -1,94 +1,87 @@
-export const filterUsers = (array, filtros) => {
-  let filterArray = [...array]
+export const filterUsers = (array, filters) => {
+  let filterArray = [...array];
 
   //FILTRO EXISTENCIA DE NOMBRE
-  if (filtros.name !== 'Not selected')
-    filterArray = filterByValue(
-      [...filterArray],
-      'name',
-      '',
-      filtros.name === 'vacio'
-    )
+  if (filters.name !== null)
+    filterArray = filterByValue([...filterArray], "name", filters.name);
 
   //FILTRO EXISTENCIA DE LASTNAME
-  if (filtros.lastName !== 'Not selected')
-    filterArray = filterByValue(
-      [...filterArray],
-      'lastName',
-      '',
-      filtros.lastName === 'vacio'
-    )
+  if (filters.lastName !== null)
+    filterArray = filterByValue([...filterArray], "lastName", filters.lastName);
 
   //FILTRO EXISTENCIA DE EMAIL
-  if (filtros.email !== 'Not selected')
-    filterArray = filterByValue(
-      [...filterArray],
-      'email',
-      '',
-      filtros.email === 'vacio'
-    )
+  if (filters.email !== null)
+    filterArray = filterByValue([...filterArray], "email", filters.email);
 
   //FILTRO PAIS DE ORIGEN
-  if (filtros.country !== 'Not selected')
-    filterArray = multiFilters([...filterArray], 'country', filtros.country)
+  if (filters.country.length > 0)
+    filterArray = multiFilters([...filterArray], "country", filters.country);
+
+  //FILTRO POR CURSOS
+  if (filters.courses.length > 0)
+    filterArray = filterPerCourses([...filterArray], filters.courses);
 
   //FILTRO TTCDATE
-  if (filtros.TTCDate !== 'Not selected')
-    filterArray = multiFilters([...filterArray], 'TTCDate', filtros.TTCDate)
+  if (filters.TTCDate.length > 0)
+    filterArray = multiFilters([...filterArray], "TTCDate", filters.TTCDate);
 
   //FILTRO ESTADO (AUTENTICADO/NO)
-  if (filtros.state !== 'Not selected')
+  if (filters.state !== null)
     filterArray = filterByValue(
       [...filterArray],
-      'authenticated',
-      filtros.state === 'autenticados' ? '1' : '0'
-    )
+      "authenticated",
+      filters.state
+    );
 
   //FILTRO TELEFONO
-  if (filtros.phone !== 'Not selected')
-    filterArray = filterByValue(
-      [...filterArray],
-      'phone',
-      '',
-      filtros.phone === 'vacio'
-    )
+  if (filters.phone !== null)
+    filterArray = filterByValue([...filterArray], "phone", filters.phone);
 
   //FILTRO PAIS DE RESIDENCIA
-  if (filtros.teach_country !== 'Not selected')
+  if (filters.teach_country.length > 0)
     filterArray = multiFilters(
       [...filterArray],
-      'teach_country',
-      filtros.teach_country
-    )
+      "teach_country",
+      filters.teach_country
+    );
 
-  return filterArray
-}
+  return filterArray;
+};
 
 const filterByValue = (array, attribute, value, equal = true) => {
-  //   console.log('COUNTRIES: ', array)
-  const filter = array.filter(el => {
-    let valueAux =
-      attribute === 'authenticated' &&
-      value != 0 &&
-      el[1][attribute]?.toString().toLowerCase() === undefined
-        ? undefined
-        : value
+  const filter = array.filter((el) => {
+    const boolAttribute = !!el[1][attribute]?.toString().toLowerCase();
 
-    return equal
-      ? el[1][attribute]?.toString().toLowerCase() == valueAux
-      : el[1][attribute]?.toString().toLowerCase() != valueAux
-  })
-  return filter
-}
+    return equal ? boolAttribute == value : boolAttribute != value;
+  });
+
+  return filter;
+};
 
 const multiFilters = (array, attribute, values) => {
-  //   console.log({ array, attribute, values })
-
-  const filter = array.filter(el => {
+  const filter = array.filter((el) => {
     return (
-      typeof el[1][attribute] == 'string' &&
+      typeof el[1][attribute] == "string" &&
       values.includes(el[1][attribute]?.toLowerCase()?.trim())
-    )
-  })
-  return filter
-}
+    );
+  });
+  return filter;
+};
+
+const filterPerCourses = (array, values) => {
+  const filter = array.filter((el) => {
+    if (!el[1].course) return false;
+
+    const entries = Object.entries(el[1].course);
+
+    let coincidence = 0;
+
+    entries.forEach((entry) => {
+      if (values.includes(entry[0]) && entry[1] === "si") coincidence++;
+    });
+
+    return coincidence === values.length;
+  });
+
+  return filter;
+};
