@@ -37,7 +37,7 @@ const AddUserPage = props => {
   const [SSY, setSSY] = useState(false)
   const [Sahaj, setSahaj] = useState(false)
   const [VTP, setVTP] = useState(false)
-  const [YesPlus, setYesPlus] = useState(false)
+  const [SkyCampus, setSkyCampus] = useState(false)
   const [YES, setYES] = useState(false)
   const [PREMIUM, setPremium] = useState(false)
   const [RAS, setRAS] = useState(false)
@@ -124,7 +124,7 @@ const AddUserPage = props => {
             setSSY(val?.course?.SSY === 'si')
             setSahaj(val?.course?.Sahaj === 'si')
             setVTP(val?.course?.VTP === 'si')
-            setYesPlus(val?.course?.YesPlus === 'si')
+            setSkyCampus(val?.course?.SkyCampus === 'si')
             setYES(val?.course?.Yes === 'si')
             setRAS(val?.course?.RAS === 'si')
             setEternity(val?.course?.Eternity === 'si')
@@ -180,7 +180,7 @@ const AddUserPage = props => {
     const ssy_1 = SSY ? 'si' : 'no'
     const sahaj_1 = Sahaj ? 'si' : 'no'
     const vtp_1 = VTP ? 'si' : 'no'
-    const yesPlus_1 = YesPlus ? 'si' : 'no'
+    const skyCampus = SkyCampus ? 'si' : 'no'
     const yes = YES ? 'si' : 'no'
     const premium_1 = PREMIUM ? 'si' : 'no'
     const ras = RAS ? 'si' : 'no'
@@ -241,7 +241,7 @@ const AddUserPage = props => {
         SSY: ssy_1,
         Sahaj: sahaj_1,
         VTP: vtp_1,
-        YesPlus: yesPlus_1,
+        SkyCampus: skyCampus,
         Yes: yes,
         premium: premium_1,
         RAS: ras,
@@ -605,14 +605,14 @@ const AddUserPage = props => {
                 />
               </div>
               <div>
-                <label htmlFor='YesPlus'>Yes Plus</label>
+                <label htmlFor='SkyCampus'>SKY Campus</label>
                 <Form.Check
-                  id='YesPlus'
+                  id='SkyCampus'
                   type='checkbox'
-                  name='YesPlus'
-                  defaultChecked={YesPlus}
-                  value={YesPlus}
-                  onChange={() => setYesPlus(!YesPlus)}
+                  name='SkyCampus'
+                  defaultChecked={SkyCampus}
+                  value={SkyCampus}
+                  onChange={() => setSkyCampus(!SkyCampus)}
                 />
               </div>
               <div>
