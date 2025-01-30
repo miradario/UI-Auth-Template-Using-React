@@ -795,7 +795,7 @@ export default function Users () {
                             <th scope='col'>Comment</th>
                             <th scope='col'>P1</th>
                             <th scope='col'>SSY</th>
-                            <th scope='col'>Yes+</th>
+                            <th scope='col'>SKY campus</th>
                             <th scope='col'>Yes</th>
                             <th scope='col'>AE</th>
                             <th scope='col'>Sahaj</th>
@@ -949,7 +949,7 @@ export default function Users () {
                                 {/* CURSOS */}
                                 <td>{user[1]?.course?.HP}</td>
                                 <td>{user[1]?.course?.SSY}</td>
-                                <td>{user[1]?.course?.YesPlus}</td>
+                                <td>{user[1]?.course?.SkyCampus}</td>
                                 <td>{user[1]?.course?.Yes}</td>
                                 <td>{user[1]?.course?.AE}</td>
                                 <td>{user[1]?.course?.Sahaj}</td>
