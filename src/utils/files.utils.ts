@@ -1,7 +1,7 @@
 import { UserType } from '../types/user.types'
 import * as XLSX from 'xlsx'
 
-export class ExcelUtils {
+export class FileUtils {
   static exportDataToExcel = async (users: UserType[]) => {
     const dataWithoutId = users.map((el: UserType) => {
       const newData: any = {

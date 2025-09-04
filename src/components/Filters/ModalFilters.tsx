@@ -5,6 +5,9 @@ import { MultipleSelector } from "../commons/MultipleSelector";
 import { Selector } from "../commons/Selector";
 import { UserType } from "../../types/user.types";
 import { FiltersType } from "../../types/filters.types";
+import { ImCross } from "react-icons/im";
+import styles from "../../styles/modalFilters.module.css";
+import { Constants } from "../../constants/constants";
 
 export const ModalFilters = ({
   data,
@@ -115,6 +118,7 @@ export const ModalFilters = ({
   ) => {
     const realValue =
       value === "true" ? true : value === "false" ? false : value;
+
     setFiltersActive({
       ...filtersActive,
       filters: {
@@ -126,50 +130,14 @@ export const ModalFilters = ({
 
   return (
     <div className={`modalFilter ${visible && "visible"}`}>
-      <div
-        style={{
-          width: "60%",
-          height: "80%",
-          backgroundColor: "white",
-          padding: "20px",
-          borderRadius: "20px",
-          position: "relative",
-          //   overflowY: 'scroll'
-        }}
-      >
-        <p
+      <div className={styles.container}>
+        <ImCross
+          color={Constants.COLORS.primary}
           onClick={() => setShowFilters(false)}
-          style={{
-            color: "black",
-            cursor: "pointer",
-            padding: "20px",
-            borderRadius: "100%",
-            position: "absolute",
-            right: 0,
-            top: 0,
-            backgroundColor: "#feae00",
-            height: "40px",
-            width: "40px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            marginRight: "20px",
-            marginTop: "20px",
-            fontWeight: "bold",
-          }}
-        >
-          X
-        </p>
-        <h2
-          style={{
-            color: "black",
-            fontSize: "40px",
-            textTransform: "uppercase",
-            letterSpacing: "2px",
-          }}
-        >
-          Filtros
-        </h2>
+          className={styles.closeModal}
+          size={25}
+        />
+        <h2 className={styles.filterTitle}>Filtros</h2>
         <form
           className="formFilters"
           style={{ overflow: "auto", height: "90%" }}

@@ -86,6 +86,22 @@ export class UserRepository {
     }
   }
 
+  static sendPasswordResetEmail = async (email: string, url: string) => {
+    try {
+      await auth.sendPasswordResetEmail(email.trim(), {
+        url
+      })
+
+      return { ok: true }
+    } catch (e: any) {
+      console.error('Error sendPasswordResetEmail:', e)
+      return {
+        ok: false,
+        error: e?.message || 'Error sending password reset email'
+      }
+    }
+  }
+
   static authenticate = async (user: UserType) => {
     try {
       const keyUserAuth = await this.createAuthUser(user.email.trim())

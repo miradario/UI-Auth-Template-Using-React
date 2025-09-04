@@ -1,6 +1,5 @@
 import React, { useState, useEffect, ChangeEvent, MouseEvent } from "react";
 import Navigation from "./Navigation";
-import { auth } from "../firebase/firebase";
 import Footer from "./Footer";
 import { BsChevronRight, BsChevronLeft } from "react-icons/bs";
 import { MdDelete } from "react-icons/md";
@@ -10,7 +9,6 @@ import { Loader } from "./commons/Loader";
 import { formatDateDMA } from "../helpers/formatDateDMA";
 import { FaUserEdit, FaUserPlus } from "react-icons/fa";
 import { ImCross } from "react-icons/im";
-import styles from "../styles/users.module.css";
 import { Flex } from "./commons/Flex";
 import { Constants } from "../constants/constants";
 import { useHistory } from "react-router-dom";
@@ -21,9 +19,8 @@ import {
 } from "../types/filters.types";
 import { UserType } from "../types/user.types";
 import { UserRepository } from "../repositories/user.rps";
-import { ExcelUtils } from "../utils/files.utils";
-import { ObjectUtils } from "../utils/objects.utils";
-import { UserUtils } from "../utils/users.utils";
+import { FileUtils, ObjectUtils, UserUtils } from "../utils";
+import styles from "../styles/users.module.css";
 
 const existFilters = (filters: FiltersFieldsType) => {
   const entries = Object.entries(filters);
@@ -314,7 +311,7 @@ export default function Users() {
                   <button
                     onClick={async () => {
                       setLoadingExcel(true);
-                      await ExcelUtils.exportDataToExcel(itemsFilter);
+                      await FileUtils.exportDataToExcel(itemsFilter);
                       setLoadingExcel(false);
                     }}
                     className={styles.exportExcelBtn}
@@ -394,8 +391,8 @@ export default function Users() {
 
                     <div
                       className="orderContainer"
-                      onClick={() => setShowFilters(true)}
                       style={{
+                        position: "relative",
                         backgroundColor: existFilters(filtersActive.filters)
                           ? Constants.COLORS.primary
                           : Constants.COLORS.white,
@@ -404,12 +401,38 @@ export default function Users() {
                           : Constants.COLORS.black,
                       }}
                     >
-                      <p>
+                      <p
+                        onClick={() => setShowFilters(true)}
+                        style={{ padding: "0 15px" }}
+                      >
                         Filtro:{" "}
                         {existFilters(filtersActive.filters)
                           ? `Activo`
                           : "Inactivo"}
                       </p>
+                      {existFilters(filtersActive.filters) && (
+                        <div
+                          style={{
+                            position: "absolute",
+                            right: -10,
+                            top: -10,
+                          }}
+                        >
+                          <Flex align="center">
+                            <ImCross
+                              color={"red"}
+                              style={{ cursor: "pointer" }}
+                              size={17}
+                              onClick={() =>
+                                setFiltersActive({
+                                  ...filtersActive,
+                                  filters: Constants.INITIAL_FILTERS.filters,
+                                })
+                              }
+                            />
+                          </Flex>
+                        </div>
+                      )}
                     </div>
 
                     <ModalFilters
@@ -423,6 +446,7 @@ export default function Users() {
                     <div
                       className="orderContainer"
                       style={{
+                        padding: "0 15px",
                         backgroundColor: filtersActive.orderActive.active
                           ? Constants.COLORS.primary
                           : Constants.COLORS.white,
@@ -456,7 +480,7 @@ export default function Users() {
                                 });
                               }}
                             >
-                              Eliminar Orden: {filtersActive.orderActive.value}
+                              Clear
                             </li>
                           )}
 
@@ -475,6 +499,7 @@ export default function Users() {
 
                     <div
                       className="orderContainer"
+                      style={{ padding: "0 15px" }}
                       onClick={() => setShowPagination(!showPagination)}
                     >
                       <p>Por pagina: {perPage}</p>
@@ -488,19 +513,6 @@ export default function Users() {
                         </ul>
                       )}
                     </div>
-
-                    {existFilters(filtersActive.filters) && (
-                      <Flex align="center">
-                        <ImCross
-                          color={"red"}
-                          style={{ cursor: "pointer" }}
-                          size={25}
-                          onClick={() =>
-                            setFiltersActive(Constants.INITIAL_FILTERS)
-                          }
-                        />
-                      </Flex>
-                    )}
                   </Flex>
 
                   {/* PAGINATION */}
@@ -658,17 +670,17 @@ export default function Users() {
                                 <button
                                   className="btn btn-info"
                                   style={{ fontSize: 8 }}
-                                  onClick={() => {
-                                    auth
-                                      .sendPasswordResetEmail(user.email, {
-                                        url: "https://cursos.elartedevivir.org/app",
-                                      })
-                                      .then(function () {
-                                        alert("Password reset email sent");
-                                      })
-                                      .catch(function (error) {
-                                        alert(error.message);
-                                      });
+                                  onClick={async () => {
+                                    const res =
+                                      await UserRepository.sendPasswordResetEmail(
+                                        user.email,
+                                        "https://cursos.elartedevivir.org/app"
+                                      );
+                                    alert(
+                                      res.ok
+                                        ? "Password reset email sent"
+                                        : res.error
+                                    );
                                   }}
                                 >
                                   Reset Password

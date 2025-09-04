@@ -407,7 +407,6 @@ footer Form {
 .orderContainer {
   border: 2px solid black;
   text-align: center;
-  padding: 0 25px;
   position: relative;
   display: flex;
   justify-content: space-between;

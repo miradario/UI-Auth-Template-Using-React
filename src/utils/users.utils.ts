@@ -9,7 +9,6 @@ export class UserUtils {
     const notUpdated = array.filter(el => !el.updatedAt)
 
     let min, aux
-    // console.log(param, array.length)
     for (let i = 0; i < filterArray.length - 1; i++) {
       min = i
       for (let j = i + 1; j < filterArray.length; j++) {
@@ -21,8 +20,7 @@ export class UserUtils {
             min = j
         } else {
           if (param === 'updatedAt') {
-            if (filterArray[j][param] || 0 <= filterArray[min][param] || 0)
-              min = j
+            if (filterArray[j].updatedAt <= filterArray[min].updatedAt) min = j
           } else {
             if (
               filterArray[j][param]?.toString()?.toLowerCase().trim() <
@@ -102,12 +100,13 @@ export class UserUtils {
       )
 
     //FILTRO ESTADO (AUTENTICADO/NO)
-    if (filters.state !== null)
+    if (filters.state !== null) {
       filterArray = this.filterByValue(
         [...filterArray],
         'authenticated',
         filters.state
       )
+    }
 
     //FILTRO TELEFONO
     if (filters.phone !== null)
@@ -131,7 +130,10 @@ export class UserUtils {
     equal = true
   ) => {
     const filter = array.filter(el => {
-      const boolAttribute = !!el[attribute]?.toString().toLowerCase()
+      const boolAttribute =
+        attribute === 'authenticated' && el[attribute] === undefined
+          ? true
+          : !!el[attribute]
 
       return equal ? boolAttribute == value : boolAttribute != value
     })

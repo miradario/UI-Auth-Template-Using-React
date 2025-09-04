@@ -1,0 +1,24 @@
+.closeModal {
+  cursor: pointer;
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin-right: 20px;
+  margin-top: 20px;
+}
+
+.container {
+  width: 60%;
+  height: 80%;
+  background-color: white;
+  padding: 20px;
+  border-radius: 20px;
+  position: relative;
+}
+
+.filterTitle {
+  color: black;
+  font-size: 40px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
