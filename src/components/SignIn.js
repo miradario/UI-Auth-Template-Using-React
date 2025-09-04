@@ -4,10 +4,10 @@ import { withRouter } from 'react-router-dom'
 import { SignUpLink } from './SignUp'
 import { PasswordForgetLink } from './PasswordForget'
 import { auth } from '../firebase'
-import * as routes from '../constants/routes'
 import Footer from './Footer'
 import Navigation from './Navigation'
 import MainBanner from './Banner'
+import { Constants } from '../constants/constants'
 
 const SignInPage = ({ history }) => {
   return (
@@ -51,7 +51,7 @@ class SignInForm extends Component {
       .then(userCredential => {
         this.setState({ ...INITIAL_STATE })
         localStorage.setItem('email', userCredential.user.email)
-        history.push(routes.LANDING)
+        history.push(Constants.ROUTES.LANDING)
       })
       .catch(error => {
         alert(error.message)

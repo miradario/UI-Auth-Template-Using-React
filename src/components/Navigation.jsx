@@ -1,30 +1,30 @@
-import React from "react";
-import { Navbar, Nav, NavDropdown, Button, Image } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import * as routes from "../constants/routes";
-import SignOutButton from "./SignOut";
-import { auth } from "../firebase/firebase";
-import cardDetails from "./CardDetails";
+import React from 'react'
+import { Navbar, Nav, NavDropdown, Button, Image } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
+import SignOutButton from './SignOut'
+import { auth } from '../firebase/firebase'
+import cardDetails from './CardDetails'
+import { Constants } from '../constants/constants'
 
-function Navigation() {
+function Navigation () {
   return (
     <div
       style={{
-        position: "fixed",
-        top: "0",
-        width: "100%",
-        zIndex: "99",
+        position: 'fixed',
+        top: '0',
+        width: '100%',
+        zIndex: '99'
       }}
     >
-      <Navbar className="header" collapseOnSelect expand="lg" variant="dark">
+      <Navbar className='header' collapseOnSelect expand='lg' variant='dark'>
         <Navbar.Brand>
-          <Link to={routes.LANDING}>
-            <img src="./guru.png" alt="Branda Logo" height={"70px"} />
+          <Link to={Constants.ROUTES.LANDING}>
+            <img src='./guru.png' alt='Branda Logo' height={'70px'} />
           </Link>
         </Navbar.Brand>
-        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-        <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav className="mr-auto">
+        <Navbar.Toggle aria-controls='responsive-navbar-nav' />
+        <Navbar.Collapse id='responsive-navbar-nav'>
+          <Nav className='mr-auto'>
             {/*  <NavDropdown
               title={<Button>Features</Button>}
               id="collasible-nav-dropdown"
@@ -40,7 +40,7 @@ function Navigation() {
                 </NavDropdown.Item>
               ))}
             </NavDropdown> */}
-            {/*  <Nav.Link to={routes.ACCOUNT}>
+            {/*  <Nav.Link to={Constants.ROUTES.ACCOUNT}>
               <Button>Users</Button>
             </Nav.Link> */}
             {/* <Nav.Link href="https://code-mergers-org.netlify.app/">
@@ -50,8 +50,8 @@ function Navigation() {
           {auth.currentUser === null ? (
             <Nav>
               <Nav.Link>
-                <Link to={routes.SIGN_IN} style={{ color: "white" }}>
-                  <Button style={{ color: "white", backgroundColor: "gray" }}>
+                <Link to={Constants.ROUTES.SIGN_IN} style={{ color: 'white' }}>
+                  <Button style={{ color: 'white', backgroundColor: 'gray' }}>
                     SignIn/SignUp
                   </Button>
                 </Link>
@@ -60,12 +60,12 @@ function Navigation() {
           ) : (
             <Nav>
               <Nav.Link>
-                <Link to={routes.USERS} style={{ color: "white" }}>
+                <Link to={Constants.ROUTES.USERS} style={{ color: 'white' }}>
                   <Button
                     style={{
-                      backgroundColor: "white",
+                      backgroundColor: 'white',
 
-                      borderColor: "gray",
+                      borderColor: 'gray'
                     }}
                   >
                     Users
@@ -80,7 +80,7 @@ function Navigation() {
         </Navbar.Collapse>
       </Navbar>
     </div>
-  );
+  )
 }
 
-export default Navigation;
+export default Navigation

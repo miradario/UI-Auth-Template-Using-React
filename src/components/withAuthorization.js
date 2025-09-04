@@ -2,7 +2,7 @@ import React from 'react'
 import { withRouter } from 'react-router-dom'
 import AuthUserContext from './AuthUserContext'
 import { firebase } from '../firebase'
-import * as routes from '../constants/routes'
+import { Constants } from '../constants/constants'
 
 const withAuthorization = authCondition => Component => {
   class WithAuthorization extends React.Component {
@@ -11,7 +11,7 @@ const withAuthorization = authCondition => Component => {
         if (!authCondition(authUser)) {
           //if the authorization fails, redirects to sign in page
           localStorage.removeItem('email')
-          this.props.history.push(routes.SIGN_IN)
+          this.props.history.push(Constants.ROUTES.SIGN_IN)
         }
       })
     }

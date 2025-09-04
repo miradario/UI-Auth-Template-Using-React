@@ -20,11 +20,9 @@ import { formatDateDMA } from '../helpers/formatDateDMA'
 import { FaUserEdit, FaUserPlus } from 'react-icons/fa'
 import { ImCross } from 'react-icons/im'
 import styles from '../styles/users.module.css'
-import { TABLE_HEADER } from '../constants/table.constants'
 import { removeAccents } from '../helpers/strings.helpers'
 import { Flex } from './commons/Flex'
-import { COLORS } from '../constants/colors.constants'
-import { ORDER_OPTIONS, PER_PAGE } from '../constants/filters.constants'
+import { Constants } from '../constants/constants'
 
 const initialFiltersActive = {
   searchValue: '',
@@ -67,7 +65,7 @@ export default function Users () {
   const [showOrder, setShowOrder] = useState(false)
   const [pagination, setPagination] = useState({})
   const [perPage, setPerPage] = useState(
-    getPerPage ? Number(getPerPage) : PER_PAGE[0]
+    getPerPage ? Number(getPerPage) : Constants.FILTERS.PER_PAGE[0]
   )
   const [showPagination, setShowPagination] = useState(false)
   const [selectedToAuthenticated, setSelectedToAuthenticated] = useState([])
@@ -635,8 +633,8 @@ export default function Users () {
                       style={{
                         backgroundColor:
                           filtersActive.showInactive === 'true'
-                            ? COLORS.red
-                            : COLORS.grey
+                            ? Constants.COLORS.red
+                            : Constants.COLORS.grey
                       }}
                     >
                       {filtersActive.showInactive === 'false'
@@ -649,11 +647,11 @@ export default function Users () {
                       onClick={() => setShowFilters(true)}
                       style={{
                         backgroundColor: existFilters(filtersActive.filters)
-                          ? COLORS.primary
-                          : COLORS.white,
+                          ? Constants.COLORS.primary
+                          : Constants.COLORS.white,
                         color: existFilters(filtersActive.filters)
-                          ? COLORS.white
-                          : COLORS.black
+                          ? Constants.COLORS.white
+                          : Constants.COLORS.black
                       }}
                     >
                       <p>
@@ -676,16 +674,16 @@ export default function Users () {
                       className='orderContainer'
                       style={{
                         backgroundColor: filtersActive.orderActive.active
-                          ? COLORS.primary
-                          : COLORS.white
+                          ? Constants.COLORS.primary
+                          : Constants.COLORS.white
                       }}
                       onClick={() => setShowOrder(!showOrder)}
                     >
                       <p
                         style={{
                           color: filtersActive.orderActive.active
-                            ? COLORS.white
-                            : COLORS.black
+                            ? Constants.COLORS.white
+                            : Constants.COLORS.black
                         }}
                       >
                         {'Order by ' + filtersActive.orderActive.by ||
@@ -712,7 +710,7 @@ export default function Users () {
                             </li>
                           )}
 
-                          {ORDER_OPTIONS.map(el => (
+                          {Constants.FILTERSORDER_OPTIONS.map(el => (
                             <li
                               data-id={el.key}
                               key={el.key}
@@ -732,7 +730,7 @@ export default function Users () {
                       <p>Por pagina: {perPage}</p>
                       {showPagination && (
                         <ul className='orderOptions'>
-                          {PER_PAGE.map(el => (
+                          {Constants.FILTERS.PER_PAGE.map(el => (
                             <li key={el} onClick={() => setPerPage(el)}>
                               {el}
                             </li>
@@ -769,7 +767,7 @@ export default function Users () {
                           style={{
                             backgroundColor: 'inherit',
                             border: 'none',
-                            color: COLORS.lightGray
+                            color: Constants.COLORS.lightGray
                           }}
                         >
                           <BsChevronLeft />
@@ -791,7 +789,7 @@ export default function Users () {
                           style={{
                             backgroundColor: 'inherit',
                             border: 'none',
-                            color: COLORS.lightGray
+                            color: Constants.COLORS.lightGray
                           }}
                         >
                           <BsChevronRight />
@@ -842,7 +840,7 @@ export default function Users () {
                     >
                       <thead>
                         <tr>
-                          {TABLE_HEADER.map(el => (
+                          {Constants.TABLE.HEADER.map(el => (
                             <th key={el} scope='col'>
                               {el}
                             </th>
@@ -871,8 +869,8 @@ export default function Users () {
                                   size={25}
                                   color={
                                     user[1].inactive
-                                      ? COLORS.white
-                                      : COLORS.primary
+                                      ? Constants.COLORS.white
+                                      : Constants.COLORS.primary
                                   }
                                   onClick={() => {
                                     history.push({
@@ -949,7 +947,7 @@ export default function Users () {
                                   style={{
                                     marginTop: 5,
                                     fontSize: 22,
-                                    color: COLORS.error,
+                                    color: Constants.COLORS.error,
                                     cursor: 'pointer'
                                   }}
                                   onClick={() =>
