@@ -411,7 +411,6 @@ export default function Users () {
     else setSaveCheckboxes([...saveCheckboxes, key])
   }
 
-  console.log('saveCheckboxes: ', saveCheckboxes)
   //   const sendSelected = () => {
   //     const promises = selectedToAuthenticated.map(
   //       async el => await handleAuthenticateUser(el, false)
@@ -802,8 +801,7 @@ export default function Users () {
                   )}
                   {/* PAGINATION CLOSE */}
 
-                  {/* START TABLE WITH USERS DATA */}
-
+                  {/* SELECTED USERS ACTIONS */}
                   {saveCheckboxes.length > 0 && (
                     <div className={styles.selectedUsersContainer}>
                       <h6> Selected Teachers: {saveCheckboxes.length}</h6>
@@ -831,6 +829,8 @@ export default function Users () {
                       )}
                     </div>
                   )}
+
+                  {/* START TABLE WITH USERS DATA */}
                   <div style={{ overflow: 'auto' }}>
                     <table
                       className='table table-striped'
