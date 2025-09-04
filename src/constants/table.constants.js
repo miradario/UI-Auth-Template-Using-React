@@ -1,6 +1,6 @@
 export const TABLE_HEADER = [
-  'Action',
-  'Delete',
+  'Edit',
+  'Active',
   'Forgot Password',
   'Authenticate',
   '',

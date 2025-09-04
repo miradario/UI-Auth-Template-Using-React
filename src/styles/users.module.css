@@ -23,3 +23,10 @@
 .exportExcelBtn:hover {
   background-color: #ac8100;
 }
+
+.selectedUsersContainer {
+  margin-bottom: 10px;
+}
+
+.selectedUsersContainer > div {
+}

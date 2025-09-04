@@ -599,15 +599,15 @@ body {
 .lds-ring {
   display: inline-block !important;
   position: relative !important;
-  width: 60px !important;
-  height: 60px !important;
+  width: 60px;
+  height: 60px;
 }
 .lds-ring div {
   box-sizing: border-box !important;
   display: block !important;
   position: absolute !important;
-  width: 80px !important;
-  height: 80px !important;
+  width: 60px;
+  height: 60px;
   border: 8px solid #feae00 !important;
   border-radius: 50% !important;
   animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite !important;

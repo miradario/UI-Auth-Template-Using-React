@@ -17,7 +17,7 @@ import { filterUsers } from '../helpers/filterUsers'
 import { Loader } from './commons/Loader'
 import { useHistory } from 'react-router-dom/cjs/react-router-dom'
 import { formatDateDMA } from '../helpers/formatDateDMA'
-import { FaUserPlus } from 'react-icons/fa'
+import { FaUserEdit, FaUserPlus } from 'react-icons/fa'
 import { ImCross } from 'react-icons/im'
 import styles from '../styles/users.module.css'
 import { TABLE_HEADER } from '../constants/table.constants'
@@ -76,8 +76,12 @@ export default function Users () {
   const [showFilters, setShowFilters] = useState(false)
 
   const [loadingExcel, setLoadingExcel] = useState(false)
+  const [loadingDeleteSelected, setLoadingDeleteSelected] = useState(false)
+  const [loadingChangeActiveSelected, setLoadingChangeActiveSelected] =
+    useState(false)
 
   const [filtersActive, setFiltersActive] = useState(initialFiltersActive)
+  const [saveCheckboxes, setSaveCheckboxes] = useState([])
 
   useEffect(() => {
     let totalPages =
@@ -135,13 +139,54 @@ export default function Users () {
     )
   }
 
-  const deleteAuthUser = (id, status) => {
-    db.ref('users/' + id).update({
+  const changeActiveUser = async (id, status, reload = true) => {
+    await db.ref('users/' + id).update({
       inactive: status
     })
-    alert('User status changed')
-    window.location.reload(false)
+
+    console.log(
+      'Change status inactive of: ',
+      items.find(el => el[0] === id)[1].email,
+      ' to ',
+      status
+    )
+
+    if (reload) alert('User status changed')
+    if (reload) window.location.reload(false)
   }
+
+  const changeActiveSelectedUsers = async () => {
+    if (loadingChangeActiveSelected || saveCheckboxes.length === 0) return
+
+    const confirm = window.confirm(
+      `¿Está seguro de que desea cambiar el estado de los usuarios seleccionados (${saveCheckboxes.length})?`
+    )
+
+    if (confirm) {
+      setLoadingChangeActiveSelected(true)
+
+      const promises = saveCheckboxes.map(key => {
+        const findUser = items.find(el => el[0] === key)
+
+        return findUser
+          ? changeActiveUser(findUser[0], !findUser[1].inactive, false)
+          : Promise.resolve()
+      })
+
+      try {
+        await Promise.all(promises)
+        window.location.reload()
+      } catch (e) {
+        console.error('Error changeActiveSelectedUsers:', e)
+      } finally {
+        setLoadingChangeActiveSelected(false)
+      }
+    }
+  }
+
+  useEffect(() => {
+    setSaveCheckboxes([])
+  }, [itemsFilter])
 
   // const getData = () => {
   //   db.ref("users/").on("value", (snapshot) => {
@@ -354,19 +399,19 @@ export default function Users () {
   }
   //MARCAR INPUTS CHECKBOX
   const handleCheckbox = e => {
+    if (saveCheckboxes.length === 10) {
+      alert('You can only select up to 10 teachers at a time')
+      return
+    }
+
     const key = e.target.dataset.key
 
-    if (selectedToAuthenticated.find(el => el[0] == key)) {
-      setSelectedToAuthenticated(
-        selectedToAuthenticated.filter(el => el[0] != key)
-      )
-    } else {
-      setSelectedToAuthenticated([
-        ...selectedToAuthenticated,
-        itemsFilter.find(el => el[0] == key)
-      ])
-    }
+    if (saveCheckboxes.includes(key))
+      setSaveCheckboxes(saveCheckboxes.filter(item => item !== key))
+    else setSaveCheckboxes([...saveCheckboxes, key])
   }
+
+  console.log('saveCheckboxes: ', saveCheckboxes)
   //   const sendSelected = () => {
   //     const promises = selectedToAuthenticated.map(
   //       async el => await handleAuthenticateUser(el, false)
@@ -381,20 +426,54 @@ export default function Users () {
   //       })
   //   }
 
-  const deleteOneUser = async (key, email) => {
+  const deleteOneUser = async (key, email, reload = true) => {
     try {
-      const confirm = window.confirm(
-        '¿Seguro que desea eliminar el usuario: ' + email + '?'
-      )
+      const confirm = reload
+        ? window.confirm(
+            '¿Seguro que desea eliminar el usuario: ' + email + '?'
+          )
+        : true
+
       if (confirm) {
         const oldUserRef = db.ref('users/' + key)
         await oldUserRef.remove()
-        window.location.reload()
+
+        console.log('Usuario eliminado: ', email)
+
+        if (reload) window.location.reload()
       } else {
         window.alert('ELIMINACION CANCELADA')
       }
     } catch (e) {
-      console.log(e)
+      console.error('Error deleteOneUser:', e)
+    }
+  }
+
+  const deleteSelectedUsers = async () => {
+    if (loadingDeleteSelected || saveCheckboxes.length === 0) return
+
+    try {
+      const confirm = window.confirm(
+        `¿Está seguro de que desea eliminar a los usuarios seleccionados (${saveCheckboxes.length})?`
+      )
+      if (confirm) {
+        setLoadingDeleteSelected(true)
+
+        const promises = saveCheckboxes.map(key => {
+          const findUser = items.find(el => el[0] === key)
+
+          return findUser
+            ? deleteOneUser(findUser[0], findUser[1].email, false)
+            : Promise.resolve()
+        })
+
+        await Promise.all(promises)
+        window.location.reload()
+      }
+    } catch (error) {
+      console.error('Error in deleteSelectedUsers:', error)
+    } finally {
+      setLoadingDeleteSelected(false)
     }
   }
 
@@ -723,6 +802,35 @@ export default function Users () {
                   )}
                   {/* PAGINATION CLOSE */}
 
+                  {/* START TABLE WITH USERS DATA */}
+
+                  {saveCheckboxes.length > 0 && (
+                    <div className={styles.selectedUsersContainer}>
+                      <h6> Selected Teachers: {saveCheckboxes.length}</h6>
+                      {loadingChangeActiveSelected || loadingDeleteSelected ? (
+                        <Loader size={40} />
+                      ) : (
+                        <Flex gap={10} justify='center'>
+                          <button onClick={deleteSelectedUsers}>
+                            Eliminar
+                          </button>
+                          <button onClick={changeActiveSelectedUsers}>
+                            Activar / Desactivar
+                          </button>
+                          <button
+                            onClick={() => {
+                              const confirm = window.confirm(
+                                '¿Desea cancelar la selección de usuarios?'
+                              )
+                              if (confirm) setSaveCheckboxes([])
+                            }}
+                          >
+                            Cancelar
+                          </button>
+                        </Flex>
+                      )}
+                    </div>
+                  )}
                   <div style={{ overflow: 'auto' }}>
                     <table
                       className='table table-striped'
@@ -757,21 +865,22 @@ export default function Users () {
                                   : ''
                               }}
                             >
-                              <td>
-                                <button
-                                  className='btn btn-primary'
-                                  style={{
-                                    fontSize: '11px'
-                                  }}
+                              <td style={{ paddingLeft: 20 }}>
+                                <FaUserEdit
+                                  style={{ cursor: 'pointer' }}
+                                  size={25}
+                                  color={
+                                    user[1].inactive
+                                      ? COLORS.white
+                                      : COLORS.primary
+                                  }
                                   onClick={() => {
                                     history.push({
                                       pathname: '/add-users',
                                       state: { key: user[0] }
                                     })
                                   }}
-                                >
-                                  Edit
-                                </button>
+                                />
                               </td>
                               <td>
                                 <button
@@ -787,7 +896,7 @@ export default function Users () {
                                       : 'btn btn-success'
                                   }
                                   onClick={() => {
-                                    deleteAuthUser(user[0], !user[1].inactive)
+                                    changeActiveUser(user[0], !user[1].inactive)
                                   }}
                                 >
                                   {user[1].inactive ? 'Activate' : 'Inactive'}
@@ -826,21 +935,21 @@ export default function Users () {
                                 <td>Ya autenticado</td>
                               )}
                               <td>
-                                {user[1].authenticated === 0 && (
-                                  <input
-                                    id='checked_option'
-                                    type='checkbox'
-                                    data-key={user[0]}
-                                    //   checked={this.state.selectAll && true}
-                                    onClick={handleCheckbox}
-                                  />
-                                )}
+                                <input
+                                  style={{ marginTop: 10 }}
+                                  id='checked_option'
+                                  type='checkbox'
+                                  data-key={user[0]}
+                                  checked={saveCheckboxes.includes(user[0])}
+                                  onClick={handleCheckbox}
+                                />
                               </td>
                               <td>
                                 <MdDelete
                                   style={{
-                                    fontSize: '22px',
-                                    color: 'rgb(167, 0, 0)',
+                                    marginTop: 5,
+                                    fontSize: 22,
+                                    color: COLORS.error,
                                     cursor: 'pointer'
                                   }}
                                   onClick={() =>
