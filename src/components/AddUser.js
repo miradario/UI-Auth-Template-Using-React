@@ -5,8 +5,8 @@ import { Button, Form, InputGroup, Container } from 'react-bootstrap'
 import Navigation from './Navigation'
 import { db } from '../firebase/firebase'
 import { auth } from '../firebase/firebase'
-import { getDataUser } from '../helpers/updateKeyUser'
 import styles from '../styles/addUser.module.css'
+import { UserRepository } from '../repositories/user.rps'
 
 const AddUserPage = props => {
   const [id, setId] = useState(0)
@@ -190,7 +190,10 @@ const AddUserPage = props => {
     const ads = anxDeepSleep ? 'si' : 'no'
     const ang = angels ? 'si' : 'no'
 
-    const data = await getDataUser(userNew)
+    const res = await UserRepository.getOne(userNew)
+
+    const data = res.data
+
     let authent
     if (data) {
       if (data.authenticated === 0) {

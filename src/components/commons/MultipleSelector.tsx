@@ -8,6 +8,12 @@ export const MultipleSelector = ({
   handleSelectOption,
   title,
   placeholder = "Search...",
+}: {
+  options: string[];
+  optionsSelected: string[];
+  handleSelectOption: (option: string) => void;
+  title?: string;
+  placeholder?: string;
 }) => {
   const [showOptions, setShowOptions] = useState(false);
   const [realOptions, setRealOptions] = useState(options);

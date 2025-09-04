@@ -1,3 +1,5 @@
+import { FiltersType } from '../types/filters.types'
+
 export class Constants {
   static COLORS = {
     primary: '#feae00',
@@ -8,6 +10,27 @@ export class Constants {
     black: '#000000',
     grey: '#808080',
     lightGray: '#a5a5a5'
+  }
+
+  static INITIAL_FILTERS: FiltersType = {
+    searchValue: '',
+    orderActive: {
+      by: '',
+      value: '',
+      active: false
+    },
+    filters: {
+      name: null,
+      lastName: null,
+      email: null,
+      country: [],
+      state: null,
+      TTCDate: [],
+      courses: [],
+      phone: null,
+      teach_country: []
+    },
+    showInactive: false
   }
 
   static FILTERS = {

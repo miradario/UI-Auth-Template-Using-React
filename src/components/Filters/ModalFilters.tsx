@@ -3,6 +3,8 @@ import { useEffect } from "react";
 import { getDataSet } from "../../helpers/getDataSet";
 import { MultipleSelector } from "../commons/MultipleSelector";
 import { Selector } from "../commons/Selector";
+import { UserType } from "../../types/user.types";
+import { FiltersType } from "../../types/filters.types";
 
 export const ModalFilters = ({
   data,
@@ -10,21 +12,28 @@ export const ModalFilters = ({
   setFiltersActive,
   filtersActive,
   visible,
+}: {
+  data: UserType[];
+  setShowFilters: (show: boolean) => void;
+  setFiltersActive: (filters: FiltersType) => void;
+  filtersActive: FiltersType;
+  visible: boolean;
 }) => {
-  const [countries, setCountries] = useState([]);
-  const [TTCDate, setTTCDate] = useState([]);
-  const [teachCountries, setTeachCountries] = useState([]);
-  const [courses, setCourses] = useState([]);
+  const [countries, setCountries] = useState<string[]>([]);
+  const [TTCDate, setTTCDate] = useState<string[]>([]);
+  const [teachCountries, setTeachCountries] = useState<string[]>([]);
+  const [courses, setCourses] = useState<string[]>([]);
 
   useEffect(() => {
     const ct = getDataSet(data, "country");
     const ttc = getDataSet(data, "TTCDate");
     const teachC = getDataSet(data, "teach_country");
 
-    const crsSet = new Set();
+    const crsSet: Set<string> = new Set();
+
     data.forEach((el) => {
-      if (el[1].course) {
-        const keys = Object.keys(el[1].course);
+      if (el.course) {
+        const keys = Object.keys(el.course);
         keys.forEach((el2) => crsSet.add(el2));
       }
     });
@@ -35,7 +44,7 @@ export const ModalFilters = ({
     setTeachCountries(teachC);
   }, [data]);
 
-  const handleSelectCountry = (country) => {
+  const handleSelectCountry = (country: string) => {
     let countrySelecteds = filtersActive.filters.country;
     const exist = countrySelecteds.includes(country);
     let newCountries = [];
@@ -51,7 +60,7 @@ export const ModalFilters = ({
     });
   };
 
-  const handleSelectTeachCountry = (teach_country) => {
+  const handleSelectTeachCountry = (teach_country: string) => {
     let countrySelecteds = filtersActive.filters.teach_country;
     const exist = countrySelecteds.includes(teach_country);
     let newCountries = [];
@@ -68,7 +77,7 @@ export const ModalFilters = ({
     });
   };
 
-  const handleSelectTTCDate = (TTCDate) => {
+  const handleSelectTTCDate = (TTCDate: string) => {
     let ttcSelecteds = filtersActive.filters.TTCDate;
     const exist = ttcSelecteds.includes(TTCDate);
     let newTTC = [];
@@ -84,7 +93,7 @@ export const ModalFilters = ({
     });
   };
 
-  const handleSelectCourses = (course) => {
+  const handleSelectCourses = (course: string) => {
     let coursesSelected = filtersActive.filters.courses;
     const exist = coursesSelected.includes(course);
     let newCourse = [];
@@ -100,7 +109,10 @@ export const ModalFilters = ({
     });
   };
 
-  const handleSelectOption = (field, value) => {
+  const handleSelectOption = (
+    field: string,
+    value: string | boolean | null
+  ) => {
     const realValue =
       value === "true" ? true : value === "false" ? false : value;
     setFiltersActive({
