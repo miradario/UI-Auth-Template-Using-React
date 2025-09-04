@@ -1,0 +1,25 @@
+.addIcon {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #feae00;
+}
+
+.addIcon:hover {
+  color: #c09000;
+}
+
+.exportExcelBtn {
+  background-color: #d39e00;
+  color: white;
+  border: none;
+  outline: 2px solid black;
+  margin-top: 10px;
+  margin-right: 15px;
+  padding: 2px 15px;
+  transition: all 0.3s ease;
+  font-weight: bold;
+}
+
+.exportExcelBtn:hover {
+  background-color: #ac8100;
+}

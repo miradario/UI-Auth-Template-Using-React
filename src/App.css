@@ -408,7 +408,6 @@ footer Form {
   border: 2px solid black;
   text-align: center;
   padding: 0 25px;
-  margin-left: 20px;
   position: relative;
   display: flex;
   justify-content: space-between;
@@ -468,7 +467,7 @@ footer Form {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 40px 0 20px 0;
+  margin: 20px 0 20px 0;
 }
 
 .containerBtnPage > * {
