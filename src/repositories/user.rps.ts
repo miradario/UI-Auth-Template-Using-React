@@ -49,6 +49,7 @@ export class UserRepository {
 
   static updateOne = async (id: string, data: Omit<UserType, 'userKey'>) => {
     try {
+      if (!id) throw new Error('No id provided for updateOne')
       await db.ref('users/' + id).update(data)
 
       return { ok: true }
