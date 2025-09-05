@@ -26,4 +26,45 @@ export class FileUtils {
 
     XLSX.writeFile(libro, 'Users_TeachersAOL.xlsx')
   }
+
+  static exportDataToJSON = (users: UserType[]) => {
+    try {
+      const generateObject: any = {}
+
+      users.forEach(user => {
+        const { userKey, ...userData } = user
+        generateObject[userKey] = userData
+      })
+
+      const quantityUsers = Object.keys(generateObject).length
+
+      const json = JSON.stringify(
+        {
+          quantity: quantityUsers,
+          users: generateObject
+        },
+        null,
+        2
+      )
+      const blob = new Blob([json], { type: 'application/json' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      const dateTodayMMDDYYYY = new Date()
+        .toLocaleDateString('en-GB')
+        .replace(/\//g, '-')
+
+      a.href = url
+      a.download = `Users_TeachersAOL_${dateTodayMMDDYYYY}.json`
+
+      document.body.appendChild(a)
+
+      a.click()
+
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+    } catch (error) {
+      console.error('Error exporting data to JSON:', error)
+      alert('An error occurred while exporting data to JSON.')
+    }
+  }
 }

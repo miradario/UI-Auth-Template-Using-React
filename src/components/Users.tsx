@@ -208,12 +208,9 @@ export default function Users() {
     );
 
     if (confirm) {
-      const res = await UserRepository.deleteOne(key, email);
+      const res = await UserRepository.deleteOne(key);
 
-      if (res.ok) {
-        console.log("Usuario eliminado: ", email);
-        window.location.reload();
-      }
+      if (res.ok) window.location.reload();
     } else {
       window.alert("ELIMINACION CANCELADA");
     }
@@ -242,13 +239,6 @@ export default function Users() {
 
   const changeActiveStatus = async (id: string, status: boolean) => {
     const res = await UserRepository.changeActiveStatus(id, status);
-
-    console.log(
-      "Change status inactive of: ",
-      items.find((el) => el.userKey === id)?.email,
-      " to ",
-      status
-    );
 
     if (res.ok) {
       alert("User status changed");
@@ -307,7 +297,15 @@ export default function Users() {
             <>
               <div style={{ width: "100%" }}>
                 {/* EXCEL BUTTON */}
-                <div style={{ textAlign: "right" }}>
+                <Flex justify="space-between" style={{ margin: 10 }}>
+                  <button
+                    onClick={() => {
+                      FileUtils.exportDataToJSON(items);
+                    }}
+                    className={styles.exportExcelBtn}
+                  >
+                    {"EXPORT BACKUP"}
+                  </button>
                   <button
                     onClick={async () => {
                       setLoadingExcel(true);
@@ -318,7 +316,7 @@ export default function Users() {
                   >
                     {!loadingExcel ? "EXPORT EXCEL" : "Loading..."}
                   </button>
-                </div>
+                </Flex>
 
                 <div style={{ width: "90%", margin: "0 auto" }}>
                   {/* TITLE AND ADD USER */}
@@ -693,7 +691,10 @@ export default function Users() {
                                       setIsLoaded(true);
 
                                       const res =
-                                        await UserRepository.authenticate(user);
+                                        await UserRepository.authenticate(
+                                          user,
+                                          "a1b2c3e4d5"
+                                        );
 
                                       if (res.ok) window.location.reload();
 

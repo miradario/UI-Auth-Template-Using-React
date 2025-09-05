@@ -1,4 +1,5 @@
 import { FiltersType } from '../types/filters.types'
+import { CourseType, SKYType, UserDataAddType } from '../types/user.types'
 
 export class Constants {
   static COLORS = {
@@ -103,4 +104,78 @@ export class Constants {
     ADDUSERS: '/add-users',
     PASSWORD_FORGET: '/pw-forget'
   }
+
+  static INITIAL_COURSES_ADD_USER: CourseType<boolean> = {
+    AE: false,
+    DSN: false,
+    HP: false,
+    Parte2: false,
+    Parte2SSY: false,
+    Prision: false,
+    SSY: false,
+    Sahaj: false,
+    SkyCampus: false,
+    TTC: false,
+    VTP: false,
+    Yes: false,
+    premium: false,
+    RAS: false,
+    Eternity: false,
+    Intuition: false,
+    Scanning: false,
+    Angels: false,
+    AnxDeepSleep: false
+  }
+
+  static INITIAL_SKY_ADD_USER: SKYType = {
+    ae: 0,
+    long: 0,
+    short: 0
+  }
+
+  static INITIAL_DATA_ADD_USER: UserDataAddType = {
+    name: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    placeTTC: '',
+    sign: 0,
+    teach_country: '',
+    TTCDate: '',
+    authenticated: 0,
+    comment: '',
+    country: '',
+    inactive: false,
+    code: '',
+    course: this.INITIAL_COURSES_ADD_USER,
+    SKY: this.INITIAL_SKY_ADD_USER
+  }
+
+  static SKY_OPTIONS = [
+    { key: 'ae', label: 'AE' },
+    { key: 'long', label: 'Long' },
+    { key: 'short', label: 'Short' }
+  ]
+
+  static COURSE_OPTIONS = [
+    { key: 'HP', label: 'Parte 1' },
+    { key: 'premium', label: 'Premium' },
+    { key: 'SSY', label: 'SSY' },
+    { key: 'SkyCampus', label: 'SKY Campus' },
+    { key: 'Yes', label: 'YES' },
+    { key: 'AE', label: 'AE' },
+    { key: 'Sahaj', label: 'Sahaj' },
+    { key: 'Parte2', label: 'Parte 2' },
+    { key: 'Parte2SSY', label: 'Parte2 SSY' },
+    { key: 'Prision', label: 'Prision' },
+    { key: 'DSN', label: 'DSN' },
+    { key: 'VTP', label: 'VTP' },
+    { key: 'TTC', label: 'TTC' },
+    { key: 'RAS', label: 'RAS' },
+    { key: 'Eternity', label: 'Eternity' },
+    { key: 'Intuition', label: 'Intuition' },
+    { key: 'Scanning', label: 'Scanning' },
+    { key: 'Angels', label: 'Angels' },
+    { key: 'AnxDeepSleep', label: 'Ansiedad y sueño profundo' }
+  ]
 }

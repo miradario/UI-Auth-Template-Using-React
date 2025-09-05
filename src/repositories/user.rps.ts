@@ -22,7 +22,9 @@ export class UserRepository {
     }
   }
 
-  static getOne = async (id: string) => {
+  static getOne = async (
+    id: string
+  ): Promise<{ ok: boolean; data?: UserType; error?: string }> => {
     try {
       // Obtén la referencia al nodo utilizando la clave
       const nodeRef = db.ref('users/' + id)
@@ -45,11 +47,25 @@ export class UserRepository {
     }
   }
 
-  static deleteOne = async (key: string, email: string) => {
+  static updateOne = async (id: string, data: Omit<UserType, 'userKey'>) => {
     try {
-      const oldUserRef = db.ref('users/' + key)
+      await db.ref('users/' + id).update(data)
 
+      return { ok: true }
+    } catch (e: any) {
+      console.error('Error updateOneUser:', e)
+      return { ok: false, error: e?.message || 'Error updating user' }
+    }
+  }
+
+  static deleteOne = async (key: string) => {
+    try {
+      if (!key) throw new Error('No key provided for deletion')
+
+      const oldUserRef = db.ref('users/' + key)
       await oldUserRef.remove()
+
+      console.log('Usuario eliminado con key: ', key)
 
       return { ok: true }
     } catch (e: any) {
@@ -60,9 +76,7 @@ export class UserRepository {
 
   static deleteSelected = async (users: UserType[]) => {
     try {
-      const promises = users.map(user =>
-        this.deleteOne(user.userKey, user.email)
-      )
+      const promises = users.map(user => this.deleteOne(user.userKey))
 
       await Promise.all(promises)
 
@@ -75,9 +89,13 @@ export class UserRepository {
 
   static changeActiveStatus = async (id: string, status: boolean) => {
     try {
+      if (!id) throw new Error('No id provided for changeActiveStatus')
+
       await db.ref('users/' + id).update({
         inactive: status
       })
+
+      console.log('Estado de usuario cambiado a: ', status)
 
       return { ok: true }
     } catch (e: any) {
@@ -86,11 +104,12 @@ export class UserRepository {
     }
   }
 
-  static sendPasswordResetEmail = async (email: string, url: string) => {
+  static sendPasswordResetEmail = async (email: string, url: string = '') => {
     try {
-      await auth.sendPasswordResetEmail(email.trim(), {
-        url
-      })
+      const options = url ? { url } : undefined
+      await auth.sendPasswordResetEmail(email.trim(), options)
+
+      console.log('Password reset email sent to: ', email)
 
       return { ok: true }
     } catch (e: any) {
@@ -102,9 +121,9 @@ export class UserRepository {
     }
   }
 
-  static authenticate = async (user: UserType) => {
+  static authenticate = async (user: UserType, password: string) => {
     try {
-      const keyUserAuth = await this.createAuthUser(user.email.trim())
+      const keyUserAuth = await this.createAuthUser(user.email.trim(), password)
 
       const res = await (keyUserAuth
         ? this.updateKey(user.userKey, keyUserAuth)
@@ -160,9 +179,9 @@ export class UserRepository {
     }
   }
 
-  private static createAuthUser = async (email: string) => {
+  static createAuthUser = async (email: string, password: string) => {
     const userNew = await auth
-      .createUserWithEmailAndPassword(email, 'a1b2c3d4e5') //CREA EL USUARIO DE LA AUTENTICACION
+      .createUserWithEmailAndPassword(email, password) //CREA EL USUARIO DE LA AUTENTICACION
       .then(authUser => {
         if (!authUser?.user) return null
         const userNew = authUser.user.uid

@@ -290,7 +290,7 @@ const AddUserPage = props => {
         const oldUserRef = db.ref('users/' + userNew)
         await oldUserRef.remove()
 
-        if (authent == 1) auth.sendPasswordResetEmail(email)
+        if (authent === 1) auth.sendPasswordResetEmail(email)
 
         if (id) {
           alert('User updated successfully')
@@ -303,8 +303,6 @@ const AddUserPage = props => {
         props.history.push({
           pathname: '/users'
         })
-
-        if (authent == 1) await auth.sendPasswordResetEmail(email)
       } catch (error) {
         //error callback
         console.log(error)

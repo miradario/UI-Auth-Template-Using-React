@@ -1,29 +1,30 @@
-export type CourseType = {
-  AE: 'si' | 'no'
-  DSN: 'si' | 'no'
-  HP: 'si' | 'no'
-  Parte2: 'si' | 'no'
-  Parte2SSY: 'si' | 'no'
-  Prision: 'si' | 'no'
-  SSY: 'si' | 'no'
-  Sahaj: 'si' | 'no'
-  SkyCampus: 'si' | 'no'
-  TTC: 'si' | 'no'
-  VTP: 'si' | 'no'
-  Yes: 'si' | 'no'
-  premium: 'si' | 'no'
-  RAS: 'si' | 'no'
-  Eternity: 'si' | 'no'
-  Intuition: 'si' | 'no'
-  Scanning: 'si' | 'no'
-  Angels: 'si' | 'no'
-  AnxDeepSleep: 'si' | 'no'
-}
+export type ValidRecordCourse =
+  | 'AE'
+  | 'DSN'
+  | 'HP'
+  | 'Parte2'
+  | 'Parte2SSY'
+  | 'Prision'
+  | 'SSY'
+  | 'Sahaj'
+  | 'SkyCampus'
+  | 'TTC'
+  | 'VTP'
+  | 'Yes'
+  | 'premium'
+  | 'RAS'
+  | 'Eternity'
+  | 'Intuition'
+  | 'Scanning'
+  | 'Angels'
+  | 'AnxDeepSleep'
+
+export type CourseType<T> = Record<ValidRecordCourse, T>
 
 export type SKYType = {
-  ae: number
-  long: number
-  short: number
+  ae: 0 | 1
+  long: 0 | 1
+  short: 0 | 1
 }
 
 export type UserType = {
@@ -34,14 +35,32 @@ export type UserType = {
   name: string
   phone: string
   placeTTC: string
-  sign: number
+  sign: 0 | 1
   teach_country: string
   userKey: string
   TTCDate: string
-  authenticated: number
+  authenticated: 0 | 1
   comment: string
   country: string
-  course: CourseType
+  course: CourseType<'si' | 'no'>
   updatedAt: number
   code: string
+}
+
+export type UserDataAddType = {
+  name: string
+  lastName: string
+  email: string
+  phone: string
+  placeTTC: string
+  sign: 0 | 1
+  teach_country: string
+  TTCDate: string
+  authenticated: 0 | 1
+  comment: string
+  country: string
+  inactive: boolean
+  code: string
+  SKY: SKYType
+  course: CourseType<boolean>
 }
