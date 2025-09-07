@@ -1,5 +1,10 @@
 import { FiltersType } from '../types/filters.types'
-import { CourseType, SKYType, UserDataAddType } from '../types/user.types'
+import {
+  CourseType,
+  SKYType,
+  UserDataAddType,
+  ValidRecordCourse
+} from '../types/user.types'
 
 export class Constants {
   static COLORS = {
@@ -48,6 +53,28 @@ export class Constants {
     PER_PAGE: [25, 50, 100]
   }
 
+  static COURSE_OPTIONS: { key: ValidRecordCourse; label: string }[] = [
+    { key: 'HP', label: 'Parte 1' },
+    { key: 'premium', label: 'Premium' },
+    { key: 'SSY', label: 'SSY' },
+    { key: 'SkyCampus', label: 'SKY Campus' },
+    { key: 'Yes', label: 'YES' },
+    { key: 'AE', label: 'AE' },
+    { key: 'Sahaj', label: 'Sahaj' },
+    { key: 'Parte2', label: 'Parte 2' },
+    { key: 'Parte2SSY', label: 'Parte2 SSY' },
+    { key: 'Prision', label: 'Prision' },
+    { key: 'DSN', label: 'DSN' },
+    { key: 'VTP', label: 'VTP' },
+    { key: 'TTC', label: 'TTC' },
+    { key: 'RAS', label: 'RAS' },
+    { key: 'Eternity', label: 'Eternity' },
+    { key: 'Intuition', label: 'Intuition' },
+    { key: 'Scanning', label: 'Scanning' },
+    { key: 'Angels', label: 'Angels' },
+    { key: 'AnxDeepSleep', label: 'Ansiedad y sueño profundo' }
+  ]
+
   static TABLE = {
     HEADER: [
       'Edit',
@@ -71,25 +98,7 @@ export class Constants {
       'TTC Place',
       'Sign Contract',
       'Comment',
-      'P1',
-      'SSY',
-      'SKY campus',
-      'Yes',
-      'AE',
-      'Sahaj',
-      'P2',
-      'SSY2',
-      'Prision',
-      'DSN',
-      'VTP',
-      'TTC',
-      'Premium',
-      'RAS',
-      'Eternity',
-      'Intuition',
-      'Scanning',
-      'Angels',
-      'Ansiedad y sueño profundo'
+      ...this.COURSE_OPTIONS.map(course => course.label)
     ]
   }
 
@@ -155,27 +164,5 @@ export class Constants {
     { key: 'ae', label: 'AE' },
     { key: 'long', label: 'Long' },
     { key: 'short', label: 'Short' }
-  ]
-
-  static COURSE_OPTIONS = [
-    { key: 'HP', label: 'Parte 1' },
-    { key: 'premium', label: 'Premium' },
-    { key: 'SSY', label: 'SSY' },
-    { key: 'SkyCampus', label: 'SKY Campus' },
-    { key: 'Yes', label: 'YES' },
-    { key: 'AE', label: 'AE' },
-    { key: 'Sahaj', label: 'Sahaj' },
-    { key: 'Parte2', label: 'Parte 2' },
-    { key: 'Parte2SSY', label: 'Parte2 SSY' },
-    { key: 'Prision', label: 'Prision' },
-    { key: 'DSN', label: 'DSN' },
-    { key: 'VTP', label: 'VTP' },
-    { key: 'TTC', label: 'TTC' },
-    { key: 'RAS', label: 'RAS' },
-    { key: 'Eternity', label: 'Eternity' },
-    { key: 'Intuition', label: 'Intuition' },
-    { key: 'Scanning', label: 'Scanning' },
-    { key: 'Angels', label: 'Angels' },
-    { key: 'AnxDeepSleep', label: 'Ansiedad y sueño profundo' }
   ]
 }

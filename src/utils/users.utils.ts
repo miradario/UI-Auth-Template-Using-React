@@ -160,14 +160,11 @@ export class UserUtils {
       if (!el.course) return false
 
       const entries = Object.entries(el.course)
+      const filterEntries = entries.filter(
+        entry => values.includes(entry[0]) && entry[1] === 'si'
+      )
 
-      let coincidence = 0
-
-      entries.forEach(entry => {
-        if (values.includes(entry[0]) && entry[1] === 'si') coincidence++
-      })
-
-      return coincidence === values.length
+      return filterEntries.length === values.length
     })
 
     return filter

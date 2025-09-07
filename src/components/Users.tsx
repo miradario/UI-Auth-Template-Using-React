@@ -740,33 +740,60 @@ export default function Users() {
                               <td>{user?.country}</td>
                               <td>{user.teach_country}</td>
                               <td>{user.code}</td>
-                              <td>{user?.SKY?.long === 1 ? "On" : "Off"}</td>
-                              <td>{user?.SKY?.short === 1 ? "On" : "Off"}</td>
+                              <td
+                                style={{
+                                  color: colorBoolean(user?.SKY?.long === 1),
+                                  fontSize: 14,
+                                  fontWeight: "bold",
+                                }}
+                              >
+                                {user?.SKY?.long === 1 ? "On" : "Off"}
+                              </td>
+                              <td
+                                style={{
+                                  color: colorBoolean(user?.SKY?.short === 1),
+                                  fontSize: 14,
+                                  fontWeight: "bold",
+                                }}
+                              >
+                                {user?.SKY?.short === 1 ? "On" : "Off"}
+                              </td>
                               <td>{user.inactive ? "Disable" : "Enable"}</td>
                               <td>{user.TTCDate}</td>
                               <td>{user.placeTTC}</td>
-                              <td>{user.sign === 1 ? "Yes" : "No"}</td>
-                              <td>{user.comment}</td>
+                              <td
+                                style={{
+                                  color: colorBoolean(user.sign === 1),
+                                  fontSize: 14,
+                                  fontWeight: "bold",
+                                }}
+                              >
+                                {user.sign === 1 ? "Yes" : "No"}
+                              </td>
+                              <td>{user.comment || "-"}</td>
                               {/* CURSOS */}
-                              <td>{user?.course?.HP}</td>
-                              <td>{user?.course?.SSY}</td>
-                              <td>{user?.course?.SkyCampus}</td>
-                              <td>{user?.course?.Yes}</td>
-                              <td>{user?.course?.AE}</td>
-                              <td>{user?.course?.Sahaj}</td>
-                              <td>{user?.course?.Parte2}</td>
-                              <td>{user?.course?.Parte2SSY}</td>
-                              <td>{user?.course?.Prision}</td>
-                              <td>{user?.course?.DSN}</td>
-                              <td>{user?.course?.VTP}</td>
-                              <td>{user?.course?.TTC}</td>
-                              <td>{user?.course?.premium}</td>
-                              <td>{user?.course?.RAS}</td>
-                              <td>{user?.course?.Eternity}</td>
-                              <td>{user?.course?.Intuition}</td>
-                              <td>{user?.course?.Scanning}</td>
-                              <td>{user?.course?.Angels}</td>
-                              <td>{user?.course?.AnxDeepSleep}</td>
+                              {Constants.COURSE_OPTIONS.map((el) => {
+                                const value = user.course
+                                  ? user?.course[
+                                      el.key as keyof typeof user.course
+                                    ] || "no"
+                                  : "no";
+
+                                return (
+                                  <td
+                                    key={el.key}
+                                    style={{
+                                      fontSize: 14,
+                                      fontWeight: "bold",
+                                      color: colorBoolean(
+                                        value?.toLowerCase() === "si"
+                                      ),
+                                    }}
+                                  >
+                                    {value}
+                                  </td>
+                                );
+                              })}
                             </tr>
                           ))}
                       </tbody>
@@ -850,3 +877,7 @@ export default function Users() {
     </div>
   );
 }
+
+const colorBoolean = (value: boolean) => {
+  return value ? Constants.COLORS.green : Constants.COLORS.red;
+};

@@ -8,6 +8,7 @@ import { FiltersType } from "../../types/filters.types";
 import { ImCross } from "react-icons/im";
 import styles from "../../styles/modalFilters.module.css";
 import { Constants } from "../../constants/constants";
+import { OptionSelectType } from "../../types/global.types";
 
 export const ModalFilters = ({
   data,
@@ -22,10 +23,10 @@ export const ModalFilters = ({
   filtersActive: FiltersType;
   visible: boolean;
 }) => {
-  const [countries, setCountries] = useState<string[]>([]);
-  const [TTCDate, setTTCDate] = useState<string[]>([]);
-  const [teachCountries, setTeachCountries] = useState<string[]>([]);
-  const [courses, setCourses] = useState<string[]>([]);
+  const [countries, setCountries] = useState<OptionSelectType[]>([]);
+  const [TTCDate, setTTCDate] = useState<OptionSelectType[]>([]);
+  const [teachCountries, setTeachCountries] = useState<OptionSelectType[]>([]);
+  const [courses, setCourses] = useState<OptionSelectType[]>([]);
 
   useEffect(() => {
     const ct = getDataSet(data, "country");
@@ -41,18 +42,24 @@ export const ModalFilters = ({
       }
     });
 
-    setCourses(Array.from(crsSet));
-    setCountries(ct);
-    setTTCDate(ttc);
-    setTeachCountries(teachC);
+    setCourses(
+      Array.from(crsSet).map((el) => ({
+        key: el,
+        label: Constants.COURSE_OPTIONS.find((c) => c.key === el)?.label || el,
+      }))
+    );
+    setCountries(ct.map((el) => ({ key: el, label: el })));
+    setTTCDate(ttc.map((el) => ({ key: el, label: el })));
+    setTeachCountries(teachC.map((el) => ({ key: el, label: el })));
   }, [data]);
 
-  const handleSelectCountry = (country: string) => {
+  const handleSelectCountry = (country: OptionSelectType) => {
     let countrySelecteds = filtersActive.filters.country;
-    const exist = countrySelecteds.includes(country);
+    const exist = countrySelecteds.includes(country.key);
     let newCountries = [];
-    if (exist) newCountries = countrySelecteds.filter((el) => el !== country);
-    else newCountries = [...countrySelecteds, country];
+    if (exist)
+      newCountries = countrySelecteds.filter((el) => el !== country.key);
+    else newCountries = [...countrySelecteds, country.key];
 
     setFiltersActive({
       ...filtersActive,
@@ -63,13 +70,13 @@ export const ModalFilters = ({
     });
   };
 
-  const handleSelectTeachCountry = (teach_country: string) => {
+  const handleSelectTeachCountry = (teach_country: OptionSelectType) => {
     let countrySelecteds = filtersActive.filters.teach_country;
-    const exist = countrySelecteds.includes(teach_country);
+    const exist = countrySelecteds.includes(teach_country.key);
     let newCountries = [];
     if (exist)
-      newCountries = countrySelecteds.filter((el) => el !== teach_country);
-    else newCountries = [...countrySelecteds, teach_country];
+      newCountries = countrySelecteds.filter((el) => el !== teach_country.key);
+    else newCountries = [...countrySelecteds, teach_country.key];
 
     setFiltersActive({
       ...filtersActive,
@@ -80,12 +87,12 @@ export const ModalFilters = ({
     });
   };
 
-  const handleSelectTTCDate = (TTCDate: string) => {
+  const handleSelectTTCDate = (TTCDate: OptionSelectType) => {
     let ttcSelecteds = filtersActive.filters.TTCDate;
-    const exist = ttcSelecteds.includes(TTCDate);
+    const exist = ttcSelecteds.includes(TTCDate.key);
     let newTTC = [];
-    if (exist) newTTC = ttcSelecteds.filter((el) => el !== TTCDate);
-    else newTTC = [...ttcSelecteds, TTCDate];
+    if (exist) newTTC = ttcSelecteds.filter((el) => el !== TTCDate.key);
+    else newTTC = [...ttcSelecteds, TTCDate.key];
 
     setFiltersActive({
       ...filtersActive,
@@ -96,12 +103,12 @@ export const ModalFilters = ({
     });
   };
 
-  const handleSelectCourses = (course: string) => {
+  const handleSelectCourses = (course: OptionSelectType) => {
     let coursesSelected = filtersActive.filters.courses;
-    const exist = coursesSelected.includes(course);
+    const exist = coursesSelected.includes(course.key);
     let newCourse = [];
-    if (exist) newCourse = coursesSelected.filter((el) => el !== course);
-    else newCourse = [...coursesSelected, course];
+    if (exist) newCourse = coursesSelected.filter((el) => el !== course.key);
+    else newCourse = [...coursesSelected, course.key];
 
     setFiltersActive({
       ...filtersActive,
@@ -144,28 +151,41 @@ export const ModalFilters = ({
         >
           <MultipleSelector
             options={countries}
-            optionsSelected={filtersActive.filters.country}
+            optionsSelected={filtersActive.filters.country.map((el) => ({
+              key: el,
+              label: el,
+            }))}
             handleSelectOption={handleSelectCountry}
             title="Country"
             placeholder="Search country..."
           />
           <MultipleSelector
             options={teachCountries}
-            optionsSelected={filtersActive.filters.teach_country}
+            optionsSelected={filtersActive.filters.teach_country.map((el) => ({
+              key: el,
+              label: el,
+            }))}
             handleSelectOption={handleSelectTeachCountry}
             title="Teacher Country"
             placeholder="Search teacher country..."
           />
           <MultipleSelector
             options={TTCDate}
-            optionsSelected={filtersActive.filters.TTCDate}
+            optionsSelected={filtersActive.filters.TTCDate.map((el) => ({
+              key: el,
+              label: el,
+            }))}
             handleSelectOption={handleSelectTTCDate}
             title="TTC Date"
             placeholder="Search TTC Date..."
           />
           <MultipleSelector
             options={courses}
-            optionsSelected={filtersActive.filters.courses}
+            optionsSelected={filtersActive.filters.courses.map((el) => ({
+              key: el,
+              label:
+                Constants.COURSE_OPTIONS.find((c) => c.key === el)?.label || el,
+            }))}
             handleSelectOption={handleSelectCourses}
             title="Courses"
             placeholder="Search courses..."

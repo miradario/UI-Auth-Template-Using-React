@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "../../styles/multipleSelector.module.css";
 import { FaCheck } from "react-icons/fa";
+import { OptionSelectType } from "../../types/global.types";
 
 export const MultipleSelector = ({
   options,
@@ -9,9 +10,9 @@ export const MultipleSelector = ({
   title,
   placeholder = "Search...",
 }: {
-  options: string[];
-  optionsSelected: string[];
-  handleSelectOption: (option: string) => void;
+  options: OptionSelectType[];
+  optionsSelected: OptionSelectType[];
+  handleSelectOption: (option: OptionSelectType) => void;
   title?: string;
   placeholder?: string;
 }) => {
@@ -21,11 +22,17 @@ export const MultipleSelector = ({
 
   useEffect(() => {
     const opt = search
-      ? options.filter((el) => el.toLowerCase().includes(search.toLowerCase()))
+      ? options.filter((el) =>
+          el.label.toLowerCase().includes(search.toLowerCase())
+        )
       : options;
 
-    const selecteds = opt.filter((el) => optionsSelected.includes(el));
-    const notSelecteds = opt.filter((el) => !optionsSelected.includes(el));
+    const selecteds = opt.filter((el) =>
+      optionsSelected.some((sel) => sel.key === el.key)
+    );
+    const notSelecteds = opt.filter(
+      (el) => !optionsSelected.some((sel) => sel.key === el.key)
+    );
 
     setRealOptions([...selecteds, ...notSelecteds]);
   }, [options, optionsSelected, search]);
@@ -61,24 +68,30 @@ export const MultipleSelector = ({
           <ul className={styles.list}>
             {realOptions.map((el) => (
               <li
-                key={el}
+                key={el.key}
                 style={{
-                  backgroundColor: optionsSelected.includes(el)
+                  backgroundColor: optionsSelected.some(
+                    (sel) => sel.key === el.key
+                  )
                     ? "orange"
                     : "inherit",
-                  color: optionsSelected.includes(el) ? "white" : "black",
+                  color: optionsSelected.some((sel) => sel.key === el.key)
+                    ? "white"
+                    : "black",
                 }}
               >
-                <span>{el}</span>
+                <span>{el.label}</span>
                 <div
                   onClick={() => handleSelectOption(el)}
                   style={{
-                    backgroundColor: optionsSelected.includes(el)
+                    backgroundColor: optionsSelected.some(
+                      (sel) => sel.key === el.key
+                    )
                       ? "white"
                       : "inherit",
                   }}
                 >
-                  {optionsSelected.includes(el) && (
+                  {optionsSelected.some((sel) => sel.key === el.key) && (
                     <FaCheck style={{ color: "black", fontSize: 17 }} />
                   )}
                 </div>
