@@ -514,7 +514,7 @@ export default function Users() {
                   </Flex>
 
                   {/* PAGINATION */}
-                  {items.length > 0 && (
+                  {itemsFilter.length > 0 && (
                     <div className="containerBtnPage">
                       {pagination.page !== 0 ? (
                         <div
@@ -802,8 +802,22 @@ export default function Users() {
                 </div>
               </div>
 
+              {itemsFilter.length === 0 && (
+                <div
+                  style={{
+                    fontSize: 20,
+                    textAlign: "center",
+                    marginTop: 20,
+                    fontWeight: "bold",
+                    color: Constants.COLORS.error,
+                  }}
+                >
+                  <p>No users found!</p>
+                </div>
+              )}
+
               {/* PAGINATION */}
-              {items.length > 0 && (
+              {itemsFilter.length > 0 && (
                 <div className="containerBtnPage">
                   {pagination.page !== 0 ? (
                     <div
