@@ -747,7 +747,7 @@ export default function Users() {
                                   fontWeight: "bold",
                                 }}
                               >
-                                {user?.SKY?.long === 1 ? "On" : "Off"}
+                                {user?.SKY?.long === 1 ? "ON" : "OFF"}
                               </td>
                               <td
                                 style={{
@@ -756,9 +756,17 @@ export default function Users() {
                                   fontWeight: "bold",
                                 }}
                               >
-                                {user?.SKY?.short === 1 ? "On" : "Off"}
+                                {user?.SKY?.short === 1 ? "ON" : "OFF"}
                               </td>
-                              <td>{user.inactive ? "Disable" : "Enable"}</td>
+                              <td
+                                style={{
+                                  color: colorBoolean(!user.inactive),
+                                  fontSize: 12,
+                                  fontWeight: "bold",
+                                }}
+                              >
+                                {user.inactive ? "DISABLE" : "ENABLE"}
+                              </td>
                               <td>{user.TTCDate}</td>
                               <td>{user.placeTTC}</td>
                               <td
@@ -768,7 +776,7 @@ export default function Users() {
                                   fontWeight: "bold",
                                 }}
                               >
-                                {user.sign === 1 ? "Yes" : "No"}
+                                {user.sign === 1 ? "SI" : "NO"}
                               </td>
                               <td>{user.comment || "-"}</td>
                               {/* CURSOS */}
@@ -776,8 +784,8 @@ export default function Users() {
                                 const value = user.course
                                   ? user?.course[
                                       el.key as keyof typeof user.course
-                                    ] || "no"
-                                  : "no";
+                                    ]?.toUpperCase() || "NO"
+                                  : "NO";
 
                                 return (
                                   <td
@@ -785,9 +793,7 @@ export default function Users() {
                                     style={{
                                       fontSize: 14,
                                       fontWeight: "bold",
-                                      color: colorBoolean(
-                                        value?.toLowerCase() === "si"
-                                      ),
+                                      color: colorBoolean(value === "SI"),
                                     }}
                                   >
                                     {value}
