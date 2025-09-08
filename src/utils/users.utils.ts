@@ -4,9 +4,15 @@ import { StringsUtils } from './strings.utils'
 
 export class UserUtils {
   static orderArray = (array: any[], param: string) => {
-    const filterArray =
+    let filterArray =
       param === 'updatedAt' ? array.filter(el => !!el.updatedAt) : array
     const notUpdated = array.filter(el => !el.updatedAt)
+
+    filterArray =
+      param === 'birthday'
+        ? filterArray.filter(el => !!el.birthday)
+        : filterArray
+    const notBirthday = array.filter(el => !el.birthday)
 
     let min, aux
     for (let i = 0; i < filterArray.length - 1; i++) {
@@ -23,10 +29,22 @@ export class UserUtils {
             if (filterArray[j].updatedAt <= filterArray[min].updatedAt) min = j
           } else {
             if (
-              filterArray[j][param]?.toString()?.toLowerCase().trim() <
-              filterArray[min][param]?.toString()?.toLowerCase().trim()
-            )
-              min = j
+              param === 'birthday' &&
+              filterArray[j].birthday &&
+              filterArray[min].birthday
+            ) {
+              const dateJ = new Date(filterArray[j].birthday).getMilliseconds()
+              const dateMin = new Date(
+                filterArray[min].birthday
+              ).getMilliseconds()
+              if (dateJ < dateMin) min = j
+            } else {
+              if (
+                filterArray[j][param]?.toString()?.toLowerCase().trim() <
+                filterArray[min][param]?.toString()?.toLowerCase().trim()
+              )
+                min = j
+            }
           }
         }
       }
@@ -38,7 +56,11 @@ export class UserUtils {
       }
     }
 
-    return param === 'updatedAt' ? [...filterArray, ...notUpdated] : filterArray
+    return param === 'updatedAt'
+      ? [...filterArray, ...notUpdated]
+      : param === 'birthday'
+      ? [...filterArray, ...notBirthday]
+      : filterArray
   }
 
   static filterDataSearch = (array: UserType[], value: string) => {

@@ -18,6 +18,7 @@ export type ValidRecordCourse =
   | 'Scanning'
   | 'Angels'
   | 'AnxDeepSleep'
+  | 'TLEX'
 
 export type CourseType<T> = Record<ValidRecordCourse, T>
 
@@ -45,6 +46,9 @@ export type UserType = {
   course: CourseType<'si' | 'no'>
   updatedAt: number
   code: string
+  birthday: string
+  manualCode: string
+  kriyaNotesCode: string
 }
 
 export type UserDataAddType = Omit<

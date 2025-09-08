@@ -67,10 +67,13 @@ const AddUserPage = (props: {
         const objectCourse: any = {};
 
         entriesCourse.forEach(([k, v]) => {
-          objectCourse[k] = v === "si" ? true : false;
+          objectCourse[k] = v?.toLowerCase() === "si" ? true : false;
         });
 
-        setUserData({ ...rest, course: { ...objectCourse } });
+        setUserData({
+          ...rest,
+          course: { ...Constants.INITIAL_COURSES_ADD_USER, ...objectCourse },
+        });
       } else alert(res.error || "Error getting user data");
 
       setIsLoading(false);
@@ -234,7 +237,7 @@ const AddUserPage = (props: {
                 </InputGroup>
               </div>
 
-              {!id && (
+              {!id ? (
                 <div>
                   <label className={styles.label}>Password*:</label>
                   <InputGroup className={styles.container_input}>
@@ -246,6 +249,27 @@ const AddUserPage = (props: {
                       autoFocus
                       required
                       onChange={(event) => setPassword(event.target.value)}
+                    />
+                  </InputGroup>
+                </div>
+              ) : (
+                <div>
+                  <label className={styles.label}>Birthday*:</label>
+                  <InputGroup className={styles.container_input}>
+                    <Form.Control
+                      max={new Date().toISOString().split("T")[0]}
+                      id="inputtext"
+                      type="date"
+                      placeholder="********"
+                      value={userData.birthday}
+                      autoFocus
+                      required
+                      onChange={(event) =>
+                        setUserData((prevState) => ({
+                          ...prevState,
+                          birthday: event.target.value,
+                        }))
+                      }
                     />
                   </InputGroup>
                 </div>
@@ -288,6 +312,29 @@ const AddUserPage = (props: {
                   />
                 </InputGroup>
               </div>
+              {!id && (
+                <div>
+                  <label className={styles.label}>Birthday*:</label>
+                  <InputGroup className={styles.container_input}>
+                    <Form.Control
+                      //max date today
+                      max={new Date().toISOString().split("T")[0]}
+                      id="inputtext"
+                      type="date"
+                      placeholder="********"
+                      value={userData.birthday}
+                      autoFocus
+                      required
+                      onChange={(event) =>
+                        setUserData((prevState) => ({
+                          ...prevState,
+                          birthday: event.target.value,
+                        }))
+                      }
+                    />
+                  </InputGroup>
+                </div>
+              )}
             </Flex>
 
             <Flex
@@ -322,6 +369,42 @@ const AddUserPage = (props: {
                   autoFocus
                   onChange={handleChangeText}
                 />
+              </div>
+            </Flex>
+
+            <Flex
+              justify="space-between"
+              align="center"
+              gap={20}
+              className={styles.agrouped_input}
+            >
+              <div>
+                <label className={styles.label}>TTC Date:</label>
+                <InputGroup className={styles.container_input}>
+                  <Form.Control
+                    type="text"
+                    name="TTCDate"
+                    id="inputtextTTCDate"
+                    placeholder=" 2020-01-01"
+                    value={userData.TTCDate}
+                    autoFocus
+                    onChange={handleChangeText}
+                  />
+                </InputGroup>
+              </div>
+              <div>
+                <label className={styles.label}>Place TTC:</label>
+                <InputGroup className={styles.container_input}>
+                  <Form.Control
+                    type="text"
+                    name="placeTTC"
+                    id="inputtextplaceTTC"
+                    placeholder="Argentina"
+                    value={userData.placeTTC}
+                    autoFocus
+                    onChange={handleChangeText}
+                  />
+                </InputGroup>
               </div>
             </Flex>
 
@@ -368,28 +451,28 @@ const AddUserPage = (props: {
               className={styles.agrouped_input}
             >
               <div>
-                <label className={styles.label}>TTC Date:</label>
+                <label className={styles.label}>Manual Code:</label>
                 <InputGroup className={styles.container_input}>
                   <Form.Control
                     type="text"
-                    name="TTCDate"
-                    id="inputtextTTCDate"
-                    placeholder=" 2020-01-01"
-                    value={userData.TTCDate}
+                    name="manualCode"
+                    id="inputtextManualCode"
+                    placeholder="Insert Manual Code"
+                    value={userData.manualCode}
                     autoFocus
                     onChange={handleChangeText}
                   />
                 </InputGroup>
               </div>
               <div>
-                <label className={styles.label}>Place TTC:</label>
+                <label className={styles.label}>Kriya Note Code:</label>
                 <InputGroup className={styles.container_input}>
                   <Form.Control
                     type="text"
-                    name="placeTTC"
-                    id="inputtextplaceTTC"
-                    placeholder="Argentina"
-                    value={userData.placeTTC}
+                    name="kriyaNotesCode"
+                    id="inputtextKriyaNotesCode"
+                    placeholder="Insert Code"
+                    value={userData.kriyaNotesCode}
                     autoFocus
                     onChange={handleChangeText}
                   />

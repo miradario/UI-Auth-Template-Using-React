@@ -23,8 +23,25 @@
 }
 
 .selectedUsersContainer {
-  margin-bottom: 10px;
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  background-color: #feae00;
+  padding: 10px;
+  border: 2px solid black;
+  min-width: 300px;
 }
 
-.selectedUsersContainer > div {
+.selectedUsersContainer > h6 {
+  color: white;
+  font-weight: bold;
+}
+
+.crossIcon_selected {
+  position: absolute;
+  top: 7.5px;
+  right: 7.5px;
+  color: white;
+  font-size: 13px;
+  cursor: pointer;
 }

@@ -48,7 +48,8 @@ export class Constants {
       { key: 'country', label: 'Origin Country' },
       { key: 'teach_country', label: 'Residence Country' },
       { key: 'email', label: 'Email' },
-      { key: 'phone', label: 'Phone' }
+      { key: 'phone', label: 'Phone' },
+      { key: 'birthday', label: 'Birthday' }
     ],
     PER_PAGE: [25, 50, 100]
   }
@@ -72,25 +73,26 @@ export class Constants {
     { key: 'Intuition', label: 'Intuition' },
     { key: 'Scanning', label: 'Scanning' },
     { key: 'Angels', label: 'Angels' },
-    { key: 'AnxDeepSleep', label: 'Ansiedad y sueño profundo' }
+    { key: 'AnxDeepSleep', label: 'Ansiedad y sueño profundo' },
+    { key: 'TLEX', label: 'TLEX' }
   ]
 
   static TABLE = {
     HEADER: [
+      'Select',
       'Edit',
-      'Active',
-      'Forgot Password',
       'Authenticate',
-      '',
-      'Delete',
       'Last Update',
       'Name',
       'Last Name',
       'Email',
+      'Birthday',
       'Phone',
       'Country Origin',
       'Country Residence',
       'Code',
+      'Manual Code',
+      'Kriya Notes Code',
       'Long',
       'Short',
       'Status',
@@ -98,7 +100,8 @@ export class Constants {
       'TTC Place',
       'Sign Contract',
       'Comment',
-      ...this.COURSE_OPTIONS.map(course => course.label)
+      ...this.COURSE_OPTIONS.map(course => course.label),
+      'ID'
     ]
   }
 
@@ -133,7 +136,8 @@ export class Constants {
     Intuition: false,
     Scanning: false,
     Angels: false,
-    AnxDeepSleep: false
+    AnxDeepSleep: false,
+    TLEX: false
   }
 
   static INITIAL_SKY_ADD_USER: SKYType = {
@@ -157,7 +161,10 @@ export class Constants {
     inactive: false,
     code: '',
     course: this.INITIAL_COURSES_ADD_USER,
-    SKY: this.INITIAL_SKY_ADD_USER
+    SKY: this.INITIAL_SKY_ADD_USER,
+    manualCode: '',
+    birthday: '',
+    kriyaNotesCode: ''
   }
 
   static SKY_OPTIONS = [

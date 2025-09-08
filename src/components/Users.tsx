@@ -2,11 +2,9 @@ import React, { useState, useEffect, ChangeEvent, MouseEvent } from "react";
 import Navigation from "./Navigation";
 import Footer from "./Footer";
 import { BsChevronRight, BsChevronLeft } from "react-icons/bs";
-import { MdDelete } from "react-icons/md";
 import { AiOutlineSearch } from "react-icons/ai";
 import { ModalFilters } from "./Filters/ModalFilters";
 import { Loader } from "./commons/Loader";
-import { formatDateDMA } from "../helpers/formatDateDMA";
 import { FaUserEdit, FaUserPlus } from "react-icons/fa";
 import { ImCross } from "react-icons/im";
 import { Flex } from "./commons/Flex";
@@ -21,6 +19,9 @@ import { UserType } from "../types/user.types";
 import { UserRepository } from "../repositories/user.rps";
 import { FileUtils, ObjectUtils, UserUtils } from "../utils";
 import styles from "../styles/users.module.css";
+import { DatesUtils } from "../utils/dates.utils";
+import { FaUserCheck } from "react-icons/fa6";
+import { MdOutgoingMail } from "react-icons/md";
 
 const existFilters = (filters: FiltersFieldsType) => {
   const entries = Object.entries(filters);
@@ -49,6 +50,7 @@ export default function Users() {
     perPage: 0,
     totalPages: 0,
   });
+  const [viewMoreComment, setViewMoreComment] = useState<string[]>([]);
 
   const [perPage, setPerPage] = useState<number>(
     getPerPage ? Number(getPerPage) : Constants.FILTERS.PER_PAGE[0]
@@ -60,6 +62,7 @@ export default function Users() {
   const [loadingDeleteSelected, setLoadingDeleteSelected] = useState(false);
   const [loadingChangeActiveSelected, setLoadingChangeActiveSelected] =
     useState(false);
+  const [loadingResetPassword, setLoadingResetPassword] = useState(false);
 
   const [filtersActive, setFiltersActive] = useState<FiltersType>(
     Constants.INITIAL_FILTERS
@@ -202,62 +205,58 @@ export default function Users() {
     else setSaveCheckboxes([...saveCheckboxes, key]);
   };
 
-  const deleteOneUser = async (key: string, email: string) => {
-    const confirm = window.confirm(
-      "¿Seguro que desea eliminar el usuario: " + email + "?"
-    );
-
-    if (confirm) {
-      const res = await UserRepository.deleteOne(key);
-
-      if (res.ok) window.location.reload();
-    } else {
-      window.alert("ELIMINACION CANCELADA");
-    }
-  };
-
   const deleteSelectedUsers = async () => {
     if (loadingDeleteSelected || saveCheckboxes.length === 0) return;
 
+    const filterUsers = itemsFilter.filter((el) =>
+      saveCheckboxes.includes(el.userKey)
+    );
+
     const confirm = window.confirm(
-      `¿Está seguro de que desea eliminar a los usuarios seleccionados (${saveCheckboxes.length})?`
+      `¿Está seguro de que desea eliminar a los usuarios seleccionados (${
+        saveCheckboxes.length
+      })?\n\n${filterUsers
+        .map((el, index) => `${index + 1}. ${el.email}`)
+        .join("\n")}`
     );
 
     if (confirm) {
       setLoadingDeleteSelected(true);
-
-      const filterUsers = items.filter((el) =>
-        saveCheckboxes.includes(el.userKey)
-      );
 
       const res = await UserRepository.deleteSelected(filterUsers);
 
       if (res.ok) window.location.reload();
     }
     setLoadingDeleteSelected(false);
-  };
 
-  const changeActiveStatus = async (id: string, status: boolean) => {
-    const res = await UserRepository.changeActiveStatus(id, status);
-
-    if (res.ok) {
-      alert("User status changed");
-      window.location.reload();
-    }
+    setSaveCheckboxes([]);
   };
 
   const changeActiveSelectedUsers = async () => {
     if (loadingChangeActiveSelected || saveCheckboxes.length === 0) return;
 
+    const filterUsers = itemsFilter.filter((el) =>
+      saveCheckboxes.includes(el.userKey)
+    );
+
     const confirm = window.confirm(
-      `¿Está seguro de que desea cambiar el estado de los usuarios seleccionados (${saveCheckboxes.length})?`
+      `¿Está seguro de que desea cambiar el estado de los usuarios seleccionados (${
+        saveCheckboxes.length
+      })?\n\n${filterUsers
+        .map(
+          (el, index) =>
+            `${index + 1}. ${el.email} (${
+              el.inactive ? "ACTIVAR" : "DESACTIVAR"
+            })`
+        )
+        .join("\n")}`
     );
 
     if (confirm) {
       setLoadingChangeActiveSelected(true);
 
       const promises = saveCheckboxes.map((key) => {
-        const findUser = items.find((el) => el.userKey === key);
+        const findUser = filterUsers.find((el) => el.userKey === key);
 
         return findUser
           ? UserRepository.changeActiveStatus(
@@ -273,6 +272,88 @@ export default function Users() {
       else alert("Error changing status for some users");
 
       setLoadingChangeActiveSelected(false);
+
+      setSaveCheckboxes([]);
+    }
+  };
+
+  const handleViewMoreComment = (key: string) => {
+    if (viewMoreComment.includes(key)) {
+      setViewMoreComment(viewMoreComment.filter((item) => item !== key));
+    } else {
+      setViewMoreComment([...viewMoreComment, key]);
+    }
+  };
+
+  const handleResetPassword = async () => {
+    if (saveCheckboxes.length === 0) return;
+
+    if (saveCheckboxes.length > 4) {
+      alert("You can only reset the password for up to 4 teachers at a time");
+      return;
+    }
+
+    let filterItems = itemsFilter.filter((el) =>
+      saveCheckboxes.includes(el.userKey)
+    );
+
+    const confirm = window.confirm(
+      `¿Está seguro de que desea enviar un correo electrónico de restablecimiento de contraseña a los usuarios seleccionados (${
+        saveCheckboxes.length
+      })?\n\n${filterItems
+        .map(
+          (el, index) =>
+            `${index + 1}. ${el.email} (${
+              el.authenticated === 0
+                ? "Primero debes enviar FIRST MAIL"
+                : "Listo para enviar"
+            })`
+        )
+        .join("\n")} `
+    );
+
+    filterItems = filterItems.filter((el) => el.authenticated !== 0);
+    const errors: string[] = [];
+    const success: string[] = [];
+
+    if (confirm) {
+      setLoadingResetPassword(true);
+      for (const user of filterItems) {
+        const res = await UserRepository.sendPasswordResetEmail(
+          user.email,
+          "https://cursos.elartedevivir.org/app"
+        );
+
+        if (!res.ok)
+          errors.push(`${user.email} - ${res.error || "Error desconocido"}`);
+        else success.push(user.email);
+      }
+
+      alert(
+        `Reset password emails sent successfully to ${success.length}:\n
+        ${success.join("\n")} 
+        ${errors.length > 0 ? "\n\nErrors:\n" + errors.join("\n") : ""}`
+      );
+
+      setLoadingResetPassword(false);
+
+      setSaveCheckboxes([]);
+    }
+  };
+
+  const handleSendFirstMail = async (user: UserType) => {
+    const confirm = window.confirm(
+      `¿Está seguro de que desea enviar el primer correo a ${email}?`
+    );
+
+    if (confirm) {
+      setIsLoaded(true);
+
+      const res = await UserRepository.authenticate(user, "a1b2c3e4d5");
+
+      if (res.ok) window.location.reload();
+
+      setIsLoaded(false);
     }
   };
 
@@ -282,6 +363,11 @@ export default function Users() {
     const value = e.target.value.toLowerCase().trim();
     setFiltersActive({ ...filtersActive, searchValue: value });
   };
+
+  const disabledActionsCheckboxes =
+    loadingChangeActiveSelected ||
+    loadingDeleteSelected ||
+    loadingResetPassword;
 
   return (
     <div className="App">
@@ -327,7 +413,7 @@ export default function Users() {
                     style={{ marginBottom: 10 }}
                   >
                     <h1 style={{ fontSize: 30, marginBottom: 0 }}>
-                      Teachers ({itemsFilter.length})
+                      Teachers ({itemsFilter.length} de {items.length})
                     </h1>
                     <FaUserPlus
                       onClick={() => history.push("/add-users")}
@@ -564,28 +650,45 @@ export default function Users() {
                   {/* SELECTED USERS ACTIONS */}
                   {saveCheckboxes.length > 0 && (
                     <div className={styles.selectedUsersContainer}>
-                      <h6> Selected Teachers: {saveCheckboxes.length}</h6>
-                      {loadingChangeActiveSelected || loadingDeleteSelected ? (
-                        <Loader size={40} />
-                      ) : (
+                      <h6>SELECTED: {saveCheckboxes.length}</h6>
+
+                      <div>
                         <Flex gap={10} justify="center">
-                          <button onClick={deleteSelectedUsers}>
+                          <button
+                            onClick={deleteSelectedUsers}
+                            disabled={disabledActionsCheckboxes}
+                          >
                             Eliminar
                           </button>
-                          <button onClick={changeActiveSelectedUsers}>
+                          <button
+                            onClick={changeActiveSelectedUsers}
+                            disabled={disabledActionsCheckboxes}
+                          >
                             Activar / Desactivar
                           </button>
                           <button
-                            onClick={() => {
-                              const confirm = window.confirm(
-                                "¿Desea cancelar la selección de usuarios?"
-                              );
-                              if (confirm) setSaveCheckboxes([]);
-                            }}
+                            onClick={handleResetPassword}
+                            disabled={disabledActionsCheckboxes}
                           >
-                            Cancelar
+                            Reset Pass
                           </button>
                         </Flex>
+                        <ImCross
+                          className={styles.crossIcon_selected}
+                          onClick={() => {
+                            const confirm = window.confirm(
+                              "¿Desea cancelar la selección de usuarios?"
+                            );
+                            if (confirm) setSaveCheckboxes([]);
+                          }}
+                        />
+                      </div>
+                      {disabledActionsCheckboxes && (
+                        <Loader
+                          size={30}
+                          color={Constants.COLORS.white}
+                          style={{ marginTop: 10 }}
+                        />
                       )}
                     </div>
                   )}
@@ -623,10 +726,22 @@ export default function Users() {
                                 backgroundColor: user.inactive ? "orange" : "",
                               }}
                             >
+                              <td>
+                                <input
+                                  style={{ marginTop: 10 }}
+                                  id="checked_option"
+                                  type="checkbox"
+                                  data-key={user.userKey}
+                                  checked={saveCheckboxes.includes(
+                                    user.userKey
+                                  )}
+                                  onChange={handleCheckbox}
+                                />
+                              </td>
                               <td style={{ paddingLeft: 20 }}>
                                 <FaUserEdit
                                   style={{ cursor: "pointer" }}
-                                  size={25}
+                                  size={30}
                                   color={
                                     user.inactive
                                       ? Constants.COLORS.white
@@ -640,106 +755,50 @@ export default function Users() {
                                   }}
                                 />
                               </td>
-                              <td>
-                                <button
-                                  style={{
-                                    backgroundColor: user.inactive
-                                      ? ""
-                                      : "orange",
-                                    fontSize: "11px",
-                                  }}
-                                  className={
-                                    user.inactive
-                                      ? "btn btn-danger"
-                                      : "btn btn-success"
-                                  }
-                                  onClick={() => {
-                                    changeActiveStatus(
-                                      user.userKey,
-                                      !user.inactive
-                                    );
-                                  }}
-                                >
-                                  {user.inactive ? "Activate" : "Inactive"}
-                                </button>
-                              </td>
-                              <td>
-                                {/* send a forgot password */}
-                                <button
-                                  className="btn btn-info"
-                                  style={{ fontSize: 8 }}
-                                  onClick={async () => {
-                                    const res =
-                                      await UserRepository.sendPasswordResetEmail(
-                                        user.email,
-                                        "https://cursos.elartedevivir.org/app"
-                                      );
-                                    alert(
-                                      res.ok
-                                        ? "Password reset email sent"
-                                        : res.error
-                                    );
-                                  }}
-                                >
-                                  Reset Password
-                                </button>
-                              </td>
+
                               {user.authenticated === 0 ? (
                                 <td>
                                   <button
-                                    onClick={async () => {
-                                      setIsLoaded(true);
-
-                                      const res =
-                                        await UserRepository.authenticate(
-                                          user,
-                                          "a1b2c3e4d5"
-                                        );
-
-                                      if (res.ok) window.location.reload();
-
-                                      setIsLoaded(false);
-                                    }}
+                                    className="btn btn-danger"
+                                    onClick={() => handleSendFirstMail(user)}
+                                    style={{ fontSize: 12 }}
                                   >
-                                    Send first mail
+                                    <MdOutgoingMail size={25} />
                                   </button>
                                 </td>
                               ) : (
-                                <td>Ya autenticado</td>
+                                <td
+                                  style={{
+                                    color: Constants.COLORS.green,
+                                    fontWeight: "bold",
+                                    fontSize: 10,
+                                  }}
+                                >
+                                  <FaUserCheck
+                                    size={30}
+                                    title="Authenticated"
+                                  />
+                                </td>
                               )}
                               <td>
-                                <input
-                                  style={{ marginTop: 10 }}
-                                  id="checked_option"
-                                  type="checkbox"
-                                  data-key={user.userKey}
-                                  checked={saveCheckboxes.includes(
-                                    user.userKey
-                                  )}
-                                  onChange={handleCheckbox}
-                                />
+                                {DatesUtils.formatTimestampToDDMMAAAA(
+                                  user.updatedAt
+                                ) || "-"}
                               </td>
-                              <td>
-                                <MdDelete
-                                  style={{
-                                    marginTop: 5,
-                                    fontSize: 22,
-                                    color: Constants.COLORS.error,
-                                    cursor: "pointer",
-                                  }}
-                                  onClick={() =>
-                                    deleteOneUser(user.userKey, user.email)
-                                  }
-                                />
-                              </td>
-                              <td>{formatDateDMA(user.updatedAt) || "-"}</td>
                               <td>{user.name}</td>
                               <td>{user.lastName}</td>
                               <td>{user.email}</td>
+                              <td>
+                                {DatesUtils.formatAAAAMMDDtoDDMMYYYY(
+                                  user.birthday
+                                ) || "-"}
+                              </td>
                               <td>{user.phone}</td>
                               <td>{user?.country}</td>
                               <td>{user.teach_country}</td>
                               <td>{user.code}</td>
+                              <td>{user.manualCode}</td>
+                              <td>{user.kriyaNotesCode}</td>
                               <td
                                 style={{
                                   color: colorBoolean(user?.SKY?.long === 1),
@@ -778,7 +837,35 @@ export default function Users() {
                               >
                                 {user.sign === 1 ? "SI" : "NO"}
                               </td>
-                              <td>{user.comment || "-"}</td>
+                              <td>
+                                {user.comment?.length > 25 ? (
+                                  <div>
+                                    {viewMoreComment.includes(user.userKey)
+                                      ? user.comment
+                                      : `${user.comment.slice(0, 25)}...`}
+
+                                    <span
+                                      onClick={() =>
+                                        handleViewMoreComment(user.userKey)
+                                      }
+                                      style={{
+                                        cursor: "pointer",
+                                        color: "#feae00",
+                                        fontWeight: "bold",
+                                        textDecoration: "underline",
+                                        display: "block",
+                                      }}
+                                    >
+                                      {" "}
+                                      {viewMoreComment.includes(user.userKey)
+                                        ? "Ver menos"
+                                        : "Ver más"}
+                                    </span>
+                                  </div>
+                                ) : (
+                                  user.comment || "-"
+                                )}
+                              </td>
                               {/* CURSOS */}
                               {Constants.COURSE_OPTIONS.map((el) => {
                                 const value = user.course
@@ -800,6 +887,17 @@ export default function Users() {
                                   </td>
                                 );
                               })}
+
+                              {/* USER ID */}
+                              <td
+                                style={{
+                                  fontSize: 8,
+                                  fontWeight: "bold",
+                                  color: Constants.COLORS.black,
+                                }}
+                              >
+                                {user.userKey}
+                              </td>
                             </tr>
                           ))}
                       </tbody>
