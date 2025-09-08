@@ -2,11 +2,13 @@ import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/database'
 import 'firebase/firestore'
-import { config } from './.env.js'
+import { Config } from '../constants/config'
+
+console.log('Firebase config:', Config.FIREBASE)
 
 if (!firebase.apps.length) {
   //initializing with the config object
-  firebase.initializeApp(config)
+  firebase.initializeApp(Config.FIREBASE)
 }
 
 const db = firebase.database()

@@ -5,7 +5,7 @@ import { auth } from "../firebase";
 import Footer from "./Footer";
 import Navigation from "./Navigation";
 import { Constants } from "../constants/constants";
-import { ADMIN_CONFIG } from "../firebase/.env";
+import { Config } from "../constants/config";
 
 const INITIAL_STATE = {
   email: "",
@@ -44,7 +44,7 @@ const SignInForm = ({ history }: SignInFormProps) => {
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (internalCode !== ADMIN_CONFIG.internalCode) {
+    if (internalCode !== Config.ADMIN.internalCode) {
       alert("Invalid Admin Code");
       return;
     }
