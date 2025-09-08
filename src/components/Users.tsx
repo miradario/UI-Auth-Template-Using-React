@@ -131,9 +131,12 @@ export default function Users() {
   //FUNCTIONS
 
   const initEffect = async () => {
-    const filters: FiltersType | null = JSON.parse(
-      localStorage.getItem("filtersActive") || ""
-    );
+    const filtersActiveStorage = localStorage.getItem("filtersActive");
+
+    const filters: FiltersType | null = filtersActiveStorage
+      ? JSON.parse(filtersActiveStorage)
+      : null;
+
     setIsLoaded(true);
 
     const response = await UserRepository.getAll();
