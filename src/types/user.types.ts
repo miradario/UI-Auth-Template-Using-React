@@ -47,20 +47,9 @@ export type UserType = {
   code: string
 }
 
-export type UserDataAddType = {
-  name: string
-  lastName: string
-  email: string
-  phone: string
-  placeTTC: string
-  sign: 0 | 1
-  teach_country: string
-  TTCDate: string
-  authenticated: 0 | 1
-  comment: string
-  country: string
-  inactive: boolean
-  code: string
-  SKY: SKYType
+export type UserDataAddType = Omit<
+  UserType,
+  'userKey' | 'updatedAt' | 'course'
+> & {
   course: CourseType<boolean>
 }

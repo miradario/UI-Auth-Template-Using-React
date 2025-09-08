@@ -5,6 +5,7 @@ export const Flex = ({
   direction = "row",
   gap = 0,
   style = {},
+  className = "",
 }: {
   children: React.ReactNode;
   justify?:
@@ -18,6 +19,7 @@ export const Flex = ({
   direction?: "row" | "column" | "row-reverse" | "column-reverse";
   gap?: number | string;
   style?: React.CSSProperties;
+  className?: string;
 }) => {
   return (
     <div
@@ -29,6 +31,7 @@ export const Flex = ({
         gap,
         ...style,
       }}
+      className={className}
     >
       {children}
     </div>
