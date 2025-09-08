@@ -1,16 +1,16 @@
-import './App.css'
-import 'bootstrap/dist/css/bootstrap.min.css'
-import React from 'react'
-import { BrowserRouter, Route } from 'react-router-dom'
-import SignUpPage from './components/SignUp'
-import SignInPage from './components/SignIn'
-import PasswordForgetPage from './components/PasswordForget'
+import React from "react";
+import "./App.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { BrowserRouter, Route } from "react-router-dom";
+import SignUpPage from "./components/SignUp";
+import SignInPage from "./components/SignIn";
+import PasswordForgetPage from "./components/PasswordForget";
 
-import LandingPage from './components/Landing'
-import UsersPage from './components/Users'
-import AddUsersPage from './components/AddUser'
-import withAuthentication from './components/withAuthentication'
-import { Constants } from './constants/constants'
+import LandingPage from "./components/Landing";
+import UsersPage from "./components/Users";
+import AddUsersPage from "./components/AddUser";
+import withAuthentication from "./components/withAuthentication";
+import { Constants } from "./constants/constants";
 
 const App = () => (
   <BrowserRouter>
@@ -27,6 +27,6 @@ const App = () => (
 
     {/* <Route exact path={routes.HOME} component={HomePage} /> */}
   </BrowserRouter>
-)
+);
 
-export default withAuthentication(App)
+export default withAuthentication(App);
