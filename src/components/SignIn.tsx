@@ -1,10 +1,17 @@
-import { Component, FormEvent } from "react";
+import { useState, FormEvent } from "react";
 import { Button, Form, InputGroup, Container } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
 import { auth } from "../firebase";
 import Footer from "./Footer";
 import Navigation from "./Navigation";
 import { Constants } from "../constants/constants";
+import { ADMIN_CONFIG } from "../firebase/.env";
+
+const INITIAL_STATE = {
+  email: "",
+  password: "",
+  internalCode: "",
+};
 
 interface SignInFormProps {
   history: any;
@@ -16,7 +23,6 @@ const SignInPage = ({ history }: SignInFormProps) => {
       <Navigation />
       <center>
         <SignInForm history={history} />
-
         <br />
         <hr />
         <Footer />
@@ -25,118 +31,102 @@ const SignInPage = ({ history }: SignInFormProps) => {
   );
 };
 
-const byPropKey = (propertyName: string, value: any) => () => ({
-  [propertyName]: value,
-});
+const SignInForm = ({ history }: SignInFormProps) => {
+  const [form, setForm] = useState(INITIAL_STATE);
 
-const INITIAL_STATE = {
-  email: "",
-  password: "",
-  internalCode: "",
-};
+  const { email, password, internalCode } = form;
+  const isInvalid = password === "" || email === "";
 
-class SignInForm extends Component<SignInFormProps> {
-  state = { ...INITIAL_STATE };
+  const handleChange = (field: string, value: string) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
+  };
 
-  onSubmit = (event: FormEvent<HTMLFormElement>) => {
-    const { email, password } = this.state;
-    const { history } = this.props;
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-    if (this.state.internalCode !== "Jgd108") {
+    if (internalCode !== ADMIN_CONFIG.internalCode) {
       alert("Invalid Admin Code");
       return;
     }
 
-    auth
-      .doSignInWithEmailAndPassword(email, password)
-      .then((userCredential) => {
-        if (!userCredential.user?.email)
-          throw new Error("No user credential returned");
+    try {
+      const userCredential = await auth.doSignInWithEmailAndPassword(
+        email,
+        password
+      );
 
-        this.setState({ ...INITIAL_STATE });
-        localStorage.setItem("email", userCredential.user.email);
-        history.push(Constants.ROUTES.LANDING);
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
+      if (!userCredential.user) throw new Error("No user credential returned");
 
-    event.preventDefault();
+      localStorage.setItem("email", userCredential.user.email || "");
+
+      setForm(INITIAL_STATE);
+      history.push(Constants.ROUTES.LANDING);
+    } catch (error: any) {
+      alert("Error: " + error.message);
+    }
   };
 
-  render() {
-    const { email, password, internalCode } = this.state;
-    const isInvalid = password === "" || email === "";
-
-    return (
-      <div className="inputclass">
-        <Container>
-          <center>
-            <h2 id="mytexth2">Sign In</h2>
-            <Form onSubmit={this.onSubmit}>
-              <InputGroup>
-                <InputGroup.Prepend className="inputlabel">
-                  Email
-                </InputGroup.Prepend>
-                <Form.Control
-                  id="inputtext"
-                  type="email"
-                  placeholder="user@gmail.com"
-                  value={email}
-                  required
-                  autoFocus
-                  onChange={(event) =>
-                    this.setState(byPropKey("email", event.target.value))
-                  }
-                />
-              </InputGroup>
-              <br />
-              <InputGroup>
-                <InputGroup.Prepend className="inputlabel">
-                  Password
-                </InputGroup.Prepend>
-                <Form.Control
-                  id="inputtext"
-                  type="password"
-                  placeholder="Password"
-                  value={password}
-                  required
-                  onChange={(event) =>
-                    this.setState(byPropKey("password", event.target.value))
-                  }
-                />
-              </InputGroup>
-              <br />
-              <InputGroup>
-                <InputGroup.Prepend className="inputlabel">
-                  Admin Code
-                </InputGroup.Prepend>
-                <Form.Control
-                  id="inputtext"
-                  type="password"
-                  placeholder="internal Code"
-                  value={internalCode}
-                  required
-                  onChange={(event) =>
-                    this.setState(byPropKey("internalCode", event.target.value))
-                  }
-                />
-              </InputGroup>
-              <br />
-              <div className="text-center">
-                <Button disabled={isInvalid} type="submit" id="mybutton">
-                  Sign In
-                </Button>
-              </div>
-            </Form>
-            <hr />
-          </center>
-        </Container>
-      </div>
-    );
-  }
-}
+  return (
+    <div className="inputclass">
+      <Container>
+        <center>
+          <h2 id="mytexth2">Sign In</h2>
+          <Form onSubmit={onSubmit}>
+            <InputGroup>
+              <InputGroup.Prepend className="inputlabel">
+                Email
+              </InputGroup.Prepend>
+              <Form.Control
+                id="inputtext"
+                type="email"
+                placeholder="user@gmail.com"
+                value={email}
+                required
+                autoFocus
+                onChange={(e) => handleChange("email", e.target.value)}
+              />
+            </InputGroup>
+            <br />
+            <InputGroup>
+              <InputGroup.Prepend className="inputlabel">
+                Password
+              </InputGroup.Prepend>
+              <Form.Control
+                id="inputtext"
+                type="password"
+                placeholder="Password"
+                value={password}
+                required
+                onChange={(e) => handleChange("password", e.target.value)}
+              />
+            </InputGroup>
+            <br />
+            <InputGroup>
+              <InputGroup.Prepend className="inputlabel">
+                Admin Code
+              </InputGroup.Prepend>
+              <Form.Control
+                id="inputtext"
+                type="password"
+                placeholder="Internal Code"
+                value={internalCode}
+                required
+                onChange={(e) => handleChange("internalCode", e.target.value)}
+              />
+            </InputGroup>
+            <br />
+            <div className="text-center">
+              <Button disabled={isInvalid} type="submit" id="mybutton">
+                Sign In
+              </Button>
+            </div>
+          </Form>
+          <hr />
+        </center>
+      </Container>
+    </div>
+  );
+};
 
 export default withRouter(SignInPage);
-
 export { SignInForm };

@@ -8,3 +8,7 @@ export const config = {
   appId: "1:737432643320:web:b956bc21a0a8025c463d0d",
   measurementId: "G-HQQEY3Y0ZZ",
 };
+
+export const ADMIN_CONFIG = {
+  internalCode: "Jgd108"
+}

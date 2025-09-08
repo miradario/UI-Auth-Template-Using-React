@@ -343,7 +343,7 @@ export default function Users() {
 
   const handleSendFirstMail = async (user: UserType) => {
     const confirm = window.confirm(
-      `¿Está seguro de que desea enviar el primer correo a ${email}?`
+      `¿Está seguro de que desea enviar el primer correo a ${user.email}?`
     );
 
     if (confirm) {
@@ -413,7 +413,7 @@ export default function Users() {
                     style={{ marginBottom: 10 }}
                   >
                     <h1 style={{ fontSize: 30, marginBottom: 0 }}>
-                      Teachers ({itemsFilter.length} de {items.length})
+                      Teachers ({itemsFilter.length} of {items.length})
                     </h1>
                     <FaUserPlus
                       onClick={() => history.push("/add-users")}
