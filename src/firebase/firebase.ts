@@ -4,8 +4,6 @@ import 'firebase/database'
 import 'firebase/firestore'
 import { Config } from '../constants/config'
 
-console.log('Firebase config:', Config.FIREBASE)
-
 if (!firebase.apps.length) {
   //initializing with the config object
   firebase.initializeApp(Config.FIREBASE)
