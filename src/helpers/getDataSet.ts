@@ -15,7 +15,7 @@ const orderArray = (array: any[]) => {
       if (array[j] < array[min]) min = j
     }
 
-    if (min != i) {
+    if (min !== i) {
       aux = array[i]
       array[i] = array[min]
       array[min] = aux

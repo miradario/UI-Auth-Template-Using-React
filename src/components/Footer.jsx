@@ -1,36 +1,35 @@
-import React, { Component } from "react";
-import { db } from "../firebase/firebase";
-import { Button, Form, InputGroup } from "react-bootstrap";
+import React, { Component } from 'react'
+import { db } from '../firebase/firebase'
 
 class Footer extends Component {
-  state = { feedback: "" };
+  state = { feedback: '' }
 
-  onSubmit = (event) => {
-    const { feedback } = this.state;
-    db.ref("feedbacks")
+  onSubmit = event => {
+    const { feedback } = this.state
+    db.ref('feedbacks')
       .push()
       .set({ feedback: feedback })
       .then(() => {
         alert(
-          "Thank you so much for taking the time to send us your valuable feedback!"
-        );
-        this.setState({ feedback: "" });
+          'Thank you so much for taking the time to send us your valuable feedback!'
+        )
+        this.setState({ feedback: '' })
       })
-      .catch((e) => {
-        alert(e.message);
-      });
-    event.preventDefault();
-  };
+      .catch(e => {
+        alert(e.message)
+      })
+    event.preventDefault()
+  }
 
-  render() {
+  render () {
     return (
-      <div id="ourfooter">
+      <div id='ourfooter'>
         <br />
         <footer>
-          <div className="container-foot">
-            <section className="ft-main">
-              <div id="ourfeedback" className="ft-main-item">
-                <img src="./aoljgd.png" alt="Branda Logo" height={"70px"} />
+          <div className='container-foot'>
+            <section className='ft-main'>
+              <div id='ourfeedback' className='ft-main-item'>
+                <img src='./aoljgd.png' alt='Branda Logo' height={'70px'} />
               </div>
             </section>
 
@@ -79,8 +78,8 @@ class Footer extends Component {
           </div>
         </footer>
       </div>
-    );
+    )
   }
 }
 
-export default Footer;
+export default Footer

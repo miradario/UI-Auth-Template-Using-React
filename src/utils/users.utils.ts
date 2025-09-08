@@ -157,6 +157,7 @@ export class UserUtils {
           ? true
           : !!el[attribute]
 
+      // eslint-disable-next-line eqeqeq
       return equal ? boolAttribute == value : boolAttribute != value
     })
 
