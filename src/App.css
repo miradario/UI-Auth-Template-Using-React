@@ -407,8 +407,6 @@ footer Form {
 .orderContainer {
   border: 2px solid black;
   text-align: center;
-  padding: 0 25px;
-  margin-left: 20px;
   position: relative;
   display: flex;
   justify-content: space-between;
@@ -468,7 +466,7 @@ footer Form {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 40px 0 20px 0;
+  margin: 20px 0 20px 0;
 }
 
 .containerBtnPage > * {
@@ -600,19 +598,17 @@ body {
 .lds-ring {
   display: inline-block !important;
   position: relative !important;
-  width: 60px !important;
-  height: 60px !important;
+  width: 60px;
+  height: 60px;
 }
 .lds-ring div {
   box-sizing: border-box !important;
   display: block !important;
   position: absolute !important;
-  width: 80px !important;
-  height: 80px !important;
-  border: 8px solid #feae00 !important;
+  width: 60px;
+  height: 60px;
   border-radius: 50% !important;
   animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite !important;
-  border-color: #feae00 transparent transparent transparent !important;
 }
 .lds-ring div:nth-child(1) {
   animation-delay: -0.45s;

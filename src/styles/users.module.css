@@ -1,0 +1,47 @@
+.addIcon {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #feae00;
+}
+
+.addIcon:hover {
+  color: #c09000;
+}
+
+.exportExcelBtn {
+  background-color: #d39e00;
+  color: white;
+  border: none;
+  outline: 2px solid black;
+  padding: 2px 15px;
+  transition: all 0.3s ease;
+  font-weight: bold;
+}
+
+.exportExcelBtn:hover {
+  background-color: #ac8100;
+}
+
+.selectedUsersContainer {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  background-color: #feae00;
+  padding: 10px;
+  border: 2px solid black;
+  min-width: 300px;
+}
+
+.selectedUsersContainer > h6 {
+  color: white;
+  font-weight: bold;
+}
+
+.crossIcon_selected {
+  position: absolute;
+  top: 7.5px;
+  right: 7.5px;
+  color: white;
+  font-size: 13px;
+  cursor: pointer;
+}

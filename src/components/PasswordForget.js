@@ -84,7 +84,7 @@ class PasswordForgetForm extends Component {
       .catch(error => {
         // Invalid or expired action code. Ask user to try to reset the password
         // again.
-        console.log('EXPIRO')
+        console.error('EXPIRO')
         this.setState({ expiro: true })
         // alert('expiro?', error)
         //window.location.href = "http://cursos.elartedevivir.org/app";

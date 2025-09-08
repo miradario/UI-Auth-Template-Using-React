@@ -3,6 +3,12 @@ import { useEffect } from "react";
 import { getDataSet } from "../../helpers/getDataSet";
 import { MultipleSelector } from "../commons/MultipleSelector";
 import { Selector } from "../commons/Selector";
+import { UserType } from "../../types/user.types";
+import { FiltersType } from "../../types/filters.types";
+import { ImCross } from "react-icons/im";
+import styles from "../../styles/modalFilters.module.css";
+import { Constants } from "../../constants/constants";
+import { OptionSelectType } from "../../types/global.types";
 
 export const ModalFilters = ({
   data,
@@ -10,37 +16,50 @@ export const ModalFilters = ({
   setFiltersActive,
   filtersActive,
   visible,
+}: {
+  data: UserType[];
+  setShowFilters: (show: boolean) => void;
+  setFiltersActive: (filters: FiltersType) => void;
+  filtersActive: FiltersType;
+  visible: boolean;
 }) => {
-  const [countries, setCountries] = useState([]);
-  const [TTCDate, setTTCDate] = useState([]);
-  const [teachCountries, setTeachCountries] = useState([]);
-  const [courses, setCourses] = useState([]);
+  const [countries, setCountries] = useState<OptionSelectType[]>([]);
+  const [TTCDate, setTTCDate] = useState<OptionSelectType[]>([]);
+  const [teachCountries, setTeachCountries] = useState<OptionSelectType[]>([]);
+  const [courses, setCourses] = useState<OptionSelectType[]>([]);
 
   useEffect(() => {
     const ct = getDataSet(data, "country");
     const ttc = getDataSet(data, "TTCDate");
     const teachC = getDataSet(data, "teach_country");
 
-    const crsSet = new Set();
+    const crsSet: Set<string> = new Set();
+
     data.forEach((el) => {
-      if (el[1].course) {
-        const keys = Object.keys(el[1].course);
+      if (el.course) {
+        const keys = Object.keys(el.course);
         keys.forEach((el2) => crsSet.add(el2));
       }
     });
 
-    setCourses(Array.from(crsSet));
-    setCountries(ct);
-    setTTCDate(ttc);
-    setTeachCountries(teachC);
+    setCourses(
+      Array.from(crsSet).map((el) => ({
+        key: el,
+        label: Constants.COURSE_OPTIONS.find((c) => c.key === el)?.label || el,
+      }))
+    );
+    setCountries(ct.map((el) => ({ key: el, label: el })));
+    setTTCDate(ttc.map((el) => ({ key: el, label: el })));
+    setTeachCountries(teachC.map((el) => ({ key: el, label: el })));
   }, [data]);
 
-  const handleSelectCountry = (country) => {
+  const handleSelectCountry = (country: OptionSelectType) => {
     let countrySelecteds = filtersActive.filters.country;
-    const exist = countrySelecteds.includes(country);
+    const exist = countrySelecteds.includes(country.key);
     let newCountries = [];
-    if (exist) newCountries = countrySelecteds.filter((el) => el !== country);
-    else newCountries = [...countrySelecteds, country];
+    if (exist)
+      newCountries = countrySelecteds.filter((el) => el !== country.key);
+    else newCountries = [...countrySelecteds, country.key];
 
     setFiltersActive({
       ...filtersActive,
@@ -51,13 +70,13 @@ export const ModalFilters = ({
     });
   };
 
-  const handleSelectTeachCountry = (teach_country) => {
+  const handleSelectTeachCountry = (teach_country: OptionSelectType) => {
     let countrySelecteds = filtersActive.filters.teach_country;
-    const exist = countrySelecteds.includes(teach_country);
+    const exist = countrySelecteds.includes(teach_country.key);
     let newCountries = [];
     if (exist)
-      newCountries = countrySelecteds.filter((el) => el !== teach_country);
-    else newCountries = [...countrySelecteds, teach_country];
+      newCountries = countrySelecteds.filter((el) => el !== teach_country.key);
+    else newCountries = [...countrySelecteds, teach_country.key];
 
     setFiltersActive({
       ...filtersActive,
@@ -68,12 +87,12 @@ export const ModalFilters = ({
     });
   };
 
-  const handleSelectTTCDate = (TTCDate) => {
+  const handleSelectTTCDate = (TTCDate: OptionSelectType) => {
     let ttcSelecteds = filtersActive.filters.TTCDate;
-    const exist = ttcSelecteds.includes(TTCDate);
+    const exist = ttcSelecteds.includes(TTCDate.key);
     let newTTC = [];
-    if (exist) newTTC = ttcSelecteds.filter((el) => el !== TTCDate);
-    else newTTC = [...ttcSelecteds, TTCDate];
+    if (exist) newTTC = ttcSelecteds.filter((el) => el !== TTCDate.key);
+    else newTTC = [...ttcSelecteds, TTCDate.key];
 
     setFiltersActive({
       ...filtersActive,
@@ -84,12 +103,12 @@ export const ModalFilters = ({
     });
   };
 
-  const handleSelectCourses = (course) => {
+  const handleSelectCourses = (course: OptionSelectType) => {
     let coursesSelected = filtersActive.filters.courses;
-    const exist = coursesSelected.includes(course);
+    const exist = coursesSelected.includes(course.key);
     let newCourse = [];
-    if (exist) newCourse = coursesSelected.filter((el) => el !== course);
-    else newCourse = [...coursesSelected, course];
+    if (exist) newCourse = coursesSelected.filter((el) => el !== course.key);
+    else newCourse = [...coursesSelected, course.key];
 
     setFiltersActive({
       ...filtersActive,
@@ -100,9 +119,13 @@ export const ModalFilters = ({
     });
   };
 
-  const handleSelectOption = (field, value) => {
+  const handleSelectOption = (
+    field: string,
+    value: string | boolean | null
+  ) => {
     const realValue =
       value === "true" ? true : value === "false" ? false : value;
+
     setFiltersActive({
       ...filtersActive,
       filters: {
@@ -114,78 +137,55 @@ export const ModalFilters = ({
 
   return (
     <div className={`modalFilter ${visible && "visible"}`}>
-      <div
-        style={{
-          width: "60%",
-          height: "80%",
-          backgroundColor: "white",
-          padding: "20px",
-          borderRadius: "20px",
-          position: "relative",
-          //   overflowY: 'scroll'
-        }}
-      >
-        <p
+      <div className={styles.container}>
+        <ImCross
+          color={Constants.COLORS.primary}
           onClick={() => setShowFilters(false)}
-          style={{
-            color: "black",
-            cursor: "pointer",
-            padding: "20px",
-            borderRadius: "100%",
-            position: "absolute",
-            right: 0,
-            top: 0,
-            backgroundColor: "#feae00",
-            height: "40px",
-            width: "40px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            marginRight: "20px",
-            marginTop: "20px",
-            fontWeight: "bold",
-          }}
-        >
-          X
-        </p>
-        <h2
-          style={{
-            color: "black",
-            fontSize: "40px",
-            textTransform: "uppercase",
-            letterSpacing: "2px",
-          }}
-        >
-          Filtros
-        </h2>
+          className={styles.closeModal}
+          size={25}
+        />
+        <h2 className={styles.filterTitle}>Filtros</h2>
         <form
           className="formFilters"
           style={{ overflow: "auto", height: "90%" }}
         >
           <MultipleSelector
             options={countries}
-            optionsSelected={filtersActive.filters.country}
+            optionsSelected={filtersActive.filters.country.map((el) => ({
+              key: el,
+              label: el,
+            }))}
             handleSelectOption={handleSelectCountry}
             title="Country"
             placeholder="Search country..."
           />
           <MultipleSelector
             options={teachCountries}
-            optionsSelected={filtersActive.filters.teach_country}
+            optionsSelected={filtersActive.filters.teach_country.map((el) => ({
+              key: el,
+              label: el,
+            }))}
             handleSelectOption={handleSelectTeachCountry}
             title="Teacher Country"
             placeholder="Search teacher country..."
           />
           <MultipleSelector
             options={TTCDate}
-            optionsSelected={filtersActive.filters.TTCDate}
+            optionsSelected={filtersActive.filters.TTCDate.map((el) => ({
+              key: el,
+              label: el,
+            }))}
             handleSelectOption={handleSelectTTCDate}
             title="TTC Date"
             placeholder="Search TTC Date..."
           />
           <MultipleSelector
             options={courses}
-            optionsSelected={filtersActive.filters.courses}
+            optionsSelected={filtersActive.filters.courses.map((el) => ({
+              key: el,
+              label:
+                Constants.COURSE_OPTIONS.find((c) => c.key === el)?.label || el,
+            }))}
             handleSelectOption={handleSelectCourses}
             title="Courses"
             placeholder="Search courses..."

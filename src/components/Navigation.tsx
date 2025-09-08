@@ -1,10 +1,8 @@
-import React from "react";
-import { Navbar, Nav, NavDropdown, Button, Image } from "react-bootstrap";
+import { Navbar, Nav, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import * as routes from "../constants/routes";
 import SignOutButton from "./SignOut";
 import { auth } from "../firebase/firebase";
-import cardDetails from "./CardDetails";
+import { Constants } from "../constants/constants";
 
 function Navigation() {
   return (
@@ -18,7 +16,7 @@ function Navigation() {
     >
       <Navbar className="header" collapseOnSelect expand="lg" variant="dark">
         <Navbar.Brand>
-          <Link to={routes.LANDING}>
+          <Link to={Constants.ROUTES.LANDING}>
             <img src="./guru.png" alt="Branda Logo" height={"70px"} />
           </Link>
         </Navbar.Brand>
@@ -40,7 +38,7 @@ function Navigation() {
                 </NavDropdown.Item>
               ))}
             </NavDropdown> */}
-            {/*  <Nav.Link to={routes.ACCOUNT}>
+            {/*  <Nav.Link to={Constants.ROUTES.ACCOUNT}>
               <Button>Users</Button>
             </Nav.Link> */}
             {/* <Nav.Link href="https://code-mergers-org.netlify.app/">
@@ -50,7 +48,7 @@ function Navigation() {
           {auth.currentUser === null ? (
             <Nav>
               <Nav.Link>
-                <Link to={routes.SIGN_IN} style={{ color: "white" }}>
+                <Link to={Constants.ROUTES.SIGN_IN} style={{ color: "white" }}>
                   <Button style={{ color: "white", backgroundColor: "gray" }}>
                     SignIn/SignUp
                   </Button>
@@ -60,7 +58,7 @@ function Navigation() {
           ) : (
             <Nav>
               <Nav.Link>
-                <Link to={routes.USERS} style={{ color: "white" }}>
+                <Link to={Constants.ROUTES.USERS} style={{ color: "white" }}>
                   <Button
                     style={{
                       backgroundColor: "white",
