@@ -788,20 +788,20 @@ export default function Users() {
                                   user.updatedAt
                                 ) || "-"}
                               </td>
-                              <td>{user.name}</td>
-                              <td>{user.lastName}</td>
-                              <td>{user.email}</td>
+                              <td>{user.name || "-"}</td>
+                              <td>{user.lastName || "-"}</td>
+                              <td>{user.email || "-"}</td>
                               <td>
                                 {DatesUtils.formatAAAAMMDDtoDDMMYYYY(
                                   user.birthday
                                 ) || "-"}
                               </td>
-                              <td>{user.phone}</td>
-                              <td>{user?.country}</td>
-                              <td>{user.teach_country}</td>
-                              <td>{user.code}</td>
-                              <td>{user.manualCode}</td>
-                              <td>{user.kriyaNotesCode}</td>
+                              <td>{user.phone || "-"}</td>
+                              <td>{user?.country || "-"}</td>
+                              <td>{user.teach_country || "-"}</td>
+                              <td>{user.code || "-"}</td>
+                              <td>{user.manualCode || "-"}</td>
+                              <td>{user.kriyaNotesCode || "-"}</td>
                               <td
                                 style={{
                                   color: colorBoolean(user?.SKY?.long === 1),
@@ -829,8 +829,8 @@ export default function Users() {
                               >
                                 {user.inactive ? "DISABLE" : "ENABLE"}
                               </td>
-                              <td>{user.TTCDate}</td>
-                              <td>{user.placeTTC}</td>
+                              <td>{user.TTCDate || "-"}</td>
+                              <td>{user.placeTTC || "-"}</td>
                               <td
                                 style={{
                                   color: colorBoolean(user.sign === 1),
