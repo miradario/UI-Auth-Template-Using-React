@@ -254,7 +254,7 @@ const AddUserPage = (props: {
                 </div>
               ) : (
                 <div>
-                  <label className={styles.label}>Birthday*:</label>
+                  <label className={styles.label}>Birthday:</label>
                   <InputGroup className={styles.container_input}>
                     <Form.Control
                       max={new Date().toISOString().split("T")[0]}
@@ -263,7 +263,6 @@ const AddUserPage = (props: {
                       placeholder="********"
                       value={userData.birthday}
                       autoFocus
-                      required
                       onChange={(event) =>
                         setUserData((prevState) => ({
                           ...prevState,

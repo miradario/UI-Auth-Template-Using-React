@@ -168,7 +168,6 @@ export class Constants {
   }
 
   static SKY_OPTIONS = [
-    { key: 'ae', label: 'AE' },
     { key: 'long', label: 'Long' },
     { key: 'short', label: 'Short' }
   ]

@@ -26,7 +26,7 @@ export class UserUtils {
             min = j
         } else {
           if (param === 'updatedAt') {
-            if (filterArray[j].updatedAt <= filterArray[min].updatedAt) min = j
+            if (filterArray[j].updatedAt >= filterArray[min].updatedAt) min = j
           } else {
             if (
               param === 'birthday' &&
