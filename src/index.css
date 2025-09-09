@@ -15,3 +15,9 @@ code {
 * {
   font-family: Montserrat, Verdana, Geneva, Tahoma, sans-serif;
 }
+
+p,
+span,
+div {
+  font-weight: 500;
+}
