@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ChangeEvent, MouseEvent } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import Navigation from "./Navigation";
 import Footer from "./Footer";
 import { BsChevronRight, BsChevronLeft } from "react-icons/bs";
@@ -44,7 +44,6 @@ export default function Users() {
 
   const [items, setItems] = useState<UserType[]>([]);
   const [itemsFilter, setItemsFilter] = useState<UserType[]>([]);
-  const [showOrder, setShowOrder] = useState(false);
   const [pagination, setPagination] = useState<PaginationType>({
     page: 0,
     perPage: 0,
