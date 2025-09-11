@@ -713,7 +713,9 @@ export default function Users() {
                               key={el.key}
                               scope="col"
                               onClick={() =>
-                                filtersActive.orderActive.value === el.key
+                                !el.isOrder
+                                  ? null
+                                  : filtersActive.orderActive.value === el.key
                                   ? orderDataByParam("", "")
                                   : orderDataByParam(el.label, el.key)
                               }
@@ -722,7 +724,7 @@ export default function Users() {
                                   filtersActive.orderActive.value === el.key
                                     ? Constants.COLORS.primary
                                     : Constants.COLORS.black,
-                                cursor: "pointer",
+                                cursor: el.isOrder ? "pointer" : "default",
                                 userSelect: "none",
                               }}
                             >
@@ -737,7 +739,13 @@ export default function Users() {
                                 >
                                   {el.label}
                                 </span>
-                                {el.isOrder && <span>▼</span>}
+                                {el.isOrder &&
+                                  (filtersActive.orderActive.value ===
+                                  el.key ? (
+                                    <span>▲</span>
+                                  ) : (
+                                    <span>▼</span>
+                                  ))}
                               </Flex>
                             </th>
                           ))}
