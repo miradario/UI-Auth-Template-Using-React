@@ -40,7 +40,7 @@ export default function Users() {
 
   //STATES
 
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(true);
 
   const [items, setItems] = useState<UserType[]>([]);
   const [itemsFilter, setItemsFilter] = useState<UserType[]>([]);

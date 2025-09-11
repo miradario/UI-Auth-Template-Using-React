@@ -1,7 +1,7 @@
 #preloader {
-  background: #fff url("/loader.gif") no-repeat center;
-  height: 50%;
-  width: 90%;
+  background: #fff url('/loader.gif') no-repeat center;
+  height: 100%;
+  width: 100%;
   position: fixed;
   z-index: 100;
 }

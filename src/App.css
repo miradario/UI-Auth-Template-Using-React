@@ -646,9 +646,7 @@ body {
 
 .loader_container p {
   margin-top: 20px;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-  letter-spacing: 2px;
-  text-transform: uppercase;
+  font-style: italic;
 }
 
 /**IMAGE LANGUAJE**/
