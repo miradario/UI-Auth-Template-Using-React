@@ -40,17 +40,6 @@ export class Constants {
   }
 
   static FILTERS = {
-    ORDER_OPTIONS: [
-      { key: 'updatedAt', label: 'Last Update' },
-      { key: 'name', label: 'Name' },
-      { key: 'lastName', label: 'Last Name' },
-      { key: 'TTCDate', label: 'First TTC Date' },
-      { key: 'country', label: 'Origin Country' },
-      { key: 'teach_country', label: 'Residence Country' },
-      { key: 'email', label: 'Email' },
-      { key: 'phone', label: 'Phone' },
-      { key: 'birthday', label: 'Birthday' }
-    ],
     PER_PAGE: [25, 50, 100]
   }
 
@@ -79,29 +68,33 @@ export class Constants {
 
   static TABLE = {
     HEADER: [
-      'Select',
-      'Edit',
-      'Authenticate',
-      'Last Update',
-      'Name',
-      'Last Name',
-      'Email',
-      'Birthday',
-      'Phone',
-      'Country Origin',
-      'Country Residence',
-      'Code',
-      'Manual Code',
-      'Kriya Notes Code',
-      'Long',
-      'Short',
-      'Status',
-      'First TTC Date',
-      'TTC Place',
-      'Sign Contract',
-      'Comment',
-      ...this.COURSE_OPTIONS.map(course => course.label),
-      'ID'
+      { label: 'Select', isOrder: false, key: 'select' },
+      { label: 'Edit', isOrder: false, key: 'edit' },
+      { label: 'Authenticate', isOrder: false, key: 'authenticate' },
+      { label: 'Last Update', isOrder: true, key: 'updatedAt' },
+      { label: 'Name', isOrder: true, key: 'name' },
+      { label: 'Last Name', isOrder: true, key: 'lastName' },
+      { label: 'Email', isOrder: true, key: 'email' },
+      { label: 'Birthday', isOrder: true, key: 'birthday' },
+      { label: 'Phone', isOrder: true, key: 'phone' },
+      { label: 'Country Origin', isOrder: true, key: 'country' },
+      { label: 'Country Residence', isOrder: true, key: 'teach_country' },
+      { label: 'First TTC Date', isOrder: true, key: 'TTCDate' },
+      { label: 'Code', isOrder: false, key: 'code' },
+      { label: 'Manual Code', isOrder: false, key: 'manualCode' },
+      { label: 'Kriya Notes Code', isOrder: false, key: 'kriyaNotesCode' },
+      { label: 'Long', isOrder: false, key: 'long' },
+      { label: 'Short', isOrder: false, key: 'short' },
+      { label: 'Status', isOrder: false, key: 'status' },
+      { label: 'TTC Place', isOrder: false, key: 'ttcPlace' },
+      { label: 'Sign Contract', isOrder: false, key: 'signContract' },
+      { label: 'Comment', isOrder: false, key: 'comment' },
+      ...this.COURSE_OPTIONS.map(course => ({
+        label: course.label,
+        isOrder: false,
+        key: course.key
+      })),
+      { label: 'ID', isOrder: false, key: 'id' }
     ]
   }
 

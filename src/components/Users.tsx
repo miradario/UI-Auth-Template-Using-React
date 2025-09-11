@@ -164,15 +164,14 @@ export default function Users() {
     setIsLoaded(false);
   };
 
-  const orderDataByParam = (e: MouseEvent<HTMLLIElement>) => {
-    const key = e.currentTarget.dataset.id;
+  const orderDataByParam = (label: string, key: string) => {
     // setItemsFilter(order)
     setFiltersActive({
       ...filtersActive,
       orderActive: {
         active: true,
-        by: e.currentTarget.textContent,
-        value: key || "",
+        by: label,
+        value: key,
       },
     });
   };
@@ -530,7 +529,7 @@ export default function Users() {
                       filtersActive={filtersActive}
                     />
 
-                    <div
+                    {/* <div
                       className="orderContainer"
                       style={{
                         padding: "0 15px",
@@ -571,7 +570,9 @@ export default function Users() {
                             </li>
                           )}
 
-                          {Constants.FILTERS.ORDER_OPTIONS.map((el) => (
+                          {Constants.TABLE.HEADER.filter(
+                            (el) => el.isOrder
+                          ).map((el) => (
                             <li
                               data-id={el.key}
                               key={el.key}
@@ -582,7 +583,7 @@ export default function Users() {
                           ))}
                         </ul>
                       )}
-                    </div>
+                    </div> */}
 
                     <div
                       className="orderContainer"
@@ -709,8 +710,36 @@ export default function Users() {
                       <thead>
                         <tr>
                           {Constants.TABLE.HEADER.map((el) => (
-                            <th key={el} scope="col">
-                              {el}
+                            <th
+                              key={el.key}
+                              scope="col"
+                              onClick={() =>
+                                filtersActive.orderActive.value === el.key
+                                  ? orderDataByParam("", "")
+                                  : orderDataByParam(el.label, el.key)
+                              }
+                              style={{
+                                color:
+                                  filtersActive.orderActive.value === el.key
+                                    ? Constants.COLORS.primary
+                                    : Constants.COLORS.black,
+                                cursor: "pointer",
+                                userSelect: "none",
+                              }}
+                            >
+                              <Flex align="flex-end" justify="center" gap={5}>
+                                <span
+                                  style={{
+                                    fontWeight:
+                                      filtersActive.orderActive.value === el.key
+                                        ? 700
+                                        : 500,
+                                  }}
+                                >
+                                  {el.label}
+                                </span>
+                                {el.isOrder && <span>▼</span>}
+                              </Flex>
                             </th>
                           ))}
                         </tr>
@@ -799,6 +828,7 @@ export default function Users() {
                               <td>{user.phone || "-"}</td>
                               <td>{user?.country || "-"}</td>
                               <td>{user.teach_country || "-"}</td>
+                              <td>{user.TTCDate || "-"}</td>
                               <td>{user.code || "-"}</td>
                               <td>{user.manualCode || "-"}</td>
                               <td>{user.kriyaNotesCode || "-"}</td>
@@ -829,7 +859,6 @@ export default function Users() {
                               >
                                 {user.inactive ? "DISABLE" : "ENABLE"}
                               </td>
-                              <td>{user.TTCDate || "-"}</td>
                               <td>{user.placeTTC || "-"}</td>
                               <td
                                 style={{
