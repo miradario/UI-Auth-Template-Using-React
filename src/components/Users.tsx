@@ -1023,7 +1023,7 @@ export default function Users() {
         ) : (
           <div className="not_permisions ">
             <div className="loader_container">
-              <Loader newClass="loader-order" />
+              <Loader size={60} />
               <p>Loading Users</p>
             </div>
           </div>

@@ -24,13 +24,14 @@ const AddUserPage = (props: {
     Constants.INITIAL_DATA_ADD_USER
   );
   const [isloading, setIsLoading] = useState(false);
+  const [loadingSubmit, setLoadingSubmit] = useState(false);
 
   const createAuthUser = async (
     email: string,
     password: string,
     diferenteEmail = false
   ) => {
-    setIsLoading(true);
+    setLoadingSubmit(true);
 
     const data = auth
       .createUserWithEmailAndPassword(email, password)
@@ -48,7 +49,7 @@ const AddUserPage = (props: {
         }
       })
       .catch((error) => {
-        setIsLoading(false);
+        setLoadingSubmit(false);
         alert(error.message);
       });
     if (data) return data;
@@ -143,7 +144,7 @@ const AddUserPage = (props: {
       } else alert("Error creating user with new email");
     }
 
-    setIsLoading(false);
+    setLoadingSubmit(false);
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -209,382 +210,406 @@ const AddUserPage = (props: {
     >
       <Navigation />
 
-      <Container>
-        <center>
-          <h1>{id ? "Update Teacher" : "Add Teacher"}</h1>
-        </center>
-        <br />
+      {isloading ? (
+        <Flex
+          justify="center"
+          style={{ height: "75vh" }}
+          align="center"
+          direction="column"
+          gap={20}
+        >
+          <Loader size={60} />
+          <p style={{ fontSize: 30, fontStyle: "italic" }}>Loading user</p>
+        </Flex>
+      ) : (
+        <Container>
+          <center>
+            <h1>{id ? "Update Teacher" : "Add Teacher"}</h1>
+          </center>
+          <br />
 
-        <form onSubmit={handleSubmit} className="form_add_user">
-          <Flex
-            justify="space-between"
-            align="center"
-            gap={20}
-            className={styles.agrouped_input}
-          >
-            <div>
-              <label className={styles.label}>Email*:</label>
-              <InputGroup className={styles.container_input}>
-                <Form.Control
-                  id="inputtext"
-                  type="email"
-                  name="email"
-                  placeholder="user@gmail.com"
-                  value={userData.email}
-                  required
-                  autoFocus
-                  onChange={handleChangeText}
-                />
-              </InputGroup>
-            </div>
-
-            {!id ? (
+          <form onSubmit={handleSubmit} className="form_add_user">
+            <Flex
+              justify="space-between"
+              align="center"
+              gap={20}
+              className={styles.agrouped_input}
+            >
               <div>
-                <label className={styles.label}>Password*:</label>
+                <label className={styles.label}>Email*:</label>
                 <InputGroup className={styles.container_input}>
                   <Form.Control
                     id="inputtext"
-                    type="password"
-                    placeholder="********"
-                    value={password}
+                    type="email"
+                    name="email"
+                    placeholder="user@gmail.com"
+                    value={userData.email}
+                    required
+                    autoFocus
+                    onChange={handleChangeText}
+                  />
+                </InputGroup>
+              </div>
+
+              {!id ? (
+                <div>
+                  <label className={styles.label}>Password*:</label>
+                  <InputGroup className={styles.container_input}>
+                    <Form.Control
+                      id="inputtext"
+                      type="password"
+                      placeholder="********"
+                      value={password}
+                      autoFocus
+                      required
+                      onChange={(event) => setPassword(event.target.value)}
+                    />
+                  </InputGroup>
+                </div>
+              ) : (
+                <div>
+                  <label className={styles.label}>Birthday:</label>
+                  <InputGroup className={styles.container_input}>
+                    <Form.Control
+                      max={new Date().toISOString().split("T")[0]}
+                      id="inputtext"
+                      type="date"
+                      value={userData.birthday}
+                      autoFocus
+                      onChange={(event) =>
+                        setUserData((prevState) => ({
+                          ...prevState,
+                          birthday: event.target.value,
+                        }))
+                      }
+                    />
+                  </InputGroup>
+                </div>
+              )}
+            </Flex>
+
+            <Flex
+              justify="space-between"
+              align="center"
+              gap={20}
+              className={styles.agrouped_input}
+            >
+              <div>
+                <label className={styles.label}>Name*:</label>
+                <InputGroup className={styles.container_input}>
+                  <Form.Control
+                    type="text"
+                    name="name"
+                    id="inputtextName"
+                    placeholder=" John "
+                    value={userData.name}
                     autoFocus
                     required
-                    onChange={(event) => setPassword(event.target.value)}
+                    onChange={handleChangeText}
                   />
                 </InputGroup>
               </div>
-            ) : (
               <div>
-                <label className={styles.label}>Birthday:</label>
+                <label className={styles.label}>Last Name*:</label>
                 <InputGroup className={styles.container_input}>
                   <Form.Control
-                    max={new Date().toISOString().split("T")[0]}
-                    id="inputtext"
-                    type="date"
-                    placeholder="********"
-                    value={userData.birthday}
-                    autoFocus
-                    onChange={(event) =>
-                      setUserData((prevState) => ({
-                        ...prevState,
-                        birthday: event.target.value,
-                      }))
-                    }
-                  />
-                </InputGroup>
-              </div>
-            )}
-          </Flex>
-
-          <Flex
-            justify="space-between"
-            align="center"
-            gap={20}
-            className={styles.agrouped_input}
-          >
-            <div>
-              <label className={styles.label}>Name*:</label>
-              <InputGroup className={styles.container_input}>
-                <Form.Control
-                  type="text"
-                  name="name"
-                  id="inputtextName"
-                  placeholder=" John "
-                  value={userData.name}
-                  autoFocus
-                  required
-                  onChange={handleChangeText}
-                />
-              </InputGroup>
-            </div>
-            <div>
-              <label className={styles.label}>Last Name*:</label>
-              <InputGroup className={styles.container_input}>
-                <Form.Control
-                  type="text"
-                  name="lastName"
-                  id="inputtextLN"
-                  placeholder=" Doe"
-                  value={userData.lastName}
-                  autoFocus
-                  required
-                  onChange={handleChangeText}
-                />
-              </InputGroup>
-            </div>
-            {!id && (
-              <div>
-                <label className={styles.label}>Birthday*:</label>
-                <InputGroup className={styles.container_input}>
-                  <Form.Control
-                    //max date today
-                    max={new Date().toISOString().split("T")[0]}
-                    id="inputtext"
-                    type="date"
-                    placeholder="********"
-                    value={userData.birthday}
+                    type="text"
+                    name="lastName"
+                    id="inputtextLN"
+                    placeholder=" Doe"
+                    value={userData.lastName}
                     autoFocus
                     required
-                    onChange={(event) =>
-                      setUserData((prevState) => ({
-                        ...prevState,
-                        birthday: event.target.value,
-                      }))
-                    }
+                    onChange={handleChangeText}
                   />
                 </InputGroup>
               </div>
-            )}
-          </Flex>
+              {!id && (
+                <div>
+                  <label className={styles.label}>Birthday:</label>
+                  <InputGroup className={styles.container_input}>
+                    <Form.Control
+                      //max date today
+                      max={new Date().toISOString().split("T")[0]}
+                      id="inputtext"
+                      type="date"
+                      value={userData.birthday}
+                      autoFocus
+                      onChange={(event) =>
+                        setUserData((prevState) => ({
+                          ...prevState,
+                          birthday: event.target.value,
+                        }))
+                      }
+                    />
+                  </InputGroup>
+                </div>
+              )}
+            </Flex>
 
-          <Flex
-            justify="space-between"
-            align="center"
-            gap={20}
-            className={styles.agrouped_input}
-          >
-            <div>
-              <label className={styles.label}>Origin Country*:</label>
-              <InputGroup className={styles.container_input}>
+            <Flex
+              justify="space-between"
+              align="center"
+              gap={20}
+              className={styles.agrouped_input}
+            >
+              <div>
+                <label className={styles.label}>Origin Country*:</label>
+                <InputGroup className={styles.container_input}>
+                  <Form.Control
+                    type="text"
+                    name="country"
+                    id="inputtextCountry"
+                    placeholder=" Argentina"
+                    value={userData.country}
+                    autoFocus
+                    required
+                    onChange={handleChangeText}
+                  />
+                </InputGroup>
+              </div>
+              <div>
+                <label className={styles.label}>Residence Country:</label>
                 <Form.Control
                   type="text"
-                  name="country"
-                  id="inputtextCountry"
-                  placeholder=" Argentina"
-                  value={userData.country}
-                  autoFocus
-                  required
-                  onChange={handleChangeText}
-                />
-              </InputGroup>
-            </div>
-            <div>
-              <label className={styles.label}>Residence Country:</label>
-              <Form.Control
-                type="text"
-                name="teach_country"
-                id="inputtextTeachCountry"
-                value={userData.teach_country}
-                placeholder="Argentina"
-                autoFocus
-                onChange={handleChangeText}
-              />
-            </div>
-          </Flex>
-
-          <Flex
-            justify="space-between"
-            align="center"
-            gap={20}
-            className={styles.agrouped_input}
-          >
-            <div>
-              <label className={styles.label}>TTC Date:</label>
-              <InputGroup className={styles.container_input}>
-                <Form.Control
-                  type="text"
-                  name="TTCDate"
-                  id="inputtextTTCDate"
-                  placeholder=" 2020-01-01"
-                  value={userData.TTCDate}
-                  autoFocus
-                  onChange={handleChangeText}
-                />
-              </InputGroup>
-            </div>
-            <div>
-              <label className={styles.label}>Place TTC:</label>
-              <InputGroup className={styles.container_input}>
-                <Form.Control
-                  type="text"
-                  name="placeTTC"
-                  id="inputtextplaceTTC"
+                  name="teach_country"
+                  id="inputtextTeachCountry"
+                  value={userData.teach_country}
                   placeholder="Argentina"
-                  value={userData.placeTTC}
                   autoFocus
                   onChange={handleChangeText}
                 />
-              </InputGroup>
-            </div>
-          </Flex>
+              </div>
+            </Flex>
 
-          <Flex
-            justify="space-between"
-            align="center"
-            gap={20}
-            className={styles.agrouped_input}
-          >
-            <div>
-              <label className={styles.label}>Phone:</label>
-              <InputGroup className={styles.container_input}>
-                <Form.Control
-                  type="text"
-                  name="phone"
-                  id="inputtextPhone"
-                  placeholder=" +54 9 11 1234 5678"
-                  value={userData.phone}
-                  autoFocus
-                  onChange={handleChangeText}
-                />
-              </InputGroup>
-            </div>
-            <div>
-              <label className={styles.label}>Code:</label>
-              <InputGroup className={styles.container_input}>
-                <Form.Control
-                  type="text"
-                  name="code"
-                  id="inputtextCode"
-                  placeholder="Insert Code"
-                  value={userData.code}
-                  autoFocus
-                  onChange={handleChangeText}
-                />
-              </InputGroup>
-            </div>
-          </Flex>
+            <Flex
+              justify="space-between"
+              align="center"
+              gap={20}
+              className={styles.agrouped_input}
+            >
+              <div>
+                <label className={styles.label}>TTC Date:</label>
+                <InputGroup className={styles.container_input}>
+                  <Form.Control
+                    type="text"
+                    name="TTCDate"
+                    id="inputtextTTCDate"
+                    placeholder=" 2020-01-01"
+                    value={userData.TTCDate}
+                    autoFocus
+                    onChange={handleChangeText}
+                  />
+                </InputGroup>
+              </div>
+              <div>
+                <label className={styles.label}>Place TTC:</label>
+                <InputGroup className={styles.container_input}>
+                  <Form.Control
+                    type="text"
+                    name="placeTTC"
+                    id="inputtextplaceTTC"
+                    placeholder="Argentina"
+                    value={userData.placeTTC}
+                    autoFocus
+                    onChange={handleChangeText}
+                  />
+                </InputGroup>
+              </div>
+            </Flex>
 
-          <Flex
-            justify="space-between"
-            align="center"
-            gap={20}
-            className={styles.agrouped_input}
-          >
-            <div>
-              <label className={styles.label}>Manual Code:</label>
-              <InputGroup className={styles.container_input}>
-                <Form.Control
-                  type="text"
-                  name="manualCode"
-                  id="inputtextManualCode"
-                  placeholder="Insert Manual Code"
-                  value={userData.manualCode}
-                  autoFocus
-                  onChange={handleChangeText}
-                />
-              </InputGroup>
-            </div>
-            <div>
-              <label className={styles.label}>Kriya Note Code:</label>
-              <InputGroup className={styles.container_input}>
-                <Form.Control
-                  type="text"
-                  name="kriyaNotesCode"
-                  id="inputtextKriyaNotesCode"
-                  placeholder="Insert Code"
-                  value={userData.kriyaNotesCode}
-                  autoFocus
-                  onChange={handleChangeText}
-                />
-              </InputGroup>
-            </div>
-          </Flex>
+            <Flex
+              justify="space-between"
+              align="center"
+              gap={20}
+              className={styles.agrouped_input}
+            >
+              <div>
+                <label className={styles.label}>Phone:</label>
+                <InputGroup className={styles.container_input}>
+                  <Form.Control
+                    type="text"
+                    name="phone"
+                    id="inputtextPhone"
+                    placeholder=" +54 9 11 1234 5678"
+                    value={userData.phone}
+                    autoFocus
+                    onChange={handleChangeText}
+                  />
+                </InputGroup>
+              </div>
+              <div>
+                <label className={styles.label}>Code:</label>
+                <InputGroup className={styles.container_input}>
+                  <Form.Control
+                    type="text"
+                    name="code"
+                    id="inputtextCode"
+                    placeholder="Insert Code"
+                    value={userData.code}
+                    autoFocus
+                    onChange={handleChangeText}
+                  />
+                </InputGroup>
+              </div>
+            </Flex>
 
-          <div>
-            <label className={styles.label}>Comment:</label>
-            <InputGroup className={styles.container_input}>
-              <Form.Control
-                type="text"
-                name="comment"
-                id="inputtextComment"
-                placeholder=" Comment"
-                value={userData.comment}
-                autoFocus
-                onChange={handleChangeText}
+            <Flex
+              justify="space-between"
+              align="center"
+              gap={20}
+              className={styles.agrouped_input}
+            >
+              <div>
+                <label className={styles.label}>Manual Code:</label>
+                <InputGroup className={styles.container_input}>
+                  <Form.Control
+                    type="text"
+                    name="manualCode"
+                    id="inputtextManualCode"
+                    placeholder="Insert Manual Code"
+                    value={userData.manualCode}
+                    autoFocus
+                    onChange={handleChangeText}
+                  />
+                </InputGroup>
+              </div>
+              <div>
+                <label className={styles.label}>Kriya Note Code:</label>
+                <InputGroup className={styles.container_input}>
+                  <Form.Control
+                    type="text"
+                    name="kriyaNotesCode"
+                    id="inputtextKriyaNotesCode"
+                    placeholder="Insert Code"
+                    value={userData.kriyaNotesCode}
+                    autoFocus
+                    onChange={handleChangeText}
+                  />
+                </InputGroup>
+              </div>
+            </Flex>
+
+            <div>
+              <label className={styles.label}>Comment:</label>
+              <InputGroup className={styles.container_input}>
+                <Form.Control
+                  type="text"
+                  name="comment"
+                  id="inputtextComment"
+                  placeholder=" Comment"
+                  value={userData.comment}
+                  autoFocus
+                  onChange={handleChangeText}
+                />
+              </InputGroup>
+            </div>
+
+            <div className={styles.separator} />
+
+            {/* CHECKBOXES */}
+
+            {!id && (
+              <Form.Check
+                className="inputradio"
+                label="Enviar mail de bienvenida"
+                type="checkbox"
+                name="mail"
+                defaultChecked={mail}
+                value={mail ? 1 : 0}
+                onChange={() => setMail(!mail)}
               />
-            </InputGroup>
-          </div>
-
-          <div className={styles.separator} />
-
-          {/* CHECKBOXES */}
-
-          {!id && (
+            )}
+            {!id && <div style={{ margin: "10px 0" }} />}
             <Form.Check
               className="inputradio"
-              label="Enviar mail de bienvenida"
+              label="Sign the contract"
               type="checkbox"
-              name="mail"
-              defaultChecked={mail}
-              value={mail ? 1 : 0}
-              onChange={() => setMail(!mail)}
+              name="Sign"
+              id="Sign"
+              defaultChecked={!!userData.sign}
+              value={userData.sign ? 1 : 0}
+              onChange={handleCheckbox}
             />
-          )}
-          {!id && <div style={{ margin: "10px 0" }} />}
-          <Form.Check
-            className="inputradio"
-            label="Sign the contract"
-            type="checkbox"
-            name="Sign"
-            id="Sign"
-            defaultChecked={!!userData.sign}
-            value={userData.sign ? 1 : 0}
-            onChange={handleCheckbox}
-          />
 
-          <div className={styles.separator} />
+            <div className={styles.separator} />
 
-          {/* SKY */}
-          <div style={{ display: "flex" }}>
-            <h4>Kriya Available</h4>
-            <InputGroup style={{ width: "80%" }}>
-              {Constants.SKY_OPTIONS.map((option) => (
-                <Form.Check
-                  className="inputradio"
-                  label={option.label}
-                  type="checkbox"
-                  name={option.key}
-                  defaultChecked={
-                    !!userData.SKY[option.key as keyof typeof userData.SKY]
-                  }
-                  value={userData.SKY[option.key as keyof typeof userData.SKY]}
-                  id={option.key}
-                  onChange={handleCheckboxSKY}
-                />
-              ))}
+            {/* SKY */}
+            <div style={{ display: "flex" }}>
+              <h4>Kriya Available</h4>
+              <InputGroup style={{ width: "80%" }}>
+                {Constants.SKY_OPTIONS.map((option) => (
+                  <Form.Check
+                    className="inputradio"
+                    label={option.label}
+                    type="checkbox"
+                    name={option.key}
+                    defaultChecked={
+                      !!userData.SKY[option.key as keyof typeof userData.SKY]
+                    }
+                    value={
+                      userData.SKY[option.key as keyof typeof userData.SKY]
+                    }
+                    id={option.key}
+                    onChange={handleCheckboxSKY}
+                  />
+                ))}
+              </InputGroup>
+            </div>
+
+            <div className={styles.separator} />
+
+            {/* COURSES */}
+            <h4>Courses</h4>
+            <InputGroup className={styles.courses_container}>
+              {Constants.COURSE_OPTIONS.map((option) => {
+                return (
+                  <div key={option.key}>
+                    <label htmlFor={option.key}>{option.label}</label>
+                    <Form.Check
+                      type="checkbox"
+                      name={option.key}
+                      defaultChecked={
+                        !!userData.course[
+                          option.key as keyof typeof userData.course
+                        ]
+                      }
+                      value={
+                        userData.course[
+                          option.key as keyof typeof userData.course
+                        ]
+                          ? 1
+                          : 0
+                      }
+                      id={option.key}
+                      onChange={handleCheckboxCourse}
+                    />
+                  </div>
+                );
+              })}
             </InputGroup>
-          </div>
-
-          <div className={styles.separator} />
-
-          {/* COURSES */}
-          <h4>Courses</h4>
-          <InputGroup className={styles.courses_container}>
-            {Constants.COURSE_OPTIONS.map((option) => (
-              <div key={option.key}>
-                <label htmlFor={option.key}>{option.label}</label>
-                <Form.Check
-                  type="checkbox"
-                  name={option.key}
-                  defaultChecked={
-                    !!userData.course[
-                      option.key as keyof typeof userData.course
-                    ]
-                  }
-                  value={
-                    userData.course[option.key as keyof typeof userData.course]
-                      ? 1
-                      : 0
-                  }
-                  id={option.key}
-                  onChange={handleCheckboxCourse}
-                />
-              </div>
-            ))}
-          </InputGroup>
-          <br />
-          {isloading && (
-            <Flex justify="center" style={{ marginBottom: 20 }}>
-              <Loader size={50} />
-            </Flex>
-          )}
-          <div className="text-center">
-            <Button type="submit" id="mybutton" disabled={isloading}>
-              {isloading ? "Loading..." : id ? "Update Teacher" : "Add Teacher"}
-            </Button>
-          </div>
-        </form>
-      </Container>
+            <br />
+            {loadingSubmit && (
+              <Flex justify="center" style={{ marginBottom: 20 }}>
+                <Loader size={50} />
+              </Flex>
+            )}
+            <div className="text-center">
+              <Button
+                type="submit"
+                id="mybutton"
+                disabled={isloading || loadingSubmit}
+              >
+                {loadingSubmit
+                  ? "Loading..."
+                  : id
+                  ? "Update Teacher"
+                  : "Add Teacher"}
+              </Button>
+            </div>
+          </form>
+        </Container>
+      )}
     </div>
   );
 };
