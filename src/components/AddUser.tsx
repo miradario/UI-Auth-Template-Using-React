@@ -184,6 +184,14 @@ const AddUserPage = (props: {
     }));
   };
 
+  const handleCheckboxSign = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target;
+    setUserData((prevState) => ({
+      ...prevState,
+      [name]: checked ? 1 : 0,
+    }));
+  };
+
   const handleCheckboxSKY = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
     setUserData((prevState) => ({
@@ -195,13 +203,13 @@ const AddUserPage = (props: {
     }));
   };
 
-  const handleCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target;
-    setUserData((prevState) => ({
-      ...prevState,
-      [name]: checked,
-    }));
-  };
+  // const handleCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, checked } = e.target;
+  //   setUserData((prevState) => ({
+  //     ...prevState,
+  //     [name]: checked,
+  //   }));
+  // };
 
   return (
     <div
@@ -525,11 +533,11 @@ const AddUserPage = (props: {
               className="inputradio"
               label="Sign the contract"
               type="checkbox"
-              name="Sign"
-              id="Sign"
-              defaultChecked={!!userData.sign}
-              value={userData.sign ? 1 : 0}
-              onChange={handleCheckbox}
+              name="sign"
+              id="sign"
+              defaultChecked={userData.sign === 1}
+              value={userData.sign}
+              onChange={handleCheckboxSign}
             />
 
             <div className={styles.separator} />
