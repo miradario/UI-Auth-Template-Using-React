@@ -22,29 +22,7 @@ function Navigation() {
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav className="mr-auto">
-            {/*  <NavDropdown
-              title={<Button>Features</Button>}
-              id="collasible-nav-dropdown"
-            >
-              {cardDetails.map((oneCard) => (
-                <NavDropdown.Item>
-                  <Link
-                    to={"/card/" + oneCard.url}
-                    style={{ color: "black", textDecoration: "none" }}
-                  >
-                    {oneCard.title}
-                  </Link>
-                </NavDropdown.Item>
-              ))}
-            </NavDropdown> */}
-            {/*  <Nav.Link to={Constants.ROUTES.ACCOUNT}>
-              <Button>Users</Button>
-            </Nav.Link> */}
-            {/* <Nav.Link href="https://code-mergers-org.netlify.app/">
-              <Button>About Us</Button>
-            </Nav.Link> */}
-          </Nav>
+          <Nav className="mr-auto" />
           {auth.currentUser === null ? (
             <Nav>
               <Nav.Link>
